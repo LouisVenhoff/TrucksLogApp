@@ -6,18 +6,15 @@ const fastify = require("fastify")({
 })
 
 const confReader:ConfigReader = new ConfigReader("config.json", (conf:Config) => {startServer(conf)});
-
+var dbManager:DatabaseManager;
 
 fastify.get("/", (req, res) => {
     res.send({Status:"OK"})
 })
 
-
-
-
 const startServer = (conf:Config) => {
     
-    const dbManager:DatabaseManager = new DatabaseManager(conf, true);
+    dbManager = new DatabaseManager(conf, true);
     
     fastify.listen({port: conf.port}, (err:any, addr:any) => {
 
@@ -28,6 +25,8 @@ const startServer = (conf:Config) => {
     
     });
 }
+
+
 
 
 
