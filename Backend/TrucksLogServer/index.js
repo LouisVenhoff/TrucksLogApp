@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var configReader_1 = require("./classes/configReader");
+var configReader_1 = require("./classes/configReader/configReader");
 var fastify = require("fastify")({
     logger: false
 });

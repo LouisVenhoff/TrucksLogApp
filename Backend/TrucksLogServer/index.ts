@@ -1,4 +1,4 @@
-import ConfigReader, { Config } from "./classes/configReader";
+import ConfigReader, { Config } from "./classes/configReader/configReader";
 
 const fastify = require("fastify")({
     logger:false
