@@ -4,7 +4,7 @@ var configReader_1 = require("./classes/configReader");
 var fastify = require("fastify")({
     logger: false
 });
-var confReader = new configReader_1.default("Config.json", function (conf) { startServer(conf); });
+var confReader = new configReader_1.default("config.json", function (conf) { startServer(conf); });
 fastify.get("/", function (req, res) {
     res.send({ Status: "OK" });
 });
