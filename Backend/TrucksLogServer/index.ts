@@ -4,7 +4,7 @@ const fastify = require("fastify")({
     logger:false
 })
 
-const confReader:ConfigReader = new ConfigReader("Config.json", (conf:Config) => {startServer(conf)});
+const confReader:ConfigReader = new ConfigReader("config.json", (conf:Config) => {startServer(conf)});
 
 fastify.get("/", (req, res) => {
     res.send({Status:"OK"})

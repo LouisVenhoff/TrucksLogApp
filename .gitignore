@@ -1,6 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node,react,ionic3
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,react,ionic3
 
+
+###TrucksLogServer
+.config.json
+
+
 ### Ionic3 ###
 # Log an tmp data
 *~
