@@ -60,7 +60,7 @@ class DatabaseManager {
 
     public async processLogin(user:string, pwdHash: string): Promise<number> {
 
-        let databaseResult: any = await this.runQuery(`SELECT id FROM user WHERE email= "${user}" AND passwort = "${pwdHash}"`);
+        let databaseResult: any = await this.runQuery(`SELECT id FROM user WHERE email= ? AND passwort = ? `, user, pwdHash);
 
         let userId = -1;
 
@@ -75,12 +75,12 @@ class DatabaseManager {
 
     }
 
-    private async runQuery(query: string): Promise<any> {
+    private async runQuery(query: string, ...args): Promise<any> {
 
 
         return new Promise((resolve, reject) => {
             if (this.connected) {
-                this.dbConnection.query(query, (err: any, results: any, fields: any) => {
+                this.dbConnection.query(query,args, (err: any, results: any, fields: any) => {
                     if (err) {
                         console.log("Error", err)
                         throw (err);

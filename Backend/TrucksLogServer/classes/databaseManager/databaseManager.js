@@ -79,13 +79,10 @@ var DatabaseManager = /** @class */ (function () {
     };
     DatabaseManager.prototype.processLogin = function (user, pwdHash) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, databaseResult, userId;
+            var databaseResult, userId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        query = "SELECT id FROM user WHERE email= \"".concat(user, "\" AND passwort = \"").concat(pwdHash, "\"");
-                        console.log(query);
-                        return [4 /*yield*/, this.runQuery(query)];
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT id FROM user WHERE email= ? AND passwort = ? ", user, pwdHash)];
                     case 1:
                         databaseResult = _a.sent();
                         userId = -1;
@@ -100,12 +97,16 @@ var DatabaseManager = /** @class */ (function () {
         });
     };
     DatabaseManager.prototype.runQuery = function (query) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) {
                         if (_this.connected) {
-                            _this.dbConnection.query(query, function (err, results, fields) {
+                            _this.dbConnection.query(query, args, function (err, results, fields) {
                                 if (err) {
                                     console.log("Error", err);
                                     throw (err);
