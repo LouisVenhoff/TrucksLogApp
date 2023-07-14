@@ -51,6 +51,7 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                console.log(req.body.mail, req.body.passwd);
                 if (dbManager == undefined) {
                     res.code(500).send();
                     return [2 /*return*/];
