@@ -39,7 +39,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mysql = require("mysql");
 var DatabaseManager = /** @class */ (function () {
     function DatabaseManager(databaseConfig, autoConnect) {
-        var _this = this;
         this.connected = false;
         this.hostName = databaseConfig.dbHostname;
         this.userName = databaseConfig.dbUsername;
@@ -47,14 +46,7 @@ var DatabaseManager = /** @class */ (function () {
         this.databaseName = databaseConfig.dbName;
         this.dbConnection = null;
         if (autoConnect) {
-            (function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.connect()];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            }); }); });
+            this.connect();
         }
     }
     DatabaseManager.prototype.connect = function () {
@@ -71,39 +63,35 @@ var DatabaseManager = /** @class */ (function () {
                 }
                 this.dbConnection.connect(function (err) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                if (err) {
-                                    console.log("Database connection error occured!");
-                                    console.log(err.stack);
-                                    throw (err);
-                                }
-                                this.connected = true;
-                                console.log("Connected to ".concat(this.databaseName));
-                                return [4 /*yield*/, this.processLogin("$2y$15$cIPJpSiW8bASzQWZKWPtkOpT06EaRvdvc.Mx4RadicwQ891gIbEwi")];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
+                        if (err) {
+                            console.log("Database connection error occured!");
+                            console.log(err.stack);
+                            throw (err);
                         }
+                        this.connected = true;
+                        console.log("Connected to ".concat(this.databaseName));
+                        return [2 /*return*/];
                     });
                 }); });
                 return [2 /*return*/];
             });
         });
     };
-    DatabaseManager.prototype.processLogin = function (pwdHash) {
+    DatabaseManager.prototype.processLogin = function (user, pwdHash) {
         return __awaiter(this, void 0, void 0, function () {
-            var databaseResult, userId;
+            var query, databaseResult, userId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT id FROM user WHERE passwort = \"".concat(pwdHash, "\""))];
+                    case 0:
+                        query = "SELECT id FROM user WHERE email= \"".concat(user, "\" AND passwort = \"").concat(pwdHash, "\"");
+                        console.log(query);
+                        return [4 /*yield*/, this.runQuery(query)];
                     case 1:
                         databaseResult = _a.sent();
                         userId = -1;
                         if (databaseResult.length > 0) {
                             userId = parseInt(databaseResult[0].id);
                         }
-                        console.log(userId);
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 resolve(userId);
                             })];
@@ -113,21 +101,22 @@ var DatabaseManager = /** @class */ (function () {
     };
     DatabaseManager.prototype.runQuery = function (query) {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
-                if (this.connected) {
-                    this.dbConnection.query(query, function (err, results, fields) {
-                        if (err) {
-                            throw (err);
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        if (_this.connected) {
+                            _this.dbConnection.query(query, function (err, results, fields) {
+                                if (err) {
+                                    console.log("Error", err);
+                                    throw (err);
+                                }
+                                resolve(results);
+                            });
                         }
-                        return new Promise(function (resolve, reject) {
-                            resolve(results);
-                        });
-                    });
-                }
-                else {
-                    throw ("Try to query but database is not connected");
-                }
-                return [2 /*return*/];
+                        else {
+                            throw ("Try to query but database is not connected");
+                        }
+                    })];
             });
         });
     };

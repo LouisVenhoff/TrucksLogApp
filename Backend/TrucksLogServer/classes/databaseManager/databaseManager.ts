@@ -25,7 +25,7 @@ class DatabaseManager {
         this.dbConnection = null;
 
         if (autoConnect) {
-            async () => {await this.connect()};
+            this.connect();
         }
 
     }
@@ -53,23 +53,21 @@ class DatabaseManager {
 
             console.log(`Connected to ${this.databaseName}`);
 
-           await this.processLogin("Password!");
+
         });
 
     }
 
-    public async processLogin(pwdHash: string):Promise<number> {
+    public async processLogin(user:string, pwdHash: string): Promise<number> {
 
-        let databaseResult:any = await this.runQuery(`SELECT id FROM user WHERE passwort = "${pwdHash}"`);
-        
+        let databaseResult: any = await this.runQuery(`SELECT id FROM user WHERE email= "${user}" AND passwort = "${pwdHash}"`);
+
         let userId = -1;
 
         if(databaseResult.length > 0)
         {
             userId = parseInt(databaseResult[0].id);
         }
-
-        console.log(userId);
 
         return new Promise((resolve, reject) => {
             resolve(userId);
@@ -79,20 +77,24 @@ class DatabaseManager {
 
     private async runQuery(query: string): Promise<any> {
 
-        if (this.connected) {
-            this.dbConnection.query(query, (err: any, results: any, fields: any) => {
-                if (err) {
-                    throw (err);
-                }
-                return new Promise((resolve, reject) => {
-                    resolve(results);
-                });
 
-            });
-        }
-        else {
-            throw ("Try to query but database is not connected");
-        }
+        return new Promise((resolve, reject) => {
+            if (this.connected) {
+                this.dbConnection.query(query, (err: any, results: any, fields: any) => {
+                    if (err) {
+                        console.log("Error", err)
+                        throw (err);
+                    }
+                   resolve(results);
+                });
+            }
+            else {
+                throw ("Try to query but database is not connected");
+            }
+        });
+
+
+
     }
 
 

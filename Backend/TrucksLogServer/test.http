@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/v1/login
+content-Type: application/json
+
+{
+    "mail":"blackjocker01@dn-connect.de",
+    "passwd":"$2y$15$cIPJpSiW8bASzQWZKWPtkOhAHUIsT4RBEQd8BSWUZuD7n.JaiTDyD"
+}
