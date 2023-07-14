@@ -28,6 +28,19 @@ fastify.post("/api/v1/login", async (req, res) => {
 
 });
 
+//TODO: Get all Tours of an UserId
+
+fastify.post("/api/v1/GetTours", async (req, res) => {
+    let userId:number = parseInt(req.body.userId);
+    let pwdHash:string = req.body.pwdHash;
+    let payloadJSON:string = req.body.payload;
+
+    let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+
+    //TODO:Send error or read Dataset
+});
+
+
 const startServer = (conf: Config) => {
 
     dbManager = new DatabaseManager(conf, true);

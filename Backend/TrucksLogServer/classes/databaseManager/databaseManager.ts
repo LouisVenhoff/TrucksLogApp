@@ -2,6 +2,11 @@ import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { Config } from "../configReader/configReader";
 const mysql = require("mysql");
 
+export type ValidationObj = {
+    userId:number,
+    pwdHash:string
+}
+
 class DatabaseManager {
 
     private hostName: string;
@@ -72,6 +77,22 @@ class DatabaseManager {
         return new Promise((resolve, reject) => {
             resolve(userId);
         });
+
+    }
+
+    public async validateRequest(data: ValidationObj):Promise<boolean>{
+
+        let userPassword:string = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
+
+        return new Promise((resolve, reject) => {
+            if(userPassword === data.pwdHash){
+                resolve(true);
+            }
+            else{
+                resolve(false);
+            }
+        });
+
 
     }
 
