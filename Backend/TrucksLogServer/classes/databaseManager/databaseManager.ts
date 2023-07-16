@@ -1,5 +1,6 @@
 import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { Config } from "../configReader/configReader";
+import Tour from "../tour/tour";
 const mysql = require("mysql");
 
 export type ValidationObj = {
@@ -96,6 +97,23 @@ class DatabaseManager {
 
     }
 
+    
+
+
+    public async loadTours(userId:number)
+    {
+        //TODO: Laded alle benötigten Informationen aus einer Tour und Speichere diese in eine Tour Objekt
+        
+        let userClientKey:any = await this.getClientKey(userId);
+        
+        let userTours:any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key);
+        
+        let testTour:Tour = new Tour(userTours[0]);
+    
+        //TODO: Hier weiter
+
+    }
+
     private async runQuery(query: string, ...args): Promise<any> {
 
 
@@ -116,6 +134,15 @@ class DatabaseManager {
 
 
 
+    }
+
+    private async getClientKey(userId:number):Promise<string>
+    {
+        let clientKey:string = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
+        
+        return new Promise((resolve, reject) => {
+            resolve(clientKey);
+        });
     }
 
 

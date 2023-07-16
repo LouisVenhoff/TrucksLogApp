@@ -76,7 +76,14 @@ fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, 
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
             case 1:
                 passValid = _a.sent();
-                console.log(passValid);
+                if (!passValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
+                 {
+                    res.code(403).send();
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, dbManager.loadTours(userId)];
+            case 2:
+                _a.sent();
                 return [2 /*return*/];
         }
     });

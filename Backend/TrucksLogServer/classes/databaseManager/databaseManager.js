@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var tour_1 = require("../tour/tour");
 var mysql = require("mysql");
 var DatabaseManager = /** @class */ (function () {
     function DatabaseManager(databaseConfig, autoConnect) {
@@ -116,6 +117,24 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.loadTours = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userClientKey, userTours, testTour;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getClientKey(userId)];
+                    case 1:
+                        userClientKey = _a.sent();
+                        return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key)];
+                    case 2:
+                        userTours = _a.sent();
+                        testTour = new tour_1.default(userTours[0]);
+                        console.log(testTour);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.runQuery = function (query) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -138,6 +157,21 @@ var DatabaseManager = /** @class */ (function () {
                             throw ("Try to query but database is not connected");
                         }
                     })];
+            });
+        });
+    };
+    DatabaseManager.prototype.getClientKey = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var clientKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key FROM user WHERE id = ?", userId)];
+                    case 1:
+                        clientKey = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                resolve(clientKey);
+                            })];
+                }
             });
         });
     };

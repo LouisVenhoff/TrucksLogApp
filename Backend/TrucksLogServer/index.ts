@@ -43,7 +43,7 @@ fastify.post("/api/v1/GetTours", async (req, res) => {
         return;
     }
 
-    
+    await dbManager.loadTours(userId);
 
 
     //TODO:Send full Dataset of user
