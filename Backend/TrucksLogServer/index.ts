@@ -45,7 +45,7 @@ fastify.post("/api/v1/GetTours", async (req, res) => {
     }
 
     let tours:Tour[] = await dbManager.loadTours(userId);
-
+    
     res.code(200);
     res.send(JSON.stringify(tours));
 
