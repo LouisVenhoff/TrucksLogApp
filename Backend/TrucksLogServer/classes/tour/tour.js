@@ -76,6 +76,7 @@ var Tour = /** @class */ (function () {
         this.month = dataset.monat;
         this.year = dataset.year;
         this.kw = dataset.kw;
+        this.tourId = dataset.id;
         this.startPos = dataset.startort;
         this.startCompany = dataset.startfirma;
         this.targetPos = dataset.zielort;

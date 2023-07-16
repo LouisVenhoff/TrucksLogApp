@@ -23,12 +23,14 @@ class Tour
     public game:Game; //
     public nickname:string; //
     public company:string;
+    
 
     public day:number;
     public month:number;
     public year:number;
     public kw:number;
 
+    public tourId:number;
     public startPos:string;
     public startCompany:string;
     public targetPos:string;
@@ -147,6 +149,7 @@ class Tour
         this.month = dataset.monat;
         this.year = dataset.year;
         this.kw = dataset.kw;
+        this.tourId = dataset.id;
         this.startPos = dataset.startort;
         this.startCompany = dataset.startfirma;
         this.targetPos = dataset.zielort;
