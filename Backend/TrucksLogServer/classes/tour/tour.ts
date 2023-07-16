@@ -23,12 +23,14 @@ class Tour
     public game:Game; //
     public nickname:string; //
     public company:string;
+    
 
     public day:number;
     public month:number;
     public year:number;
     public kw:number;
 
+    public tourId:number;
     public startPos:string;
     public startCompany:string;
     public targetPos:string;
@@ -73,6 +75,69 @@ class Tour
         this.resolveData(dataset);
     }
 
+    public get tourValid():boolean
+    {
+        return(this.checkData())
+    }
+
+    private checkData():boolean
+    {
+        let dataOK:boolean = true;
+
+        //Gefahrene Kilometer
+        if(this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2))
+        {
+            dataOK = false;
+        }
+
+        //VS VC TOUR
+        if(this.vsTour !== 0)
+        {
+            dataOK = false;
+        }
+
+        if(this.ceTour !== 0)
+        {
+            dataOK = false;
+        }
+
+        //Gesamt Kilometer zwische 7999 und 1
+        if(this.fullDistance > 8000 || this.fullDistance < 1)
+        {
+            dataOK = false;
+        }
+
+        //Einkommen nicht gleich 600
+        if(this.income === 600)
+        {
+            dataOK = false;
+        }
+
+        //Kilometerpreis
+        if(this.game === Game.ETS){
+            if(this.kmPrice > 180){
+                dataOK = false;
+            }
+        }
+
+        if(this.game === Game.ATS){
+            if(this.kmPrice > 270){
+                dataOK = false;
+            }
+        }
+
+        //EndTimestamp
+        if(this.endTime === "")
+        {
+            dataOK = false;
+        }
+        
+        return dataOK;
+        //TODO: Check Km
+
+    }
+
+
     private resolveData(dataset:any)
     {
        
@@ -84,6 +149,7 @@ class Tour
         this.month = dataset.monat;
         this.year = dataset.year;
         this.kw = dataset.kw;
+        this.tourId = dataset.id;
         this.startPos = dataset.startort;
         this.startCompany = dataset.startfirma;
         this.targetPos = dataset.zielort;

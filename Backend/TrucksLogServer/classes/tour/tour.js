@@ -21,6 +21,52 @@ var Tour = /** @class */ (function () {
     function Tour(dataset) {
         this.resolveData(dataset);
     }
+    Object.defineProperty(Tour.prototype, "tourValid", {
+        get: function () {
+            return (this.checkData());
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Tour.prototype.checkData = function () {
+        var dataOK = true;
+        //Gefahrene Kilometer
+        if (this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2)) {
+            dataOK = false;
+        }
+        //VS VC TOUR
+        if (this.vsTour !== 0) {
+            dataOK = false;
+        }
+        if (this.ceTour !== 0) {
+            dataOK = false;
+        }
+        //Gesamt Kilometer zwische 7999 und 1
+        if (this.fullDistance > 8000 || this.fullDistance < 1) {
+            dataOK = false;
+        }
+        //Einkommen nicht gleich 600
+        if (this.income === 600) {
+            dataOK = false;
+        }
+        //Kilometerpreis
+        if (this.game === Game.ETS) {
+            if (this.kmPrice > 180) {
+                dataOK = false;
+            }
+        }
+        if (this.game === Game.ATS) {
+            if (this.kmPrice > 270) {
+                dataOK = false;
+            }
+        }
+        //EndTimestamp
+        if (this.endTime === "") {
+            dataOK = false;
+        }
+        return dataOK;
+        //TODO: Check Km
+    };
     Tour.prototype.resolveData = function (dataset) {
         this.game = this.resolveGame(dataset.spiel);
         this.state = this.resolveState(dataset.status);
@@ -30,6 +76,7 @@ var Tour = /** @class */ (function () {
         this.month = dataset.monat;
         this.year = dataset.year;
         this.kw = dataset.kw;
+        this.tourId = dataset.id;
         this.startPos = dataset.startort;
         this.startCompany = dataset.startfirma;
         this.targetPos = dataset.zielort;
