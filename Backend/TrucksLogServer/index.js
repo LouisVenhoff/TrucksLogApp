@@ -51,7 +51,6 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.body.mail, req.body.passwd);
                 if (dbManager == undefined) {
                     res.code(500).send();
                     return [2 /*return*/];
@@ -61,6 +60,23 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
                 userId = _a.sent();
                 console.log(userId);
                 res.code(200).send("\"userId\":\"".concat(userId, "\""));
+                return [2 /*return*/];
+        }
+    });
+}); });
+//TODO: Get all Tours of an UserId
+fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, pwdHash, payloadJSON, passValid;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userId = parseInt(req.body.userId);
+                pwdHash = req.body.pwdHash;
+                payloadJSON = req.body.payload;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
+            case 1:
+                passValid = _a.sent();
+                console.log(passValid);
                 return [2 /*return*/];
         }
     });

@@ -36,8 +36,17 @@ fastify.post("/api/v1/GetTours", async (req, res) => {
     let payloadJSON:string = req.body.payload;
 
     let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+    
+    if(!passValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
+    {
+        res.code(403).send();
+        return;
+    }
 
-    //TODO:Send error or read Dataset
+    
+
+
+    //TODO:Send full Dataset of user
 });
 
 

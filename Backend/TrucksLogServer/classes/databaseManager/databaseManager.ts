@@ -82,10 +82,10 @@ class DatabaseManager {
 
     public async validateRequest(data: ValidationObj):Promise<boolean>{
 
-        let userPassword:string = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
+        let userPassword:any = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
 
         return new Promise((resolve, reject) => {
-            if(userPassword === data.pwdHash){
+            if(userPassword[0].passwort === data.pwdHash){
                 resolve(true);
             }
             else{

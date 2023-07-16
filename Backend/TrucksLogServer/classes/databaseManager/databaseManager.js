@@ -96,6 +96,26 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.validateRequest = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userPassword;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId)];
+                    case 1:
+                        userPassword = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                if (userPassword[0].passwort === data.pwdHash) {
+                                    resolve(true);
+                                }
+                                else {
+                                    resolve(false);
+                                }
+                            })];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.runQuery = function (query) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
