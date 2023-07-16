@@ -100,7 +100,7 @@ class DatabaseManager {
     
 
 
-    public async loadTours(userId:number)
+    public async loadTours(userId:number):Promise<Tour[]>
     {
         //TODO: Laded alle benötigten Informationen aus einer Tour und Speichere diese in eine Tour Objekt
         
@@ -108,9 +108,21 @@ class DatabaseManager {
         
         let userTours:any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key);
         
-        let testTour:Tour = new Tour(userTours[0]);
-    
-        //TODO: Hier weiter
+        return new Promise((resolve, reject) => {
+
+            if(userTours.length === 0)
+            {
+                resolve([]);
+            }
+
+            let tourArr:Tour[] = [];
+
+            for(let i = 0; i < userTours.length; i++){
+                tourArr.push(new Tour(userTours[i]));
+            }
+
+            resolve(tourArr);
+        });
 
     }
 

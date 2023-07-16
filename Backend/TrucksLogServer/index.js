@@ -66,7 +66,7 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
 }); });
 //TODO: Get all Tours of an UserId
 fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, pwdHash, payloadJSON, passValid;
+    var userId, pwdHash, payloadJSON, passValid, tours;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -83,7 +83,9 @@ fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, 
                 }
                 return [4 /*yield*/, dbManager.loadTours(userId)];
             case 2:
-                _a.sent();
+                tours = _a.sent();
+                res.code(200);
+                res.send(JSON.stringify(tours));
                 return [2 /*return*/];
         }
     });

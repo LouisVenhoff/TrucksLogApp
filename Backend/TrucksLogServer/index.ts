@@ -1,5 +1,6 @@
 import ConfigReader, { Config } from "./classes/configReader/configReader";
 import DatabaseManager from "./classes/databaseManager/databaseManager";
+import Tour from "./classes/tour/tour";
 
 const fastify = require("fastify")({
     logger: false
@@ -43,7 +44,10 @@ fastify.post("/api/v1/GetTours", async (req, res) => {
         return;
     }
 
-    await dbManager.loadTours(userId);
+    let tours:Tour[] = await dbManager.loadTours(userId);
+
+    res.code(200);
+    res.send(JSON.stringify(tours));
 
 
     //TODO:Send full Dataset of user

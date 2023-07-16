@@ -119,7 +119,7 @@ var DatabaseManager = /** @class */ (function () {
     };
     DatabaseManager.prototype.loadTours = function (userId) {
         return __awaiter(this, void 0, void 0, function () {
-            var userClientKey, userTours, testTour;
+            var userClientKey, userTours;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getClientKey(userId)];
@@ -128,9 +128,16 @@ var DatabaseManager = /** @class */ (function () {
                         return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key)];
                     case 2:
                         userTours = _a.sent();
-                        testTour = new tour_1.default(userTours[0]);
-                        console.log(testTour);
-                        return [2 /*return*/];
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                if (userTours.length === 0) {
+                                    resolve([]);
+                                }
+                                var tourArr = [];
+                                for (var i = 0; i < userTours.length; i++) {
+                                    tourArr.push(new tour_1.default(userTours[i]));
+                                }
+                                resolve(tourArr);
+                            })];
                 }
             });
         });
