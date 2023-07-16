@@ -1,5 +1,6 @@
 import ConfigReader, { Config } from "./classes/configReader/configReader";
 import DatabaseManager from "./classes/databaseManager/databaseManager";
+import Tour from "./classes/tour/tour";
 
 const fastify = require("fastify")({
     logger: false
@@ -27,6 +28,31 @@ fastify.post("/api/v1/login", async (req, res) => {
     res.code(200).send(`"userId":"${userId}"`);
 
 });
+
+//TODO: Get all Tours of an UserId
+
+fastify.post("/api/v1/GetTours", async (req, res) => {
+    let userId:number = parseInt(req.body.userId);
+    let pwdHash:string = req.body.pwdHash;
+    let payloadJSON:string = req.body.payload;
+
+    let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+    
+    if(!passValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
+    {
+        res.code(403).send();
+        return;
+    }
+
+    let tours:Tour[] = await dbManager.loadTours(userId);
+
+    res.code(200);
+    res.send(JSON.stringify(tours));
+
+
+    //TODO:Send full Dataset of user
+});
+
 
 const startServer = (conf: Config) => {
 

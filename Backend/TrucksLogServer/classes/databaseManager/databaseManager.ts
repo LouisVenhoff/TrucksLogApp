@@ -1,6 +1,12 @@
 import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { Config } from "../configReader/configReader";
+import Tour from "../tour/tour";
 const mysql = require("mysql");
+
+export type ValidationObj = {
+    userId:number,
+    pwdHash:string
+}
 
 class DatabaseManager {
 
@@ -75,6 +81,51 @@ class DatabaseManager {
 
     }
 
+    public async validateRequest(data: ValidationObj):Promise<boolean>{
+
+        let userPassword:any = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
+
+        return new Promise((resolve, reject) => {
+            if(userPassword[0].passwort === data.pwdHash){
+                resolve(true);
+            }
+            else{
+                resolve(false);
+            }
+        });
+
+
+    }
+
+    
+
+
+    public async loadTours(userId:number):Promise<Tour[]>
+    {
+        //TODO: Laded alle benötigten Informationen aus einer Tour und Speichere diese in eine Tour Objekt
+        
+        let userClientKey:any = await this.getClientKey(userId);
+        
+        let userTours:any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key);
+        
+        return new Promise((resolve, reject) => {
+
+            if(userTours.length === 0)
+            {
+                resolve([]);
+            }
+
+            let tourArr:Tour[] = [];
+
+            for(let i = 0; i < userTours.length; i++){
+                tourArr.push(new Tour(userTours[i]));
+            }
+
+            resolve(tourArr);
+        });
+
+    }
+
     private async runQuery(query: string, ...args): Promise<any> {
 
 
@@ -95,6 +146,15 @@ class DatabaseManager {
 
 
 
+    }
+
+    private async getClientKey(userId:number):Promise<string>
+    {
+        let clientKey:string = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
+        
+        return new Promise((resolve, reject) => {
+            resolve(clientKey);
+        });
     }
 
 

@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var tour_1 = require("../tour/tour");
 var mysql = require("mysql");
 var DatabaseManager = /** @class */ (function () {
     function DatabaseManager(databaseConfig, autoConnect) {
@@ -96,6 +97,51 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.validateRequest = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userPassword;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId)];
+                    case 1:
+                        userPassword = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                if (userPassword[0].passwort === data.pwdHash) {
+                                    resolve(true);
+                                }
+                                else {
+                                    resolve(false);
+                                }
+                            })];
+                }
+            });
+        });
+    };
+    DatabaseManager.prototype.loadTours = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userClientKey, userTours;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getClientKey(userId)];
+                    case 1:
+                        userClientKey = _a.sent();
+                        return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key)];
+                    case 2:
+                        userTours = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                if (userTours.length === 0) {
+                                    resolve([]);
+                                }
+                                var tourArr = [];
+                                for (var i = 0; i < userTours.length; i++) {
+                                    tourArr.push(new tour_1.default(userTours[i]));
+                                }
+                                resolve(tourArr);
+                            })];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.runQuery = function (query) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -118,6 +164,21 @@ var DatabaseManager = /** @class */ (function () {
                             throw ("Try to query but database is not connected");
                         }
                     })];
+            });
+        });
+    };
+    DatabaseManager.prototype.getClientKey = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var clientKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key FROM user WHERE id = ?", userId)];
+                    case 1:
+                        clientKey = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                resolve(clientKey);
+                            })];
+                }
             });
         });
     };

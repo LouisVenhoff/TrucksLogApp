@@ -51,7 +51,6 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.body.mail, req.body.passwd);
                 if (dbManager == undefined) {
                     res.code(500).send();
                     return [2 /*return*/];
@@ -61,6 +60,32 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
                 userId = _a.sent();
                 console.log(userId);
                 res.code(200).send("\"userId\":\"".concat(userId, "\""));
+                return [2 /*return*/];
+        }
+    });
+}); });
+//TODO: Get all Tours of an UserId
+fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, pwdHash, payloadJSON, passValid, tours;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userId = parseInt(req.body.userId);
+                pwdHash = req.body.pwdHash;
+                payloadJSON = req.body.payload;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
+            case 1:
+                passValid = _a.sent();
+                if (!passValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
+                 {
+                    res.code(403).send();
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, dbManager.loadTours(userId)];
+            case 2:
+                tours = _a.sent();
+                res.code(200);
+                res.send(JSON.stringify(tours));
                 return [2 /*return*/];
         }
     });
