@@ -86,12 +86,20 @@ class DatabaseManager {
         let userPassword:any = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
 
         return new Promise((resolve, reject) => {
-            if(userPassword[0].passwort === data.pwdHash){
-                resolve(true);
+            try
+            {
+                if(userPassword[0].passwort === data.pwdHash){
+                    resolve(true);
+                }
+                else{
+                    resolve(false);
+                }
             }
-            else{
+            catch
+            {
                 resolve(false);
             }
+            
         });
 
 

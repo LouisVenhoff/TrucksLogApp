@@ -106,10 +106,15 @@ var DatabaseManager = /** @class */ (function () {
                     case 1:
                         userPassword = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
-                                if (userPassword[0].passwort === data.pwdHash) {
-                                    resolve(true);
+                                try {
+                                    if (userPassword[0].passwort === data.pwdHash) {
+                                        resolve(true);
+                                    }
+                                    else {
+                                        resolve(false);
+                                    }
                                 }
-                                else {
+                                catch (_a) {
                                     resolve(false);
                                 }
                             })];
