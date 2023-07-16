@@ -119,7 +119,7 @@ class Tour
         }
 
         if(this.game === Game.ATS){
-            if(this.kmPrice < 270){
+            if(this.kmPrice > 270){
                 dataOK = false;
             }
         }
