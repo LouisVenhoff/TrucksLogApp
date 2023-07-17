@@ -134,6 +134,17 @@ class DatabaseManager {
 
     }
 
+    public async loadTourById(tourId:number):Promise<Tour>
+    {
+        let resolvedTour:any = await this.runQuery("SELECT * FROM c_tourtable WHERE id = ?", tourId);
+
+        let outTour = new Tour(resolvedTour[0]);
+
+        return new Promise((resolve, reject) => {
+            resolve(outTour);
+        });
+    }
+
     private async runQuery(query: string, ...args): Promise<any> {
 
 

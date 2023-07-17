@@ -54,6 +54,28 @@ fastify.post("/api/v1/GetTours", async (req, res) => {
 });
 
 
+fastify.post("/api/v1/calcTour", async (req, res) => {
+    //TODO: Check and Calculate Tour
+
+    let tourId:number = parseInt(req.body.tourId);
+    let userId:number = req.body.userId;
+    let pwdHash:string = req.body.pwdHash;
+
+    let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+
+    if(!passValid){
+        res.code(403).send();
+        return;
+    }
+
+    let currentTour:Tour = await dbManager.loadTourById(tourId);
+
+    res.code(200).send(currentTour);
+
+    //TODO: Generate TourObj
+});
+
+
 const startServer = (conf: Config) => {
 
     dbManager = new DatabaseManager(conf, true);
