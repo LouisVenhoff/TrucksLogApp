@@ -65,7 +65,7 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
     });
 }); });
 //TODO: Get all Tours of an UserId
-fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, pwdHash, payloadJSON, passValid, tours;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -86,6 +86,29 @@ fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, 
                 tours = _a.sent();
                 res.code(200);
                 res.send(JSON.stringify(tours));
+                return [2 /*return*/];
+        }
+    });
+}); });
+fastify.post("/api/v1/getTour", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var tourId, userId, pwdHash, passValid, currentTour;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                tourId = parseInt(req.body.tourId);
+                userId = parseInt(req.body.userId);
+                pwdHash = req.body.pwdHash;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
+            case 1:
+                passValid = _a.sent();
+                if (!passValid) {
+                    res.code(403).send();
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, dbManager.loadTourById(tourId)];
+            case 2:
+                currentTour = _a.sent();
+                res.code(200).send(currentTour);
                 return [2 /*return*/];
         }
     });

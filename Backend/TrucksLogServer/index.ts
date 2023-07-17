@@ -31,7 +31,7 @@ fastify.post("/api/v1/login", async (req, res) => {
 
 //TODO: Get all Tours of an UserId
 
-fastify.post("/api/v1/GetTours", async (req, res) => {
+fastify.post("/api/v1/getTours", async (req, res) => {
     let userId:number = parseInt(req.body.userId);
     let pwdHash:string = req.body.pwdHash;
     let payloadJSON:string = req.body.payload;
@@ -52,6 +52,24 @@ fastify.post("/api/v1/GetTours", async (req, res) => {
 
     //TODO:Send full Dataset of user
 });
+
+fastify.post("/api/v1/getTour", async (req, res) => {
+    let tourId:number = parseInt(req.body.tourId);
+    let userId:number = parseInt(req.body.userId);
+    let pwdHash:string = req.body.pwdHash;
+
+    let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+
+    if(!passValid)
+    {
+        res.code(403).send();
+        return;
+    }
+
+    let currentTour:Tour = await dbManager.loadTourById(tourId);
+
+    res.code(200).send(currentTour);
+})
 
 
 fastify.post("/api/v1/calcTour", async (req, res) => {
