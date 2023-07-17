@@ -84,6 +84,12 @@ class Tour
     {
         let dataOK:boolean = true;
 
+        //Status
+        if(this.state !== TourState.COMPLETED)
+        {
+            dataOK = false;
+        }
+
         //Gefahrene Kilometer
         if(this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2))
         {

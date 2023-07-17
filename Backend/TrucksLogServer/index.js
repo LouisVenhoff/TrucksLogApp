@@ -90,6 +90,36 @@ fastify.post("/api/v1/GetTours", function (req, res) { return __awaiter(void 0, 
         }
     });
 }); });
+fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var tourId, userId, pwdHash, passValid, currentTour;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                tourId = parseInt(req.body.tourId);
+                userId = req.body.userId;
+                pwdHash = req.body.pwdHash;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
+            case 1:
+                passValid = _a.sent();
+                if (!passValid) {
+                    res.code(403).send();
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, dbManager.loadTourById(tourId)];
+            case 2:
+                currentTour = _a.sent();
+                if (!currentTour.tourValid) {
+                    res.code(200).send(false);
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, dbManager.calculateTour(currentTour.tourId)];
+            case 3:
+                _a.sent();
+                res.code(200).send(true);
+                return [2 /*return*/];
+        }
+    });
+}); });
 var startServer = function (conf) {
     dbManager = new databaseManager_1.default(conf, true);
     fastify.listen({ port: conf.port }, function (err, addr) {

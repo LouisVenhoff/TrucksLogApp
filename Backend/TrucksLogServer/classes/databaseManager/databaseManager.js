@@ -147,6 +147,34 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.loadTourById = function (tourId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var resolvedTour, outTour;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE id = ?", tourId)];
+                    case 1:
+                        resolvedTour = _a.sent();
+                        outTour = new tour_1.default(resolvedTour[0]);
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                resolve(outTour);
+                            })];
+                }
+            });
+        });
+    };
+    DatabaseManager.prototype.calculateTour = function (tourId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("UPDATE c_tourtable SET status=\"Abgerechnet\" WHERE id=?", tourId)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.runQuery = function (query) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
