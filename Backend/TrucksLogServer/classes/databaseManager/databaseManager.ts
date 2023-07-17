@@ -145,6 +145,13 @@ class DatabaseManager {
         });
     }
 
+
+    public async calculateTour(tourId:number)
+    {
+        await this.runQuery(`UPDATE c_tourtable SET status="Abgerechnet" WHERE id=?`, tourId);
+    }
+
+
     private async runQuery(query: string, ...args): Promise<any> {
 
 

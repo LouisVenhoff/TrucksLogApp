@@ -70,9 +70,16 @@ fastify.post("/api/v1/calcTour", async (req, res) => {
 
     let currentTour:Tour = await dbManager.loadTourById(tourId);
 
-    res.code(200).send(currentTour);
+    if(!currentTour.tourValid)
+    {
+        res.code(200).send(false);
+        return;
+    }
 
-    //TODO: Generate TourObj
+    await dbManager.calculateTour(currentTour.tourId);
+
+    res.code(200).send(true);
+
 });
 
 

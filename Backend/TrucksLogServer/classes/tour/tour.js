@@ -30,6 +30,10 @@ var Tour = /** @class */ (function () {
     });
     Tour.prototype.checkData = function () {
         var dataOK = true;
+        //Status
+        if (this.state !== TourState.COMPLETED) {
+            dataOK = false;
+        }
         //Gefahrene Kilometer
         if (this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2)) {
             dataOK = false;
