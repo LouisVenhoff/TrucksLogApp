@@ -132,13 +132,13 @@ fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, 
             case 2:
                 currentTour = _a.sent();
                 if (!currentTour.tourValid) {
-                    res.code(200).send(false);
+                    res.code(200).send({ calcResult: currentTour.calcState });
                     return [2 /*return*/];
                 }
                 return [4 /*yield*/, dbManager.calculateTour(currentTour.tourId)];
             case 3:
                 _a.sent();
-                res.code(200).send(true);
+                res.code(200).send({ calcResult: currentTour.calcState });
                 return [2 /*return*/];
         }
     });

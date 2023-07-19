@@ -90,13 +90,13 @@ fastify.post("/api/v1/calcTour", async (req, res) => {
 
     if(!currentTour.tourValid)
     {
-        res.code(200).send(false);
+        res.code(200).send({calcResult: currentTour.calcState});
         return;
     }
 
     await dbManager.calculateTour(currentTour.tourId);
 
-    res.code(200).send(true);
+    res.code(200).send({calcResult: currentTour.calcState});
 
 });
 

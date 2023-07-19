@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TourState = exports.Game = void 0;
+exports.CalcState = exports.TourState = exports.Game = void 0;
 var Game;
 (function (Game) {
     Game[Game["ETS"] = 0] = "ETS";
@@ -17,59 +17,81 @@ var TourState;
     TourState[TourState["BILLING"] = 6] = "BILLING";
     TourState[TourState["BILLED"] = 7] = "BILLED";
 })(TourState || (exports.TourState = TourState = {}));
+var CalcState;
+(function (CalcState) {
+    CalcState[CalcState["TOUR_OK"] = 0] = "TOUR_OK";
+    CalcState[CalcState["TOUR_STATE_ERROR"] = 1] = "TOUR_STATE_ERROR";
+    CalcState[CalcState["DISTANCE_INCORRECT"] = 2] = "DISTANCE_INCORRECT";
+    CalcState[CalcState["VS_TOUR_NOT_NULL"] = 3] = "VS_TOUR_NOT_NULL";
+    CalcState[CalcState["CE_TOUR_NOT_NULL"] = 4] = "CE_TOUR_NOT_NULL";
+    CalcState[CalcState["NO_SALARY_TOUR_TYPE"] = 5] = "NO_SALARY_TOUR_TYPE";
+    CalcState[CalcState["KILOMETER_PRICE_ERROR"] = 6] = "KILOMETER_PRICE_ERROR";
+    CalcState[CalcState["END_TIMESTAMP_IS_NULL"] = 7] = "END_TIMESTAMP_IS_NULL";
+})(CalcState || (exports.CalcState = CalcState = {}));
 var Tour = /** @class */ (function () {
     function Tour(dataset) {
         this.resolveData(dataset);
     }
     Object.defineProperty(Tour.prototype, "tourValid", {
         get: function () {
-            return (this.checkData());
+            if (this.checkData() == CalcState.TOUR_OK) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Tour.prototype, "calcState", {
+        get: function () {
+            return this.checkData();
         },
         enumerable: false,
         configurable: true
     });
     Tour.prototype.checkData = function () {
-        var dataOK = true;
+        var state = CalcState.TOUR_OK;
         //Status
         if (this.state !== TourState.COMPLETED) {
-            dataOK = false;
+            state = CalcState.TOUR_STATE_ERROR;
         }
         //Gefahrene Kilometer
         if (this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2)) {
-            dataOK = false;
+            state = CalcState.DISTANCE_INCORRECT;
         }
         //VS VC TOUR
         if (this.vsTour !== 0) {
-            dataOK = false;
+            state = CalcState.VS_TOUR_NOT_NULL;
         }
         if (this.ceTour !== 0) {
-            dataOK = false;
+            state = CalcState.CE_TOUR_NOT_NULL;
         }
         //Gesamt Kilometer zwische 7999 und 1
         if (this.fullDistance > 8000 || this.fullDistance < 1) {
-            dataOK = false;
+            state = CalcState.DISTANCE_INCORRECT;
         }
         //Einkommen nicht gleich 600
         if (this.income === 600) {
-            dataOK = false;
+            state = CalcState.NO_SALARY_TOUR_TYPE;
         }
         //Kilometerpreis
         if (this.game === Game.ETS) {
             if (this.kmPrice > 180) {
-                dataOK = false;
+                state = CalcState.KILOMETER_PRICE_ERROR;
             }
         }
         if (this.game === Game.ATS) {
             if (this.kmPrice > 270) {
-                dataOK = false;
+                state = CalcState.KILOMETER_PRICE_ERROR;
             }
         }
         //EndTimestamp
         if (this.endTime === "") {
-            dataOK = false;
+            state = CalcState.END_TIMESTAMP_IS_NULL;
         }
-        return dataOK;
-        //TODO: Check Km
+        return state;
     };
     Tour.prototype.resolveData = function (dataset) {
         this.game = this.resolveGame(dataset.spiel);

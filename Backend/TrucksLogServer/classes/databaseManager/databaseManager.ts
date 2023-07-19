@@ -148,7 +148,7 @@ class DatabaseManager {
 
     public async calculateTour(tourId:number)
     {
-        await this.runQuery(`UPDATE c_tourtable SET status="Abgerechnet" WHERE id=?`, tourId);
+        await this.runQuery(`UPDATE c_tourtable SET status="In Abrechnung" WHERE id=?`, tourId);
     }
 
 

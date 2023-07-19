@@ -1,152 +1,158 @@
-export enum Game
-{
+export enum Game {
     ETS,
     ATS
 }
 
-export enum TourState{
+export enum TourState {
     AUF_FAHRT,
     COMPLETED,
     REJECTED,
     CANCELLED,
-    OLD, 
+    OLD,
     IN_CHECK,
     BILLING,
     BILLED
 }
 
+export enum CalcState {
+    TOUR_OK,
+    TOUR_STATE_ERROR,
+    DISTANCE_INCORRECT,
+    VS_TOUR_NOT_NULL,
+    CE_TOUR_NOT_NULL,
+    NO_SALARY_TOUR_TYPE,
+    KILOMETER_PRICE_ERROR,
+    END_TIMESTAMP_IS_NULL
+}
 
 
-class Tour
-{
 
-    public game:Game; //
-    public nickname:string; //
-    public company:string;
-    
+class Tour {
 
-    public day:number;
-    public month:number;
-    public year:number;
-    public kw:number;
-
-    public tourId:number;
-    public startPos:string;
-    public startCompany:string;
-    public targetPos:string;
-    public targetCompany:string;
-    
-    public weight:string;
-    public charge:string;
-    public income:number;
-    public kmPrice:number;
-
-    public fullDistance:number;
-    public restDistance:number;
-    public traveledDistance:number;
-    
-    public startTime:string;
-    public endTime:string;
-
-    public freightDamage:number;
-
-    public tankVolume:number;
-    public startFuel:number;
-    public endFuel:number;
-    public fuelConsumption:number;
-
-    public truckODOStart:number;
-    public truckODOEnd:number;
-    public truckDistance:number;
-
-    public maxSpeed:number;
-
-    public state:TourState;
-    public billDate:string;
-
-    public notes:string;
-
-    public ceTour:number;
-    public vsTour:number;
+    public game: Game; //
+    public nickname: string; //
+    public company: string;
 
 
-    constructor(dataset:any)
-    {
+    public day: number;
+    public month: number;
+    public year: number;
+    public kw: number;
+
+    public tourId: number;
+    public startPos: string;
+    public startCompany: string;
+    public targetPos: string;
+    public targetCompany: string;
+
+    public weight: string;
+    public charge: string;
+    public income: number;
+    public kmPrice: number;
+
+    public fullDistance: number;
+    public restDistance: number;
+    public traveledDistance: number;
+
+    public startTime: string;
+    public endTime: string;
+
+    public freightDamage: number;
+
+    public tankVolume: number;
+    public startFuel: number;
+    public endFuel: number;
+    public fuelConsumption: number;
+
+    public truckODOStart: number;
+    public truckODOEnd: number;
+    public truckDistance: number;
+
+    public maxSpeed: number;
+
+    public state: TourState;
+    public billDate: string;
+
+    public notes: string;
+
+    public ceTour: number;
+    public vsTour: number;
+
+
+    constructor(dataset: any) {
         this.resolveData(dataset);
     }
 
-    public get tourValid():boolean
-    {
-        return(this.checkData())
+    public get tourValid(): boolean {
+        if (this.checkData() == CalcState.TOUR_OK) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    private checkData():boolean
+    public get calcState():CalcState
     {
-        let dataOK:boolean = true;
+            return this.checkData();
+    }
+
+    private checkData():CalcState {
+        let state: CalcState = CalcState.TOUR_OK;
 
         //Status
-        if(this.state !== TourState.COMPLETED)
-        {
-            dataOK = false;
+        if (this.state !== TourState.COMPLETED) {
+            state = CalcState.TOUR_STATE_ERROR;
         }
 
         //Gefahrene Kilometer
-        if(this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2))
-        {
-            dataOK = false;
+        if (this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2)) {
+            state = CalcState.DISTANCE_INCORRECT;
         }
 
         //VS VC TOUR
-        if(this.vsTour !== 0)
-        {
-            dataOK = false;
+        if (this.vsTour !== 0) {
+            state = CalcState.VS_TOUR_NOT_NULL;
         }
 
-        if(this.ceTour !== 0)
-        {
-            dataOK = false;
+        if (this.ceTour !== 0) {
+            state = CalcState.CE_TOUR_NOT_NULL;
         }
 
         //Gesamt Kilometer zwische 7999 und 1
-        if(this.fullDistance > 8000 || this.fullDistance < 1)
-        {
-            dataOK = false;
+        if (this.fullDistance > 8000 || this.fullDistance < 1) {
+            state = CalcState.DISTANCE_INCORRECT;
         }
 
         //Einkommen nicht gleich 600
-        if(this.income === 600)
-        {
-            dataOK = false;
+        if (this.income === 600) {
+            state = CalcState.NO_SALARY_TOUR_TYPE;
         }
 
         //Kilometerpreis
-        if(this.game === Game.ETS){
-            if(this.kmPrice > 180){
-                dataOK = false;
+        if (this.game === Game.ETS) {
+            if (this.kmPrice > 180) {
+                state = CalcState.KILOMETER_PRICE_ERROR;
             }
         }
 
-        if(this.game === Game.ATS){
-            if(this.kmPrice > 270){
-                dataOK = false;
+        if (this.game === Game.ATS) {
+            if (this.kmPrice > 270) {
+                state = CalcState.KILOMETER_PRICE_ERROR;
             }
-        }
 
+        }
         //EndTimestamp
-        if(this.endTime === "")
-        {
-            dataOK = false;
+        if (this.endTime === "") {
+            state = CalcState.END_TIMESTAMP_IS_NULL;
         }
-        
-        return dataOK;
-        //TODO: Check Km
 
+        return state;
     }
 
 
-    private resolveData(dataset:any)
-    {
-       
+    private resolveData(dataset: any) {
+
         this.game = this.resolveGame(dataset.spiel);
         this.state = this.resolveState(dataset.status);
         this.nickname = dataset.nickname;
@@ -178,7 +184,7 @@ class Tour
         this.truckODOEnd = dataset.odometer_end;
         this.truckDistance = this.truckODOEnd - this.truckODOStart;
         this.maxSpeed = dataset.max_speed;
-        
+
         this.billDate = dataset.in_abrechnung;
 
         this.notes = dataset.admin_notizen;
@@ -187,49 +193,44 @@ class Tour
         this.vsTour = dataset.VS_TOUR;
     }
 
-    private resolveGame(gameName:string):Game
-    {
-        if(gameName == "Ets2")
-        {
-            return(Game.ETS);
+    private resolveGame(gameName: string): Game {
+        if (gameName == "Ets2") {
+            return (Game.ETS);
         }
-        else
-        {
-           return(Game.ATS);
+        else {
+            return (Game.ATS);
         }
 
     }
 
-    private resolveState(stateStr:string):TourState
-    {
-        switch(stateStr)
-        {
+    private resolveState(stateStr: string): TourState {
+        switch (stateStr) {
             case "Auf Fahrt":
-                    return(TourState.AUF_FAHRT); 
+                return (TourState.AUF_FAHRT);
                 break;
             case "Abgeschlossen":
-                    return(TourState.COMPLETED);
+                return (TourState.COMPLETED);
                 break;
             case "Abgeleht":
-                    return(TourState.REJECTED);
+                return (TourState.REJECTED);
                 break;
             case "Abgebrochen":
-                    return(TourState.CANCELLED);
+                return (TourState.CANCELLED);
                 break;
             case "Veraltet":
-                    return(TourState.OLD);
+                return (TourState.OLD);
                 break;
             case "In Prüfung":
-                    return(TourState.IN_CHECK);
+                return (TourState.IN_CHECK);
                 break;
             case "In Abrechnung":
-                    return(TourState.BILLING);
+                return (TourState.BILLING);
                 break;
             case "Abgerechnet":
-                    return(TourState.BILLED);
+                return (TourState.BILLED);
                 break;
             default:
-                    return(TourState.REJECTED);
+                return (TourState.REJECTED);
                 break;
         }
     }
