@@ -86,6 +86,16 @@ fastify.post("/api/v1/calcTour", async (req, res) => {
         return;
     }
 
+    let userIsTourDriver:boolean = await dbManager.checkUserTour(userId, tourId);
+    
+
+    if(!userIsTourDriver)
+    {
+        res.code(403).send();
+        return;
+    }
+
+
     let currentTour:Tour = await dbManager.loadTourById(tourId);
 
     if(!currentTour.tourValid)

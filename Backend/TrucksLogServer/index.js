@@ -114,7 +114,7 @@ fastify.post("/api/v1/getTour", function (req, res) { return __awaiter(void 0, v
     });
 }); });
 fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tourId, userId, pwdHash, passValid, currentTour;
+    var tourId, userId, pwdHash, passValid, userIsTourDriver, currentTour;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -128,15 +128,22 @@ fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, 
                     res.code(403).send();
                     return [2 /*return*/];
                 }
-                return [4 /*yield*/, dbManager.loadTourById(tourId)];
+                return [4 /*yield*/, dbManager.checkUserTour(userId, tourId)];
             case 2:
+                userIsTourDriver = _a.sent();
+                if (!userIsTourDriver) {
+                    res.code(403).send();
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, dbManager.loadTourById(tourId)];
+            case 3:
                 currentTour = _a.sent();
                 if (!currentTour.tourValid) {
                     res.code(200).send({ calcResult: currentTour.calcState });
                     return [2 /*return*/];
                 }
                 return [4 /*yield*/, dbManager.calculateTour(currentTour.tourId)];
-            case 3:
+            case 4:
                 _a.sent();
                 res.code(200).send({ calcResult: currentTour.calcState });
                 return [2 /*return*/];

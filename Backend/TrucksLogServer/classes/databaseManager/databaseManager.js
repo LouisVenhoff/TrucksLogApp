@@ -175,6 +175,26 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.checkUserTour = function (userId, tourId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var tourColumn;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT c_tourtable.id AS TourId, user.id AS UserId FROM c_tourtable \n        JOIN user on user.client_key = c_tourtable.client_key\n        WHERE user.id = ?\n        AND c_tourtable.id = ?;", userId, tourId)];
+                    case 1:
+                        tourColumn = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                console.log(tourColumn.length);
+                                if (tourColumn.length === 0) {
+                                    resolve(false);
+                                    return;
+                                }
+                                resolve(true);
+                            })];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.runQuery = function (query) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {

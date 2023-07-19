@@ -4,8 +4,8 @@ import Tour from "../tour/tour";
 const mysql = require("mysql");
 
 export type ValidationObj = {
-    userId:number,
-    pwdHash:string
+    userId: number,
+    pwdHash: string
 }
 
 class DatabaseManager {
@@ -64,14 +64,13 @@ class DatabaseManager {
 
     }
 
-    public async processLogin(user:string, pwdHash: string): Promise<number> {
+    public async processLogin(user: string, pwdHash: string): Promise<number> {
 
         let databaseResult: any = await this.runQuery(`SELECT id FROM user WHERE email= ? AND passwort = ? `, user, pwdHash);
 
         let userId = -1;
 
-        if(databaseResult.length > 0)
-        {
+        if (databaseResult.length > 0) {
             userId = parseInt(databaseResult[0].id);
         }
 
@@ -81,17 +80,16 @@ class DatabaseManager {
 
     }
 
-    public async validateRequest(data: ValidationObj):Promise<boolean>{
+    public async validateRequest(data: ValidationObj): Promise<boolean> {
 
-        let userPassword:any = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
+        let userPassword: any = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
 
         return new Promise((resolve, reject) => {
-            try
-            {
-                if(userPassword[0].passwort === data.pwdHash){
+            try {
+                if (userPassword[0].passwort === data.pwdHash) {
                     resolve(true);
                 }
-                else{
+                else {
                     resolve(false);
                 }
             }
@@ -99,33 +97,31 @@ class DatabaseManager {
             {
                 resolve(false);
             }
-            
+
         });
 
 
     }
 
-    
 
 
-    public async loadTours(userId:number):Promise<Tour[]>
-    {
+
+    public async loadTours(userId: number): Promise<Tour[]> {
         //TODO: Laded alle benötigten Informationen aus einer Tour und Speichere diese in eine Tour Objekt
-        
-        let userClientKey:any = await this.getClientKey(userId);
-        
-        let userTours:any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key);
-        
+
+        let userClientKey: any = await this.getClientKey(userId);
+
+        let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key);
+
         return new Promise((resolve, reject) => {
 
-            if(userTours.length === 0)
-            {
+            if (userTours.length === 0) {
                 resolve([]);
             }
 
-            let tourArr:Tour[] = [];
+            let tourArr: Tour[] = [];
 
-            for(let i = 0; i < userTours.length; i++){
+            for (let i = 0; i < userTours.length; i++) {
                 tourArr.push(new Tour(userTours[i]));
             }
 
@@ -134,9 +130,8 @@ class DatabaseManager {
 
     }
 
-    public async loadTourById(tourId:number):Promise<Tour>
-    {
-        let resolvedTour:any = await this.runQuery("SELECT * FROM c_tourtable WHERE id = ?", tourId);
+    public async loadTourById(tourId: number): Promise<Tour> {
+        let resolvedTour: any = await this.runQuery("SELECT * FROM c_tourtable WHERE id = ?", tourId);
 
         let outTour = new Tour(resolvedTour[0]);
 
@@ -146,9 +141,26 @@ class DatabaseManager {
     }
 
 
-    public async calculateTour(tourId:number)
-    {
+    public async calculateTour(tourId: number) {
         await this.runQuery(`UPDATE c_tourtable SET status="In Abrechnung" WHERE id=?`, tourId);
+    }
+
+    public async checkUserTour(userId: number, tourId: number): Promise<boolean> {
+        let tourColumn: any = await this.runQuery(`SELECT c_tourtable.id AS TourId, user.id AS UserId FROM c_tourtable 
+        JOIN user on user.client_key = c_tourtable.client_key
+        WHERE user.id = ?
+        AND c_tourtable.id = ?;`, userId, tourId);
+
+
+        return new Promise((resolve, reject) => {
+                console.log(tourColumn.length);
+            if (tourColumn.length === 0) {
+                resolve(false);
+                return;
+            }
+            resolve(true);
+        });
+
     }
 
 
@@ -157,12 +169,12 @@ class DatabaseManager {
 
         return new Promise((resolve, reject) => {
             if (this.connected) {
-                this.dbConnection.query(query,args, (err: any, results: any, fields: any) => {
+                this.dbConnection.query(query, args, (err: any, results: any, fields: any) => {
                     if (err) {
                         console.log("Error", err)
                         throw (err);
                     }
-                   resolve(results);
+                    resolve(results);
                 });
             }
             else {
@@ -174,10 +186,9 @@ class DatabaseManager {
 
     }
 
-    private async getClientKey(userId:number):Promise<string>
-    {
-        let clientKey:string = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
-        
+    private async getClientKey(userId: number): Promise<string> {
+        let clientKey: string = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
+
         return new Promise((resolve, reject) => {
             resolve(clientKey);
         });
