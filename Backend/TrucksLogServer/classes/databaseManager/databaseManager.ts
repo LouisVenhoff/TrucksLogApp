@@ -5,7 +5,7 @@ const mysql = require("mysql");
 
 export type ValidationObj = {
     userId: number,
-    pwdHash: string
+    clientKey: string
 }
 
 class DatabaseManager {
@@ -82,18 +82,19 @@ class DatabaseManager {
 
     public async validateRequest(data: ValidationObj): Promise<boolean> {
 
-        let userPassword: any = await this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId);
+        let userClientKey: any = await this.runQuery("SELECT client_key FROM user WHERE id = ?", data.userId);
+
 
         return new Promise((resolve, reject) => {
             try {
-                if (userPassword[0].passwort === data.pwdHash) {
+                if (userClientKey[0].client_key === data.clientKey) {
                     resolve(true);
                 }
                 else {
                     resolve(false);
                 }
             }
-            catch
+            catch(e:any)
             {
                 resolve(false);
             }
@@ -111,7 +112,7 @@ class DatabaseManager {
 
         let userClientKey: any = await this.getClientKey(userId);
 
-        let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key);
+        let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey);
 
         return new Promise((resolve, reject) => {
 
@@ -163,6 +164,14 @@ class DatabaseManager {
 
     }
 
+    public async getClientKey(userId: number): Promise<string> {
+        let clientKey:any = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
+
+        return new Promise((resolve, reject) => {
+            resolve(clientKey[0].client_key);
+        });
+    }
+
 
     private async runQuery(query: string, ...args): Promise<any> {
 
@@ -186,13 +195,7 @@ class DatabaseManager {
 
     }
 
-    private async getClientKey(userId: number): Promise<string> {
-        let clientKey: string = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
-
-        return new Promise((resolve, reject) => {
-            resolve(clientKey);
-        });
-    }
+    
 
 
 

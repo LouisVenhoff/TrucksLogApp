@@ -47,7 +47,7 @@ fastify.get("/", function (req, res) {
     res.send({ Status: "OK" });
 });
 fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId;
+    var userId, clientKey;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -58,25 +58,32 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
                 return [4 /*yield*/, dbManager.processLogin(req.body.mail, req.body.passwd)];
             case 1:
                 userId = _a.sent();
+                clientKey = "";
+                if (!(userId !== -1)) return [3 /*break*/, 3];
+                return [4 /*yield*/, dbManager.getClientKey(userId)];
+            case 2:
+                clientKey = _a.sent();
+                _a.label = 3;
+            case 3:
                 console.log(userId);
-                res.code(200).send("\"userId\":\"".concat(userId, "\""));
+                res.code(200).send({ userId: userId, clientKey: clientKey });
                 return [2 /*return*/];
         }
     });
 }); });
 //TODO: Get all Tours of an UserId
 fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, pwdHash, payloadJSON, passValid, tours;
+    var userId, clientKey, userValid, tours;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 userId = parseInt(req.body.userId);
-                pwdHash = req.body.pwdHash;
-                payloadJSON = req.body.payload;
-                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
+                clientKey = req.body.clientKey;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
-                passValid = _a.sent();
-                if (!passValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
+                userValid = _a.sent();
+                console.log(userValid);
+                if (!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
                  {
                     res.code(403).send();
                     return [2 /*return*/];
@@ -91,17 +98,17 @@ fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, 
     });
 }); });
 fastify.post("/api/v1/getTour", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tourId, userId, pwdHash, passValid, currentTour;
+    var tourId, userId, clientKey, userValid, currentTour;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 tourId = parseInt(req.body.tourId);
                 userId = parseInt(req.body.userId);
-                pwdHash = req.body.pwdHash;
-                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
+                clientKey = req.body.clientKey;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
-                passValid = _a.sent();
-                if (!passValid) {
+                userValid = _a.sent();
+                if (!userValid) {
                     res.code(403).send();
                     return [2 /*return*/];
                 }
@@ -114,14 +121,14 @@ fastify.post("/api/v1/getTour", function (req, res) { return __awaiter(void 0, v
     });
 }); });
 fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tourId, userId, pwdHash, passValid, userIsTourDriver, currentTour;
+    var tourId, userId, clientKey, passValid, userIsTourDriver, currentTour;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 tourId = parseInt(req.body.tourId);
                 userId = req.body.userId;
-                pwdHash = req.body.pwdHash;
-                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, pwdHash: pwdHash })];
+                clientKey = req.body.clientKey;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
                 passValid = _a.sent();
                 if (!passValid) {
