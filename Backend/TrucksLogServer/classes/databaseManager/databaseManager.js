@@ -99,22 +99,22 @@ var DatabaseManager = /** @class */ (function () {
     };
     DatabaseManager.prototype.validateRequest = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var userPassword;
+            var userClientKey;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT passwort FROM user WHERE id = ?", data.userId)];
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key FROM user WHERE id = ?", data.userId)];
                     case 1:
-                        userPassword = _a.sent();
+                        userClientKey = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 try {
-                                    if (userPassword[0].passwort === data.pwdHash) {
+                                    if (userClientKey[0].client_key === data.clientKey) {
                                         resolve(true);
                                     }
                                     else {
                                         resolve(false);
                                     }
                                 }
-                                catch (_a) {
+                                catch (e) {
                                     resolve(false);
                                 }
                             })];

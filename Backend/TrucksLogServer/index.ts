@@ -28,7 +28,7 @@ fastify.post("/api/v1/login", async (req, res) => {
     {
         clientKey = await dbManager.getClientKey(userId);
     }
-    
+
     console.log(userId);
 
     res.code(200).send({userId:userId, clientKey:clientKey});
@@ -39,12 +39,13 @@ fastify.post("/api/v1/login", async (req, res) => {
 
 fastify.post("/api/v1/getTours", async (req, res) => {
     let userId:number = parseInt(req.body.userId);
-    let pwdHash:string = req.body.pwdHash;
-    let payloadJSON:string = req.body.payload;
+    let clientKey:string = req.body.clientKey;
 
-    let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+    let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
     
-    if(!passValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
+    console.log(userValid);
+
+    if(!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
     {
         res.code(403).send();
         return;
@@ -62,11 +63,11 @@ fastify.post("/api/v1/getTours", async (req, res) => {
 fastify.post("/api/v1/getTour", async (req, res) => {
     let tourId:number = parseInt(req.body.tourId);
     let userId:number = parseInt(req.body.userId);
-    let pwdHash:string = req.body.pwdHash;
+    let clientKey:string = req.body.clientKey;
 
-    let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+    let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
 
-    if(!passValid)
+    if(!userValid)
     {
         res.code(403).send();
         return;
@@ -83,9 +84,9 @@ fastify.post("/api/v1/calcTour", async (req, res) => {
 
     let tourId:number = parseInt(req.body.tourId);
     let userId:number = req.body.userId;
-    let pwdHash:string = req.body.pwdHash;
+    let clientKey:string = req.body.clientKey;
 
-    let passValid:boolean = await dbManager.validateRequest({userId:userId, pwdHash:pwdHash});
+    let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
 
     if(!passValid){
         res.code(403).send();
