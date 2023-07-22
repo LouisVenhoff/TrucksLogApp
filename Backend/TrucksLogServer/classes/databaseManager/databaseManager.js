@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var tour_1 = require("../tour/tour");
+var cryptoHelper_1 = require("../cryptoHelper/cryptoHelper");
 var mysql = require("mysql");
 var DatabaseManager = /** @class */ (function () {
     function DatabaseManager(databaseConfig, autoConnect) {
@@ -78,20 +79,24 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
-    DatabaseManager.prototype.processLogin = function (user, pwdHash) {
+    DatabaseManager.prototype.processLogin = function (mail, password) {
         return __awaiter(this, void 0, void 0, function () {
-            var databaseResult, userId;
+            var userInfo, passOk;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT id FROM user WHERE email= ? AND passwort = ? ", user, pwdHash)];
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail)];
                     case 1:
-                        databaseResult = _a.sent();
-                        userId = -1;
-                        if (databaseResult.length > 0) {
-                            userId = parseInt(databaseResult[0].id);
-                        }
+                        userInfo = _a.sent();
+                        return [4 /*yield*/, cryptoHelper_1.default.checkPassWd(password, userInfo[0].passwort)];
+                    case 2:
+                        passOk = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
-                                resolve(userId);
+                                if (!passOk) {
+                                    resolve(-1);
+                                }
+                                else {
+                                    resolve(userInfo[0].id);
+                                }
                             })];
                 }
             });

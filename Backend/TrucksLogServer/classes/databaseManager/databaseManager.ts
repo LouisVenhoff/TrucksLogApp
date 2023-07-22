@@ -1,7 +1,10 @@
 import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { Config } from "../configReader/configReader";
 import Tour from "../tour/tour";
+import bcrypt from "bcrypt";
+import CryptoHelper from "../cryptoHelper/cryptoHelper";
 const mysql = require("mysql");
+
 
 export type ValidationObj = {
     userId: number,
@@ -64,19 +67,31 @@ class DatabaseManager {
 
     }
 
-    public async processLogin(user: string, pwdHash: string): Promise<number> {
+    public async processLogin(mail: string, password: string): Promise<number> {
 
-        let databaseResult: any = await this.runQuery(`SELECT id FROM user WHERE email= ? AND passwort = ? `, user, pwdHash);
+            //TODO: Load encrypted Password from DB an verify
+            //Return: UserId
 
-        let userId = -1;
+            let userInfo:any = await this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail);
 
-        if (databaseResult.length > 0) {
-            userId = parseInt(databaseResult[0].id);
-        }
+            let passOk = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);
 
-        return new Promise((resolve, reject) => {
-            resolve(userId);
-        });
+            return new Promise((resolve, reject) => {
+
+                if(!passOk)
+                {
+                    resolve(-1);
+                }
+                else
+                {
+                    resolve(userInfo[0].id);
+                }
+
+            });
+
+
+
+
 
     }
 
