@@ -130,7 +130,7 @@ var DatabaseManager = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getClientKey(userId)];
                     case 1:
                         userClientKey = _a.sent();
-                        return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key)];
+                        return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey)];
                     case 2:
                         userTours = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
@@ -195,6 +195,21 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.getClientKey = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var clientKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key FROM user WHERE id = ?", userId)];
+                    case 1:
+                        clientKey = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                resolve(clientKey[0].client_key);
+                            })];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.runQuery = function (query) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -217,21 +232,6 @@ var DatabaseManager = /** @class */ (function () {
                             throw ("Try to query but database is not connected");
                         }
                     })];
-            });
-        });
-    };
-    DatabaseManager.prototype.getClientKey = function (userId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var clientKey;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key FROM user WHERE id = ?", userId)];
-                    case 1:
-                        clientKey = _a.sent();
-                        return [2 /*return*/, new Promise(function (resolve, reject) {
-                                resolve(clientKey);
-                            })];
-                }
             });
         });
     };

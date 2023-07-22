@@ -20,14 +20,13 @@ var TourState;
 var CalcState;
 (function (CalcState) {
     CalcState[CalcState["TOUR_OK"] = 0] = "TOUR_OK";
-    CalcState[CalcState["USER_NOT_TOUR_USER"] = 1] = "USER_NOT_TOUR_USER";
-    CalcState[CalcState["TOUR_STATE_ERROR"] = 2] = "TOUR_STATE_ERROR";
-    CalcState[CalcState["DISTANCE_INCORRECT"] = 3] = "DISTANCE_INCORRECT";
-    CalcState[CalcState["VS_TOUR_NOT_NULL"] = 4] = "VS_TOUR_NOT_NULL";
-    CalcState[CalcState["CE_TOUR_NOT_NULL"] = 5] = "CE_TOUR_NOT_NULL";
-    CalcState[CalcState["NO_SALARY_TOUR_TYPE"] = 6] = "NO_SALARY_TOUR_TYPE";
-    CalcState[CalcState["KILOMETER_PRICE_ERROR"] = 7] = "KILOMETER_PRICE_ERROR";
-    CalcState[CalcState["END_TIMESTAMP_IS_NULL"] = 8] = "END_TIMESTAMP_IS_NULL";
+    CalcState[CalcState["TOUR_STATE_ERROR"] = 1] = "TOUR_STATE_ERROR";
+    CalcState[CalcState["DISTANCE_INCORRECT"] = 2] = "DISTANCE_INCORRECT";
+    CalcState[CalcState["VS_TOUR_NOT_NULL"] = 3] = "VS_TOUR_NOT_NULL";
+    CalcState[CalcState["CE_TOUR_NOT_NULL"] = 4] = "CE_TOUR_NOT_NULL";
+    CalcState[CalcState["NO_SALARY_TOUR_TYPE"] = 5] = "NO_SALARY_TOUR_TYPE";
+    CalcState[CalcState["KILOMETER_PRICE_ERROR"] = 6] = "KILOMETER_PRICE_ERROR";
+    CalcState[CalcState["END_TIMESTAMP_IS_NULL"] = 7] = "END_TIMESTAMP_IS_NULL";
 })(CalcState || (exports.CalcState = CalcState = {}));
 var Tour = /** @class */ (function () {
     function Tour(dataset) {

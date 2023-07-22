@@ -111,7 +111,7 @@ class DatabaseManager {
 
         let userClientKey: any = await this.getClientKey(userId);
 
-        let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey[0].client_key);
+        let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey);
 
         return new Promise((resolve, reject) => {
 
@@ -163,6 +163,14 @@ class DatabaseManager {
 
     }
 
+    public async getClientKey(userId: number): Promise<string> {
+        let clientKey:any = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
+
+        return new Promise((resolve, reject) => {
+            resolve(clientKey[0].client_key);
+        });
+    }
+
 
     private async runQuery(query: string, ...args): Promise<any> {
 
@@ -186,13 +194,7 @@ class DatabaseManager {
 
     }
 
-    private async getClientKey(userId: number): Promise<string> {
-        let clientKey: string = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
-
-        return new Promise((resolve, reject) => {
-            resolve(clientKey);
-        });
-    }
+    
 
 
 

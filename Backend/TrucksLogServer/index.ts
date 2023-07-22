@@ -22,10 +22,16 @@ fastify.post("/api/v1/login", async (req, res) => {
     }
 
     let userId: number = await dbManager.processLogin(req.body.mail, req.body.passwd);
-
+    let clientKey:string = "";
+    
+    if(userId !== -1)
+    {
+        clientKey = await dbManager.getClientKey(userId);
+    }
+    
     console.log(userId);
 
-    res.code(200).send(`"userId":"${userId}"`);
+    res.code(200).send({userId:userId, clientKey:clientKey});
 
 });
 
