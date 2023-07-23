@@ -89,10 +89,22 @@ class DatabaseManager {
 
             });
 
+    }
 
+    public async getAvatar(userId:number):Promise<string>
+    {
+        let avatarLink:any = await this.runQuery("SELECT profilbild FROM user WHERE id = ?", userId);
 
-
-
+        return new Promise((resolve, reject) => {
+            if(avatarLink.length > 0)
+            {
+                resolve(avatarLink[0].profilbild);
+            }
+            else
+            {
+                resolve("");
+            }
+        });
     }
 
     public async validateRequest(data: ValidationObj): Promise<boolean> {

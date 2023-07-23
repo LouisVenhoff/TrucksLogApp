@@ -102,6 +102,26 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.getAvatar = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var avatarLink;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT profilbild FROM user WHERE id = ?", userId)];
+                    case 1:
+                        avatarLink = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                if (avatarLink.length > 0) {
+                                    resolve(avatarLink[0].profilbild);
+                                }
+                                else {
+                                    resolve("");
+                                }
+                            })];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.validateRequest = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var userClientKey;
