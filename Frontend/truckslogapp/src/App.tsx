@@ -7,7 +7,7 @@ import TourPage from "./pages/tourPage/tourPage";
 function App() {
   return (
     <div className="App">
-        <TourPage />
+        <TourPage accountName="Driver" />
     </div>
   );
 }
