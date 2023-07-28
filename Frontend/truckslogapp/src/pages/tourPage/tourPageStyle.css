@@ -58,4 +58,5 @@
     height:inherit;
     background-color:#595c5f;
     border-radius:10px;
+    z-index:-1;
 }
