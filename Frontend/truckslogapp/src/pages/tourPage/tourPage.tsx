@@ -27,7 +27,7 @@ const TourPage: React.FC<TourPageProps> = ({ accountName }) => {
 
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
         calculateAvatarTransform(latest, AVATAR_HIDE_POSITION);
-        calculateHeaderOpacity(latest);
+        calculateHeaderOpacity(latest, 10);
       })
       
   
@@ -47,11 +47,11 @@ const TourPage: React.FC<TourPageProps> = ({ accountName }) => {
 
     
 
-    const calculateHeaderOpacity = (scrollRate:number) => {
+    const calculateHeaderOpacity = (scrollRate:number, factor:number) => {
 
         if(avatarPosition === AVATAR_HIDE_BOTTOM)
         {
-            setHeaderOpacity(scrollRate * 3);
+            setHeaderOpacity(scrollRate * factor);
         }
         else
         {

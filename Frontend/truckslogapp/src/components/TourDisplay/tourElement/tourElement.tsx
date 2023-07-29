@@ -17,6 +17,9 @@ const TourElement:React.FC = () => {
         <div className="TourElementDescription">
             <h1>Berlin - Rostock</h1>
         </div>
+        <div className="TourElementDate">
+            <h1>27.03</h1>
+        </div>
     </div>
     );
 }

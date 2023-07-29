@@ -24,3 +24,10 @@
     align-self:left;
     margin-left:10px;
 }
+
+.TourElementDate
+{
+    font-size:20px;
+    font-weight:bold;
+    margin-left:90px;
+}
