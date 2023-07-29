@@ -20,14 +20,7 @@ const TourDisplay:React.FC = () =>
             <TourElement />
             <TourElement />
             <TourElement />
-            <TourElement />
-            <TourElement />
-            <TourElement />
-            <TourElement />
-            <TourElement />
-            <TourElement />
-            <TourElement />
-            <TourElement />
+            
         </div>
     );
 }
