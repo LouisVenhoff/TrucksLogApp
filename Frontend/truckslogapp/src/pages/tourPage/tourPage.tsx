@@ -11,6 +11,9 @@ type TourPageProps = {
   accountName: string;
 };
 
+const AVATAR_HIDE_POSITION:number = 0.945;
+const AVATAR_HIDE_BOTTOM:number = -300;
+
 const TourPage: React.FC<TourPageProps> = ({ accountName }) => {
   
     const elementRef = useRef(null);
@@ -18,19 +21,42 @@ const TourPage: React.FC<TourPageProps> = ({ accountName }) => {
     const {scrollYProgress} = useScroll({container:elementRef});
     const [scrollRate, setScrollRate] = useState<number>(1);
     const [headerOpacity, setHeaderOpacity] = useState<number>(0);
+    
+    const [avatarSize, setAvatarSize] = useState<number>(0);
+    const [avatarPosition, setAvatarPosition] = useState<number>(0);
 
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
-        setScrollRate(latest);
+        calculateAvatarTransform(latest, AVATAR_HIDE_POSITION);
         calculateHeaderOpacity(latest);
       })
       
-    const calculateAvatarSize = (scrollRate:number):number => 
+  
+    const calculateAvatarTransform = (scrollRate:number, displayThreashold:number) => 
     {
-        return 1 - scrollRate;
+        let sizeFactor:number = 1 - scrollRate;
+
+        if(sizeFactor < displayThreashold)
+        {
+            setAvatarPosition(AVATAR_HIDE_BOTTOM);
+        }else
+        {
+          setAvatarPosition(0);
+          setAvatarSize(sizeFactor);
+        }
     }
 
+    
+
     const calculateHeaderOpacity = (scrollRate:number) => {
-        setHeaderOpacity(scrollRate * 3);
+
+        if(avatarPosition === AVATAR_HIDE_BOTTOM)
+        {
+            setHeaderOpacity(scrollRate * 3);
+        }
+        else
+        {
+          setHeaderOpacity(0);
+        } 
     }
 
 
@@ -40,7 +66,7 @@ return (
         <Header />
       </motion.div>
       <div className="TourPageAvatarDiv">
-            <motion.img style={{scale: calculateAvatarSize(scrollRate)}}  src={TrucksLogLogo} />
+            <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src="https://abload.de/img/2000tojen.png" />
       </div>
       <div className="TourPageWelcomeTextDiv">
         <h1>Willkommen, {accountName}</h1>
