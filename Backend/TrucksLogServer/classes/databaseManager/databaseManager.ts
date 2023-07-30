@@ -77,10 +77,11 @@ class DatabaseManager {
             
 
             return new Promise(async (resolve, reject) => {
-
-                if(userInfo.length === 0)
+                console.log(userInfo);
+                if(userInfo.length === 0 || userInfo === undefined)
                 {
                     resolve(-1);
+                    return;
                 }
                 
                 let passOk:boolean = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);

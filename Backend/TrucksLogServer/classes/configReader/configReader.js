@@ -47,6 +47,7 @@ var defaultConfig = {
 };
 var ConfigReader = /** @class */ (function () {
     function ConfigReader(path, syncCallback) {
+        this.loadedConfig = null;
         this.path = path;
         this.initReader();
         this.syncCallback = syncCallback;

@@ -11,10 +11,13 @@ function App() {
   const api = new ApiController("localhost", 3000);
   
   
-  const loginFunc = (email:string, password:string) => 
+  const loginFunc = async (email:string, password:string) => 
   {
-      window.alert(email);
-      console.log(api.Login(email, password));
+      let loginObj:any = await api.Login(email, password);
+      if(loginObj.id === -1)
+      {
+        console.log("Zugriff verweigert!");
+      }
   } 
   
   return (

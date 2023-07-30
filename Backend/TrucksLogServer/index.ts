@@ -41,7 +41,6 @@ fastify.post("/api/v1/login", async (req:any, res:any) => {
     }
 
     console.log(userId);
-
     res.code(200).send({userId:userId, clientKey:clientKey, avatar:avatarLink});
 
 });

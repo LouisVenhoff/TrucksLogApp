@@ -33,13 +33,14 @@ class ApiController {
           avatar: "",
         };
 
-        if (result.userId === -1) {
-          resolve(tempUser);
-          return;
-        }
-
-        tempUser.clientKey = result.clientKey;
-        tempUser.avatar = result.avatar;
+        // if (result.data.userId === -1) {
+        //   resolve(tempUser);
+        //   return;
+        // }
+        tempUser.id = result.data.userId;
+        tempUser.clientKey = result.data.clientKey;
+        tempUser.avatar = result.data.avatar;
+        resolve(tempUser);
       } catch 
       {
         reject();

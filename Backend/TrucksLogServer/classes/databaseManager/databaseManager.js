@@ -94,8 +94,10 @@ var DatabaseManager = /** @class */ (function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
-                                            if (userInfo.length === 0) {
+                                            console.log(userInfo);
+                                            if (userInfo.length === 0 || userInfo === undefined) {
                                                 resolve(-1);
+                                                return [2 /*return*/];
                                             }
                                             return [4 /*yield*/, cryptoHelper_1.default.checkPassWd(password, userInfo[0].passwort)];
                                         case 1:

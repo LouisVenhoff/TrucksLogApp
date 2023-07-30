@@ -19,10 +19,6 @@ const LoginPage:React.FC<LoginPageProps> = ({onLogin}) =>
     const [password, setPassword] = useState<string>("");
     
 
-
-    useEffect(() => {console.log(email)},[email]);
-
-
     const loginHandler = () => 
     {
         if(!emailValid)
