@@ -7,7 +7,7 @@ import TourPage from "./pages/tourPage/tourPage";
 function App() {
   return (
     <div className="App">
-        <TourPage accountName="Driver" />
+        <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/>
     </div>
   );
 }

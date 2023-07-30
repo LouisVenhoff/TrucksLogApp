@@ -7,18 +7,26 @@ import Calculated from "../../../resources/symbols/calculated.png";
 import InCheck from "../../../resources/symbols/inCheck.png";
 import Old from "../../../resources/symbols/old.png";
 import Rejected from "../../../resources/symbols/rejected.png";
+import { TourState } from "../../../claases/tour/tour";
 
-const TourElement:React.FC = () => {
+type TourElementProps = {
+    start:string,
+    target:string,
+    state:TourState,
+    date:string,
+}
+
+const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) => {
     return(
     <div className="TourElementMainDiv">
         <div className="TourElementSymbolDiv">
             <img src={Calculated}/>
         </div>
         <div className="TourElementDescription">
-            <h1>Berlin - Rostock</h1>
+            <h1>{start} - {target}</h1>
         </div>
         <div className="TourElementDate">
-            <h1>27.03</h1>
+            <h1>date</h1>
         </div>
     </div>
     );

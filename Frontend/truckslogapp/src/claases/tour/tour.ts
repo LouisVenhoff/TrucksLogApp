@@ -1,3 +1,5 @@
+import TourDisplay from "../../components/TourDisplay/tourDisplay";
+
 export enum Game {
     ETS,
     ATS,
@@ -85,71 +87,9 @@ class Tour {
         this.resolveData(dataset);
     }
 
-    public get tourValid(): boolean {
-        if (this.checkData() == CalcState.TOUR_OK) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public get calcState():CalcState
+    public get TimeString():string
     {
-            return this.checkData();
-    }
-
-    private checkData():CalcState {
-        let state: CalcState = CalcState.TOUR_OK;
-
-        //Status
-        if (this.state !== TourState.COMPLETED) {
-            state = CalcState.TOUR_STATE_ERROR;
-        }
-
-        //Gefahrene Kilometer
-        if (this.traveledDistance < (this.fullDistance / 2) || this.traveledDistance > (this.fullDistance * 2)) {
-            state = CalcState.DISTANCE_INCORRECT;
-        }
-
-        //VS VC TOUR
-        if (this.vsTour !== 0) {
-            state = CalcState.VS_TOUR_NOT_NULL;
-        }
-
-        if (this.ceTour !== 0) {
-            state = CalcState.CE_TOUR_NOT_NULL;
-        }
-
-        //Gesamt Kilometer zwische 7999 und 1
-        if (this.fullDistance > 8000 || this.fullDistance < 1) {
-            state = CalcState.DISTANCE_INCORRECT;
-        }
-
-        //Einkommen nicht gleich 600
-        if (this.income === 600) {
-            state = CalcState.NO_SALARY_TOUR_TYPE;
-        }
-
-        //Kilometerpreis
-        if (this.game === Game.ETS) {
-            if (this.kmPrice > 180) {
-                state = CalcState.KILOMETER_PRICE_ERROR;
-            }
-        }
-
-        if (this.game === Game.ATS) {
-            if (this.kmPrice > 270) {
-                state = CalcState.KILOMETER_PRICE_ERROR;
-            }
-
-        }
-        //EndTimestamp
-        if (this.endTime === "") {
-            state = CalcState.END_TIMESTAMP_IS_NULL;
-        }
-
-        return state;
+        return `${this.day} : ${this.month}`;
     }
 
 

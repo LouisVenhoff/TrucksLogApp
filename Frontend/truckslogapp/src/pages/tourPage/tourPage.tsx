@@ -6,22 +6,31 @@ import TrucksLogLogo from "../../resources/TrucksLogLogo.png";
 import Header from "../../components/header/header";
 
 import {motion, useMotionValueEvent, useScroll} from "framer-motion";
+import Tour from "../../claases/tour/tour";
 
 type TourPageProps = {
   accountName: string;
+  avatarStr: string;
+  userTours: Tour[];
 };
 
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
 
-const TourPage: React.FC<TourPageProps> = ({ accountName }) => {
+const TourPage: React.FC<TourPageProps> = ({ accountName, avatarStr,  userTours}) => {
   
     const elementRef = useRef(null);
 
+    //Animation
     const {scrollYProgress} = useScroll({container:elementRef});
     const [scrollRate, setScrollRate] = useState<number>(1);
     const [headerOpacity, setHeaderOpacity] = useState<number>(0);
-    
+    //Tours
+    const [tours, setTours] = useState<Tour[]>(userTours);
+    const [tourElements, setTourElements] = useState<JSX.Element[]>([]);
+
+
+    //Player information
     const [avatarSize, setAvatarSize] = useState<number>(0);
     const [avatarPosition, setAvatarPosition] = useState<number>(0);
 
@@ -29,8 +38,30 @@ const TourPage: React.FC<TourPageProps> = ({ accountName }) => {
         calculateAvatarTransform(latest, AVATAR_HIDE_POSITION);
         calculateHeaderOpacity(latest, 10);
       })
-      
-  
+
+    useEffect(() => {
+      updateElements(tours);
+    },[tours]);
+
+// updateElements checks for changes in the tours array. When change events occure, the displayed tours will update
+    const updateElements = (tourData:Tour[]) =>
+    {
+      let tempElements:JSX.Element[] = [];
+
+      for(let i = 0; i < tourData.length; i++)
+      {
+        tempElements.push(transformTour(tourData[i]));
+      }
+
+      setTourElements(tempElements);
+
+    }
+    const transformTour = (tour:Tour):JSX.Element =>{
+
+        return(<TourDisplay tour={tour}/>);
+
+    } 
+
     const calculateAvatarTransform = (scrollRate:number, displayThreashold:number) => 
     {
         let sizeFactor:number = 1 - scrollRate;
@@ -46,7 +77,6 @@ const TourPage: React.FC<TourPageProps> = ({ accountName }) => {
     }
 
     
-
     const calculateHeaderOpacity = (scrollRate:number, factor:number) => {
 
         if(avatarPosition === AVATAR_HIDE_BOTTOM)
@@ -66,13 +96,13 @@ return (
         <Header />
       </motion.div>
       <div className="TourPageAvatarDiv">
-            <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src="https://abload.de/img/2000tojen.png" />
+            <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src={avatarStr} />
       </div>
       <div className="TourPageWelcomeTextDiv">
         <h1>Willkommen, {accountName}</h1>
       </div>
       <div className="TourPageDataTableSpace">
-            <TourDisplay/>
+            {tourElements}
       </div>
     </div>
   );
