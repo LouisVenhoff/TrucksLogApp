@@ -73,10 +73,17 @@ class DatabaseManager {
             //Return: UserId
 
             let userInfo:any = await this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail);
+            console.log(userInfo); 
+            
 
-            let passOk = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);
+            return new Promise(async (resolve, reject) => {
 
-            return new Promise((resolve, reject) => {
+                if(userInfo.length === 0)
+                {
+                    resolve(-1);
+                }
+                
+                let passOk:boolean = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);
 
                 if(!passOk)
                 {

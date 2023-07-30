@@ -81,23 +81,35 @@ var DatabaseManager = /** @class */ (function () {
     };
     DatabaseManager.prototype.processLogin = function (mail, password) {
         return __awaiter(this, void 0, void 0, function () {
-            var userInfo, passOk;
+            var userInfo;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail)];
                     case 1:
                         userInfo = _a.sent();
-                        return [4 /*yield*/, cryptoHelper_1.default.checkPassWd(password, userInfo[0].passwort)];
-                    case 2:
-                        passOk = _a.sent();
-                        return [2 /*return*/, new Promise(function (resolve, reject) {
-                                if (!passOk) {
-                                    resolve(-1);
-                                }
-                                else {
-                                    resolve(userInfo[0].id);
-                                }
-                            })];
+                        console.log(userInfo);
+                        return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                                var passOk;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (userInfo.length === 0) {
+                                                resolve(-1);
+                                            }
+                                            return [4 /*yield*/, cryptoHelper_1.default.checkPassWd(password, userInfo[0].passwort)];
+                                        case 1:
+                                            passOk = _a.sent();
+                                            if (!passOk) {
+                                                resolve(-1);
+                                            }
+                                            else {
+                                                resolve(userInfo[0].id);
+                                            }
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                 }
             });
         });

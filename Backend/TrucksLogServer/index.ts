@@ -1,21 +1,30 @@
 import ConfigReader, { Config } from "./classes/configReader/configReader";
 import DatabaseManager from "./classes/databaseManager/databaseManager";
 import Tour from "./classes/tour/tour";
+import cors from "@fastify/cors"
 
 const fastify = require("fastify")({
     logger: false
 })
 
+fastify.register(cors, {
+
+})
+
+
 const confReader: ConfigReader = new ConfigReader("config.json", (conf: Config) => { startServer(conf) });
 var dbManager: DatabaseManager;
 
-fastify.get("/", (req, res) => {
+fastify.get("/", (req:any, res:any) => {
     res.send({ Status: "OK" })
 })
 
 
-fastify.post("/api/v1/login", async (req, res) => {
+fastify.post("/api/v1/login", async (req:any, res:any) => {
 
+    console.log(req.body.mail);
+    console.log(req.body.passwd);
+    
     if (dbManager == undefined) {
         res.code(500).send();
         return;
@@ -39,7 +48,7 @@ fastify.post("/api/v1/login", async (req, res) => {
 
 //TODO: Get all Tours of an UserId
 
-fastify.post("/api/v1/getTours", async (req, res) => {
+fastify.post("/api/v1/getTours", async (req:any, res:any) => {
     let userId:number = parseInt(req.body.userId);
     let clientKey:string = req.body.clientKey;
 
@@ -62,7 +71,7 @@ fastify.post("/api/v1/getTours", async (req, res) => {
     //TODO:Send full Dataset of user
 });
 
-fastify.post("/api/v1/getTour", async (req, res) => {
+fastify.post("/api/v1/getTour", async (req:any, res:any) => {
     let tourId:number = parseInt(req.body.tourId);
     let userId:number = parseInt(req.body.userId);
     let clientKey:string = req.body.clientKey;
@@ -81,7 +90,7 @@ fastify.post("/api/v1/getTour", async (req, res) => {
 })
 
 
-fastify.post("/api/v1/calcTour", async (req, res) => {
+fastify.post("/api/v1/calcTour", async (req:any, res:any) => {
     //TODO: Check and Calculate Tour
 
     let tourId:number = parseInt(req.body.tourId);

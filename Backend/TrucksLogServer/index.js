@@ -38,9 +38,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var configReader_1 = require("./classes/configReader/configReader");
 var databaseManager_1 = require("./classes/databaseManager/databaseManager");
+var cors_1 = require("@fastify/cors");
 var fastify = require("fastify")({
     logger: false
 });
+fastify.register(cors_1.default, {});
 var confReader = new configReader_1.default("config.json", function (conf) { startServer(conf); });
 var dbManager;
 fastify.get("/", function (req, res) {
@@ -51,6 +53,8 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                console.log(req.body.mail);
+                console.log(req.body.passwd);
                 if (dbManager == undefined) {
                     res.code(500).send();
                     return [2 /*return*/];
