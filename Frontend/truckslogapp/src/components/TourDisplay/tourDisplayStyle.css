@@ -1,0 +1,9 @@
+.TourDisplayMainDiv
+{
+    position:relative;
+    width:100%;
+    border-radius:25px 25px 0px 0px; 
+    background-color:rgb(12, 12, 12);
+    overflow-x: visible;
+    z-index:-1;
+}
