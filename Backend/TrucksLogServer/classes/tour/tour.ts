@@ -1,6 +1,7 @@
 export enum Game {
     ETS,
-    ATS
+    ATS,
+    UNDEFINED
 }
 
 export enum TourState {
@@ -11,10 +12,12 @@ export enum TourState {
     OLD,
     IN_CHECK,
     BILLING,
-    BILLED
+    BILLED,
+    UNDEFINED
 }
 
 export enum CalcState {
+    UNDEFINED,
     TOUR_OK,
     TOUR_STATE_ERROR,
     DISTANCE_INCORRECT,
@@ -29,54 +32,54 @@ export enum CalcState {
 
 class Tour {
 
-    public game: Game; //
-    public nickname: string; //
-    public company: string;
+    public game: Game = Game.UNDEFINED; //
+    public nickname: string = ""; //
+    public company: string = "";
 
 
-    public day: number;
-    public month: number;
-    public year: number;
-    public kw: number;
+    public day: number = 0;
+    public month: number = 0;
+    public year: number = 0;
+    public kw: number = 0;
 
-    public tourId: number;
-    public startPos: string;
-    public startCompany: string;
-    public targetPos: string;
-    public targetCompany: string;
+    public tourId: number = 0;
+    public startPos: string = "";
+    public startCompany: string = "";
+    public targetPos: string = "";
+    public targetCompany: string = "";
 
-    public weight: string;
-    public charge: string;
-    public income: number;
-    public kmPrice: number;
+    public weight: string = "";
+    public charge: string = "";
+    public income: number = 0;
+    public kmPrice: number = 0;
 
-    public fullDistance: number;
-    public restDistance: number;
-    public traveledDistance: number;
+    public fullDistance: number = 0;
+    public restDistance: number = 0;
+    public traveledDistance: number = 0;
 
-    public startTime: string;
-    public endTime: string;
+    public startTime: string = "";
+    public endTime: string = "";
 
-    public freightDamage: number;
+    public freightDamage: number = 0;
 
-    public tankVolume: number;
-    public startFuel: number;
-    public endFuel: number;
-    public fuelConsumption: number;
+    public tankVolume: number = 0;
+    public startFuel: number = 0;
+    public endFuel: number = 0;
+    public fuelConsumption: number = 0;
 
-    public truckODOStart: number;
-    public truckODOEnd: number;
-    public truckDistance: number;
+    public truckODOStart: number = 0;
+    public truckODOEnd: number = 0;
+    public truckDistance: number = 0;
 
-    public maxSpeed: number;
+    public maxSpeed: number = 0;
 
-    public state: TourState;
-    public billDate: string;
+    public state: TourState = TourState.UNDEFINED;
+    public billDate: string = "";
 
-    public notes: string;
+    public notes: string = "";
 
-    public ceTour: number;
-    public vsTour: number;
+    public ceTour: number = 0;
+    public vsTour: number = 0;
 
 
     constructor(dataset: any) {

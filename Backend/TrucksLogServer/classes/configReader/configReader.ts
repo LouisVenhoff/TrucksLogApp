@@ -23,7 +23,7 @@ const defaultConfig:Config =
 
 class ConfigReader{
     private path:string
-    private loadedConfig:Config;
+    private loadedConfig:Config = null!;
 
     private syncCallback:(conf:Config) => void;
 
@@ -53,7 +53,7 @@ class ConfigReader{
     {
         //TODO: Check if file is there, when not create File
          
-        await fs.open(this.path,"r", async (err, fd:number) => 
+        await fs.open(this.path,"r", async (err:any, fd:number) => 
         {
             if(err)
             {
@@ -76,7 +76,7 @@ class ConfigReader{
     }
 
     private async createDefaultConfig(){
-        await fs.writeFile(this.path, JSON.stringify(defaultConfig), (err) => {
+        await fs.writeFile(this.path, JSON.stringify(defaultConfig), (err:any) => {
             if(err){
                 throw(err)
             }
@@ -90,7 +90,7 @@ class ConfigReader{
         
         return new Promise<Config>(async (resolve, reject) => {
 
-            fs.readFile(this.path, "utf8", (err, data) => {
+            fs.readFile(this.path, "utf8", (err:any, data:any) => {
 
                 if(err){
                     reject(err);

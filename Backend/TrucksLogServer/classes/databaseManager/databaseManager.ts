@@ -50,7 +50,7 @@ class DatabaseManager {
             });
         }
 
-        this.dbConnection.connect(async (err) => {
+        this.dbConnection.connect(async (err:any) => {
 
             if (err) {
                 console.log("Database connection error occured!");
@@ -207,7 +207,7 @@ class DatabaseManager {
     }
 
 
-    private async runQuery(query: string, ...args): Promise<any> {
+    private async runQuery(query: string, ...args:any): Promise<any> {
 
 
         return new Promise((resolve, reject) => {
