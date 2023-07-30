@@ -8,8 +8,12 @@ const LoginPage:React.FC = () =>
 {
     
     const [email, setEmail] = useState<string>();
+    const [emailValid, setEmailValid] = useState<boolean>(false);
+
     const [password, setPassword] = useState<string>();
     
+
+
     useEffect(() => {console.log(email)},[email]);
 
 
@@ -23,6 +27,17 @@ const LoginPage:React.FC = () =>
         window.alert("RegisterHandler!");
     }
 
+    const checkEmail = (email:string):boolean => {
+        let emailRegex = new RegExp("^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$");
+        let result = emailRegex.test(email);
+        return result;
+    }
+
+    const emailChangeHandler = (value:string) => 
+    {
+        setEmailValid(checkEmail(value));
+    }
+
 
     return(
         <div className="LoginPageDiv">
@@ -30,7 +45,7 @@ const LoginPage:React.FC = () =>
                  <img className="LoginPageLogoImg" src={Logo}/>
             </div>
             <div className="LoginPageControlsDiv">
-                <Input placeholder="Email" backgroundColor="white" onChange={(e:any) => {setEmail(e.target.value)}}/>
+                <Input isInvalid={!emailValid} placeholder="Email" backgroundColor="white" onChange={(e:any) => {emailChangeHandler(e.target.value)}}/>
                 <Input placeholder="Passwort" backgroundColor="white" onChange={(e:any) => {setPassword(e.target.value)}}/>
                 <Button colorScheme="teal" onClick={() => {loginHandler()}}>Login</Button>
                 <Button colorScheme="teal" onClick={() => {registerHandler()}}>Registieren</Button>
