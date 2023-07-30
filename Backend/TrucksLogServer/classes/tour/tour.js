@@ -5,6 +5,7 @@ var Game;
 (function (Game) {
     Game[Game["ETS"] = 0] = "ETS";
     Game[Game["ATS"] = 1] = "ATS";
+    Game[Game["UNDEFINED"] = 2] = "UNDEFINED";
 })(Game || (exports.Game = Game = {}));
 var TourState;
 (function (TourState) {
@@ -16,20 +17,57 @@ var TourState;
     TourState[TourState["IN_CHECK"] = 5] = "IN_CHECK";
     TourState[TourState["BILLING"] = 6] = "BILLING";
     TourState[TourState["BILLED"] = 7] = "BILLED";
+    TourState[TourState["UNDEFINED"] = 8] = "UNDEFINED";
 })(TourState || (exports.TourState = TourState = {}));
 var CalcState;
 (function (CalcState) {
-    CalcState[CalcState["TOUR_OK"] = 0] = "TOUR_OK";
-    CalcState[CalcState["TOUR_STATE_ERROR"] = 1] = "TOUR_STATE_ERROR";
-    CalcState[CalcState["DISTANCE_INCORRECT"] = 2] = "DISTANCE_INCORRECT";
-    CalcState[CalcState["VS_TOUR_NOT_NULL"] = 3] = "VS_TOUR_NOT_NULL";
-    CalcState[CalcState["CE_TOUR_NOT_NULL"] = 4] = "CE_TOUR_NOT_NULL";
-    CalcState[CalcState["NO_SALARY_TOUR_TYPE"] = 5] = "NO_SALARY_TOUR_TYPE";
-    CalcState[CalcState["KILOMETER_PRICE_ERROR"] = 6] = "KILOMETER_PRICE_ERROR";
-    CalcState[CalcState["END_TIMESTAMP_IS_NULL"] = 7] = "END_TIMESTAMP_IS_NULL";
+    CalcState[CalcState["UNDEFINED"] = 0] = "UNDEFINED";
+    CalcState[CalcState["TOUR_OK"] = 1] = "TOUR_OK";
+    CalcState[CalcState["TOUR_STATE_ERROR"] = 2] = "TOUR_STATE_ERROR";
+    CalcState[CalcState["DISTANCE_INCORRECT"] = 3] = "DISTANCE_INCORRECT";
+    CalcState[CalcState["VS_TOUR_NOT_NULL"] = 4] = "VS_TOUR_NOT_NULL";
+    CalcState[CalcState["CE_TOUR_NOT_NULL"] = 5] = "CE_TOUR_NOT_NULL";
+    CalcState[CalcState["NO_SALARY_TOUR_TYPE"] = 6] = "NO_SALARY_TOUR_TYPE";
+    CalcState[CalcState["KILOMETER_PRICE_ERROR"] = 7] = "KILOMETER_PRICE_ERROR";
+    CalcState[CalcState["END_TIMESTAMP_IS_NULL"] = 8] = "END_TIMESTAMP_IS_NULL";
 })(CalcState || (exports.CalcState = CalcState = {}));
 var Tour = /** @class */ (function () {
     function Tour(dataset) {
+        this.game = Game.UNDEFINED; //
+        this.nickname = ""; //
+        this.company = "";
+        this.day = 0;
+        this.month = 0;
+        this.year = 0;
+        this.kw = 0;
+        this.tourId = 0;
+        this.startPos = "";
+        this.startCompany = "";
+        this.targetPos = "";
+        this.targetCompany = "";
+        this.weight = "";
+        this.charge = "";
+        this.income = 0;
+        this.kmPrice = 0;
+        this.fullDistance = 0;
+        this.restDistance = 0;
+        this.traveledDistance = 0;
+        this.startTime = "";
+        this.endTime = "";
+        this.freightDamage = 0;
+        this.tankVolume = 0;
+        this.startFuel = 0;
+        this.endFuel = 0;
+        this.fuelConsumption = 0;
+        this.truckODOStart = 0;
+        this.truckODOEnd = 0;
+        this.truckDistance = 0;
+        this.maxSpeed = 0;
+        this.state = TourState.UNDEFINED;
+        this.billDate = "";
+        this.notes = "";
+        this.ceTour = 0;
+        this.vsTour = 0;
         this.resolveData(dataset);
     }
     Object.defineProperty(Tour.prototype, "tourValid", {

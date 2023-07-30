@@ -50,7 +50,7 @@ class DatabaseManager {
             });
         }
 
-        this.dbConnection.connect(async (err) => {
+        this.dbConnection.connect(async (err:any) => {
 
             if (err) {
                 console.log("Database connection error occured!");
@@ -73,10 +73,18 @@ class DatabaseManager {
             //Return: UserId
 
             let userInfo:any = await this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail);
+            console.log(userInfo); 
+            
 
-            let passOk = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);
-
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
+                console.log(userInfo);
+                if(userInfo.length === 0 || userInfo === undefined)
+                {
+                    resolve(-1);
+                    return;
+                }
+                
+                let passOk:boolean = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);
 
                 if(!passOk)
                 {
@@ -200,7 +208,7 @@ class DatabaseManager {
     }
 
 
-    private async runQuery(query: string, ...args): Promise<any> {
+    private async runQuery(query: string, ...args:any): Promise<any> {
 
 
         return new Promise((resolve, reject) => {
