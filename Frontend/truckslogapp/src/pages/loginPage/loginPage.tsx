@@ -3,14 +3,20 @@ import "./loginPageStyle.css";
 import Logo from "../../resources/TrucksLogLogo.png";
 import { Input, Button } from "@chakra-ui/react";
 
+type LoginPageProps = 
+{
+    onLogin:(email:string, password:string) => void
+}
 
-const LoginPage:React.FC = () => 
+
+
+const LoginPage:React.FC<LoginPageProps> = ({onLogin}) => 
 {
     
-    const [email, setEmail] = useState<string>();
+    const [email, setEmail] = useState<string>("");
     const [emailValid, setEmailValid] = useState<boolean>(false);
 
-    const [password, setPassword] = useState<string>();
+    const [password, setPassword] = useState<string>("");
     
 
 
@@ -19,7 +25,11 @@ const LoginPage:React.FC = () =>
 
     const loginHandler = () => 
     {
-        window.alert("LoginHandler!");
+        if(!emailValid)
+        {
+            return;
+        }
+        onLogin(email, password);
     }
 
     const registerHandler = () => 
@@ -35,6 +45,7 @@ const LoginPage:React.FC = () =>
 
     const emailChangeHandler = (value:string) => 
     {
+        setEmail(value);
         setEmailValid(checkEmail(value));
     }
 
@@ -47,7 +58,7 @@ const LoginPage:React.FC = () =>
             <div className="LoginPageControlsDiv">
                 <Input isInvalid={!emailValid} placeholder="Email" backgroundColor="white" onChange={(e:any) => {emailChangeHandler(e.target.value)}}/>
                 <Input placeholder="Passwort" backgroundColor="white" onChange={(e:any) => {setPassword(e.target.value)}}/>
-                <Button colorScheme="teal" onClick={() => {loginHandler()}}>Login</Button>
+                <Button isActive={!emailValid} colorScheme="teal" onClick={() => {loginHandler()}}>Login</Button>
                 <Button colorScheme="teal" onClick={() => {registerHandler()}}>Registieren</Button>
             </div>
         </div>
