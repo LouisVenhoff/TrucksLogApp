@@ -4,7 +4,7 @@ import './App.css';
 import LoginPage from './pages/loginPage/loginPage';
 import TourPage from "./pages/tourPage/tourPage";
 import ApiController from './claases/controller/apiController';
-import AlertComponent from './components/alert/alertComponent';
+import AlertComponent, { AlertType } from './components/alertComponent/alertComponent';
 
 function App() {
   
@@ -23,7 +23,7 @@ function App() {
   
   return (
     <div className="App">
-        <AlertComponent />
+        <AlertComponent isOpen={false} text={"Testnachricht"} type={AlertType.WARNING}/>
         {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
         <LoginPage onLogin={(email:string, password:string) => {loginFunc(email, password)}}/>
     </div>
