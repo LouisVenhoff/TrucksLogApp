@@ -1,4 +1,6 @@
 import axios from "axios";
+import Toaster from "../toaster/toaster";
+import { AlertType } from "../../components/alertComponent/alertComponent";
 
 type UserObj = {
   id: number;
@@ -49,8 +51,17 @@ class ApiController {
   }
 
   private async sendPost(uri: string, body: any): Promise<any> {
+    
     return new Promise(async (resolve, reject) => {
-      resolve(await axios.post(`${this.queryPattern}${uri}`, body));
+      try
+      {
+        resolve(await axios.post(`${this.queryPattern}${uri}`, body));
+      }
+      catch
+      {
+        Toaster.show("Server nicht erreichbar", AlertType.ERROR, 1500);
+      }
+      
     });
   }
 }

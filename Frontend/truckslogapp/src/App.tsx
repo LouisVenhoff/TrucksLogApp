@@ -6,6 +6,7 @@ import TourPage from "./pages/tourPage/tourPage";
 import ApiController from './claases/controller/apiController';
 import AlertComponent, { AlertType } from './components/alertComponent/alertComponent';
 import AlertProvider from './components/alertProvider/alertProvider';
+import Toaster from './claases/toaster/toaster';
 
 function App() {
   
@@ -18,7 +19,7 @@ function App() {
       let loginObj:any = await api.Login(email, password);
       if(loginObj.id === -1)
       {
-        console.log("Zugriff verweigert!");
+          Toaster.show("Email oder Passwort falsch", AlertType.WARNING, 1500);
       }
   } 
   
