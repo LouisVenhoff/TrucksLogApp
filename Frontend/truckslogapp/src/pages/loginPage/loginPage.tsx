@@ -3,6 +3,9 @@ import "./loginPageStyle.css";
 import Logo from "../../resources/TrucksLogLogo.png";
 import { Input, Button } from "@chakra-ui/react";
 
+import Toaster from "../../claases/toaster/toaster";
+import { AlertType } from "../../components/alertComponent/alertComponent";
+
 type LoginPageProps = 
 {
     onLogin:(email:string, password:string) => void
@@ -30,7 +33,7 @@ const LoginPage:React.FC<LoginPageProps> = ({onLogin}) =>
 
     const registerHandler = () => 
     {
-        window.alert("RegisterHandler!");
+       //Open register form from TrucksLog homepage
     }
 
     const checkEmail = (email:string):boolean => {

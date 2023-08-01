@@ -74,7 +74,6 @@ const AlertComponent: React.FC<AlertComponentProps> = ({
       initial={{ top: -75 }}
       animate={isOpen ? "open" : "closed"}
       variants={alertVariants}
-      transition={{ delay: 5 }}
     >
       <Alert
         position="absolute"
