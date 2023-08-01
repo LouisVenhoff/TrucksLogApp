@@ -1,8 +1,4 @@
 import { AlertType } from "../../components/alertComponent/alertComponent";
-import {showAlert} from "../../features/alert";
-
-
-
 
 class Toaster
 {

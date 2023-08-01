@@ -6,11 +6,11 @@ import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider } from "@chakra-ui/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import alertReducer from "./features/alert";
+import userReducer from "./features/user";
 
 const store = configureStore({
   reducer: {
-    alert: alertReducer,
+    alert: userReducer,
   },
 });
 
