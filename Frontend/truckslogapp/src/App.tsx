@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import LoginPage from './pages/loginPage/loginPage';
@@ -12,37 +12,51 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
 
 import { login } from './features/user';
+import { switchPage } from './features/page';
+
+import { Pages } from './enums/pages';
 
 function App() {
   
-  const user:any = useSelector((state:any) => state.value);
-  
+  const user:any = useSelector((state:any) => state.user.value);
+  const currentPage = useSelector((state:any) => state.page.value);
+
+  const [activePage, setActivePage] = useState<JSX.Element>();
+
+  useEffect(() => {
+    loadPage(currentPage.page);
+  },[currentPage]);
+
+
   const api = new ApiController("localhost", 3000);
   
   const dispatch = useDispatch();
   
-  const loginFunc = async (email:string, password:string) => 
+
+
+  const loadPage = (page:Pages) => 
   {
-      let loginObj:any = await api.Login(email, password);
-      if(loginObj.id === -1)
+      switch(page)
       {
-          Toaster.show("Email oder Passwort falsch", AlertType.WARNING, 1500);
-          return;
+        case Pages.LOGIN:
+          setActivePage(<LoginPage api={api}/>);
+          break;
+        case Pages.TOUR_LIST:
+          setActivePage(<TourPage api={api} />);
+          break;
+        case Pages.TOUR_DETAIL:
+          break;
       }
+  }
 
-      console.log(loginObj);
 
-      let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar);
-
-      dispatch(login(usrObj.getReduxObj()));
-
-  } 
   
+
   return (
     <div className="App">
         <AlertProvider />
         {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
-        <LoginPage onLogin={(email:string, password:string) => {loginFunc(email, password)}}/>
+        {activePage}
     </div>
   );
 }

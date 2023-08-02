@@ -7,10 +7,12 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import userReducer from "./features/user";
+import pageReducer from "./features/page";
 
 const store = configureStore({
   reducer: {
-    alert: userReducer,
+    user: userReducer,
+    page: pageReducer
   },
 });
 

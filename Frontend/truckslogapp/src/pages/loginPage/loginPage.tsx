@@ -5,17 +5,48 @@ import { Input, Button } from "@chakra-ui/react";
 
 import Toaster from "../../claases/toaster/toaster";
 import { AlertType } from "../../components/alertComponent/alertComponent";
+import ApiController from "../../claases/controller/apiController";
+import UserObj from "../../claases/user/userObj";
+
+import { useDispatch } from "react-redux";
+import { login } from "../../features/user";
+import { switchPage } from "../../features/page";
+import { Pages } from "../../enums/pages";
 
 type LoginPageProps = 
 {
-    onLogin:(email:string, password:string) => void
+    api:ApiController
 }
 
 
 
-const LoginPage:React.FC<LoginPageProps> = ({onLogin}) => 
+const LoginPage:React.FC<LoginPageProps> = ({api}) => 
 {
-    
+
+    const dispatch = useDispatch();
+
+
+    const loginFunc = async (email:string, password:string) => 
+    {
+       
+        
+        let loginObj:any = await api.Login(email, password);
+        if(loginObj.id === -1)
+        {
+            Toaster.show("Email oder Passwort falsch", AlertType.WARNING, 1500);
+            return;
+        }
+  
+        console.log(loginObj);
+  
+        let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar);
+  
+        dispatch(login(usrObj.getReduxObj()));
+        dispatch(switchPage(Pages.TOUR_LIST));
+    } 
+
+
+
     const [email, setEmail] = useState<string>("");
     const [emailValid, setEmailValid] = useState<boolean>(false);
 
@@ -28,7 +59,7 @@ const LoginPage:React.FC<LoginPageProps> = ({onLogin}) =>
         {
             return;
         }
-        onLogin(email, password);
+        loginFunc(email, password);
     }
 
     const registerHandler = () => 
