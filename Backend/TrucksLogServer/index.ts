@@ -33,15 +33,19 @@ fastify.post("/api/v1/login", async (req:any, res:any) => {
     let userId: number = await dbManager.processLogin(req.body.mail, req.body.passwd);
     let clientKey:string = "";
     let avatarLink:string = "";
+    let username:string = "";
     
     if(userId !== -1)
     {
-        clientKey = await dbManager.getClientKey(userId);
-        avatarLink = await dbManager.getAvatar(userId);
+        let usrInfo = await dbManager.getUserInfo(userId);
+        
+        clientKey = usrInfo.clientKey;
+        avatarLink = usrInfo.avatar;
+        username = usrInfo.username;
     }
 
     console.log(userId);
-    res.code(200).send({userId:userId, clientKey:clientKey, avatar:avatarLink});
+    res.code(200).send({userId:userId,username:username ,clientKey:clientKey, avatar:avatarLink});
 
 });
 

@@ -40,6 +40,7 @@ class ApiController {
         //   return;
         // }
         tempUser.id = result.data.userId;
+        tempUser.username = result.data.username;
         tempUser.clientKey = result.data.clientKey;
         tempUser.avatar = result.data.avatar;
         resolve(tempUser);

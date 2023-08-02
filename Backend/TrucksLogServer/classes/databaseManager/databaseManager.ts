@@ -11,6 +11,13 @@ export type ValidationObj = {
     clientKey: string
 }
 
+type UserInfoObj = {
+    username:string;
+    clientKey:string,
+    avatar:string
+}
+
+
 class DatabaseManager {
 
     private hostName: string;
@@ -205,6 +212,16 @@ class DatabaseManager {
         return new Promise((resolve, reject) => {
             resolve(clientKey[0].client_key);
         });
+    }
+
+    public async getUserInfo(userId:number):Promise<UserInfoObj>
+    {
+        let userInfoObj = await this.runQuery("SELECT client_key, nickname,  profilbild FROM user WHERE id = ?", userId);
+    
+        return new Promise((resolve, reject) => {
+            resolve({username:userInfoObj[0].nickname, clientKey:userInfoObj[0].client_key, avatar:userInfoObj[0].profilbild});
+        });
+    
     }
 
 
