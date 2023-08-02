@@ -49,7 +49,7 @@ fastify.get("/", function (req, res) {
     res.send({ Status: "OK" });
 });
 fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, clientKey, avatarLink;
+    var userId, clientKey, avatarLink, username, usrInfo;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -64,17 +64,18 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
                 userId = _a.sent();
                 clientKey = "";
                 avatarLink = "";
-                if (!(userId !== -1)) return [3 /*break*/, 4];
-                return [4 /*yield*/, dbManager.getClientKey(userId)];
+                username = "";
+                if (!(userId !== -1)) return [3 /*break*/, 3];
+                return [4 /*yield*/, dbManager.getUserInfo(userId)];
             case 2:
-                clientKey = _a.sent();
-                return [4 /*yield*/, dbManager.getAvatar(userId)];
+                usrInfo = _a.sent();
+                clientKey = usrInfo.clientKey;
+                avatarLink = usrInfo.avatar;
+                username = usrInfo.username;
+                _a.label = 3;
             case 3:
-                avatarLink = _a.sent();
-                _a.label = 4;
-            case 4:
                 console.log(userId);
-                res.code(200).send({ userId: userId, clientKey: clientKey, avatar: avatarLink });
+                res.code(200).send({ userId: userId, username: username, clientKey: clientKey, avatar: avatarLink });
                 return [2 /*return*/];
         }
     });

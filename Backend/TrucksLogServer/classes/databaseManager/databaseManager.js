@@ -249,6 +249,21 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.getUserInfo = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInfoObj;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key, nickname,  profilbild FROM user WHERE id = ?", userId)];
+                    case 1:
+                        userInfoObj = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                resolve({ username: userInfoObj[0].nickname, clientKey: userInfoObj[0].client_key, avatar: userInfoObj[0].profilbild });
+                            })];
+                }
+            });
+        });
+    };
     DatabaseManager.prototype.runQuery = function (query) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
