@@ -4,21 +4,25 @@ import TourDisplay from "../../components/TourDisplay/tourDisplay";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
 import TrucksLogLogo from "../../resources/TrucksLogLogo.png";
 import Header from "../../components/header/header";
+import {useSelector} from "react-redux";
+
 
 import {motion, useMotionValueEvent, useScroll} from "framer-motion";
 import Tour from "../../claases/tour/tour";
+import ApiController from "../../claases/controller/apiController";
 
 type TourPageProps = {
-  accountName: string;
-  avatarStr: string;
-  userTours: Tour[];
+  api:ApiController
 };
 
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
 
-const TourPage: React.FC<TourPageProps> = ({ accountName, avatarStr,  userTours}) => {
-  
+const TourPage: React.FC<TourPageProps> = ({api}) => {
+
+    const currentUser = useSelector((state:any) => state.user.value);
+
+
     const elementRef = useRef(null);
 
     //Animation
@@ -26,7 +30,7 @@ const TourPage: React.FC<TourPageProps> = ({ accountName, avatarStr,  userTours}
     const [scrollRate, setScrollRate] = useState<number>(1);
     const [headerOpacity, setHeaderOpacity] = useState<number>(0);
     //Tours
-    const [tours, setTours] = useState<Tour[]>(userTours);
+    const [tours, setTours] = useState<Tour[]>([]);
     const [tourElements, setTourElements] = useState<JSX.Element[]>([]);
 
 
@@ -96,10 +100,10 @@ return (
         <Header />
       </motion.div>
       <div className="TourPageAvatarDiv">
-            <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src={avatarStr} />
+            <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src={currentUser.avatar} />
       </div>
       <div className="TourPageWelcomeTextDiv">
-        <h1>Willkommen, {accountName}</h1>
+        <h1>Willkommen, {currentUser.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
             {tourElements}
