@@ -17,7 +17,7 @@ type TourPageProps = {
 
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
-const SCROLL_ELEMENTS_THRESHOLD = 5;
+const SCROLL_ELEMENTS_THRESHOLD = 3;
 
 const TourPage: React.FC<TourPageProps> = ({api}) => {
 
@@ -32,8 +32,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const [headerOpacity, setHeaderOpacity] = useState<number>(0);
     //Tours
     const [tours, setTours] = useState<Tour[]>([]);
-    const [tourElements, setTourElements] = useState<JSX.Element[]>([]);
-
+   
     const [infoText, setInfoText] = useState<string>("Noch keine Fahrten!");
 
 
@@ -62,7 +61,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
       })
 
     useEffect(() => {
-      updateElements(tours);
+      
 
       if(tours.length === 0)
       {
@@ -73,25 +72,6 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
         setInfoText("");
       }
     },[tours]);
-
-// updateElements checks for changes in the tours array. When change events occure, the displayed tours will update
-    const updateElements = (tourData:Tour[]) =>
-    {
-      let tempElements:JSX.Element[] = [];
-
-      for(let i = 0; i < tourData.length; i++)
-      {
-        tempElements.push(transformTour(tourData[i]));
-      }
-
-      setTourElements(tempElements);
-
-    }
-    const transformTour = (tour:Tour):JSX.Element =>{
-
-        return(<TourDisplay tour={tour}/>);
-
-    } 
 
     const calculateAvatarTransform = (scrollRate:number, displayThreashold:number) => 
     {
@@ -144,7 +124,7 @@ return (
       </div>
       <div className="TourPageDataTableSpace">
             <h1>{infoText}</h1>
-            {tourElements}
+            <TourDisplay tourData={tours} />
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
             <h1>{start} - {target}</h1>
         </div>
         <div className="TourElementDate">
-            <h1>date</h1>
+            <h1>{date}</h1>
         </div>
     </div>
     );
