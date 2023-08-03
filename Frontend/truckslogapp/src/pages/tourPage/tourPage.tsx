@@ -17,6 +17,7 @@ type TourPageProps = {
 
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
+const SCROLL_ELEMENTS_THRESHOLD = 5;
 
 const TourPage: React.FC<TourPageProps> = ({api}) => {
 
@@ -33,18 +34,32 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const [tours, setTours] = useState<Tour[]>([]);
     const [tourElements, setTourElements] = useState<JSX.Element[]>([]);
 
+    const [infoText, setInfoText] = useState<string>("Noch keine Fahrten!");
+
 
     //Player information
-    const [avatarSize, setAvatarSize] = useState<number>(0);
+    const [avatarSize, setAvatarSize] = useState<number>(1);
     const [avatarPosition, setAvatarPosition] = useState<number>(0);
 
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
-        calculateAvatarTransform(latest, AVATAR_HIDE_POSITION);
-        calculateHeaderOpacity(latest, 10);
+        if(tours.length > SCROLL_ELEMENTS_THRESHOLD)
+        {
+          calculateAvatarTransform(latest, AVATAR_HIDE_POSITION);
+          calculateHeaderOpacity(latest, 10);
+        }
       })
 
     useEffect(() => {
       updateElements(tours);
+
+      if(tours.length === 0)
+      {
+        setInfoText("Noch keine Fahrten");
+      }
+      else
+      {
+        setInfoText("");
+      }
     },[tours]);
 
 // updateElements checks for changes in the tours array. When change events occure, the displayed tours will update
@@ -69,7 +84,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const calculateAvatarTransform = (scrollRate:number, displayThreashold:number) => 
     {
         let sizeFactor:number = 1 - scrollRate;
-
+        console.log(sizeFactor);
         if(sizeFactor < displayThreashold)
         {
             setAvatarPosition(AVATAR_HIDE_BOTTOM);
@@ -106,6 +121,7 @@ return (
         <h1>Willkommen, {currentUser.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
+            <h1>{infoText}</h1>
             {tourElements}
       </div>
     </div>
