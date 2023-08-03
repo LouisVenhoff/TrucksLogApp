@@ -1,6 +1,7 @@
 import axios from "axios";
 import Toaster from "../toaster/toaster";
 import { AlertType } from "../../components/alertComponent/alertComponent";
+import Tour from "../tour/tour";
 
 type UserObj = {
   id: number;
@@ -14,11 +15,34 @@ class ApiController {
   private port: string;
   private queryPattern: string;
 
+
   constructor(hostname: string, port: number) {
     this.hostname = hostname;
     this.port = port.toString();
     this.queryPattern = `http://${this.hostname}:${this.port}`;
   }
+
+  public async LoadTours(id:number, clientKey:string):Promise<Tour[]>
+  {
+    
+    let result:any = await this.sendPost("/api/v1/getTours",{
+          userId:id,
+          clientKey:clientKey
+      })
+
+    
+
+    let tourArr:Tour[] = this.createTourArr(result.data);
+
+    return new Promise((resolve, reject) => {
+
+        resolve(tourArr);
+
+    });
+
+    
+  }
+
 
   public async Login(email: string, password: string): Promise<UserObj> {
     let result: any = await this.sendPost("/api/v1/login", {
@@ -34,11 +58,6 @@ class ApiController {
           clientKey: "",
           avatar: "",
         };
-
-        // if (result.data.userId === -1) {
-        //   resolve(tempUser);
-        //   return;
-        // }
         tempUser.id = result.data.userId;
         tempUser.username = result.data.username;
         tempUser.clientKey = result.data.clientKey;
@@ -65,6 +84,21 @@ class ApiController {
       
     });
   }
+
+  private createTourArr(input:any[]):Tour[]
+  {
+      let output:Tour[] = [];
+
+      for(let i = 0; i < input.length; i++)
+      {
+        output.push(input[i] as Tour);
+      }
+      console.log("Toures", output);
+      return output;
+
+  }
+
+  
 }
 
 export default ApiController;

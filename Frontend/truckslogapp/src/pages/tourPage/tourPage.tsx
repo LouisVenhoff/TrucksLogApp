@@ -41,6 +41,18 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const [avatarSize, setAvatarSize] = useState<number>(1);
     const [avatarPosition, setAvatarPosition] = useState<number>(0);
 
+
+    useEffect(() => {
+
+      //TODO:Load all Tours
+      // Parse Tours to Tour Obj
+      // Load Tours in tours state
+      loadTours();
+
+    },[]);
+
+
+
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
         if(tours.length > SCROLL_ELEMENTS_THRESHOLD)
         {
@@ -84,7 +96,6 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const calculateAvatarTransform = (scrollRate:number, displayThreashold:number) => 
     {
         let sizeFactor:number = 1 - scrollRate;
-        console.log(sizeFactor);
         if(sizeFactor < displayThreashold)
         {
             setAvatarPosition(AVATAR_HIDE_BOTTOM);
@@ -106,6 +117,17 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
         {
           setHeaderOpacity(0);
         } 
+    }
+
+
+
+    const loadTours = async () =>
+    {
+        
+        let tourArr:Tour[] = await api.LoadTours(currentUser.id, currentUser.clientKey);
+
+        setTours(tourArr);
+        
     }
 
 

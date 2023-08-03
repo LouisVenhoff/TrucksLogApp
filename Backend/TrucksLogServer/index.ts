@@ -52,11 +52,11 @@ fastify.post("/api/v1/login", async (req:any, res:any) => {
 //TODO: Get all Tours of an UserId
 
 fastify.post("/api/v1/getTours", async (req:any, res:any) => {
-    let userId:number = parseInt(req.body.userId);
+    let userId:number = req.body.userId;
     let clientKey:string = req.body.clientKey;
-
     let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
     
+
     console.log(userValid);
 
     if(!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
@@ -75,12 +75,12 @@ fastify.post("/api/v1/getTours", async (req:any, res:any) => {
 });
 
 fastify.post("/api/v1/getTour", async (req:any, res:any) => {
-    let tourId:number = parseInt(req.body.tourId);
+    let tourId:number = req.body.tourId;
     let userId:number = parseInt(req.body.userId);
     let clientKey:string = req.body.clientKey;
 
     let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
-
+    
     if(!userValid)
     {
         res.code(403).send();

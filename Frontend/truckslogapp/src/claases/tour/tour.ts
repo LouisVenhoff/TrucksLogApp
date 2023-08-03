@@ -95,6 +95,8 @@ class Tour {
 
     private resolveData(dataset: any) {
 
+        console.log("Constructor input:", dataset);
+        
         this.game = this.resolveGame(dataset.spiel);
         this.state = this.resolveState(dataset.status);
         this.nickname = dataset.nickname;

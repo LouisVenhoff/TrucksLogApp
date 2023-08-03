@@ -86,11 +86,12 @@ fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                userId = parseInt(req.body.userId);
+                userId = req.body.userId;
                 clientKey = req.body.clientKey;
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
                 userValid = _a.sent();
+                console.log(userId);
                 console.log(userValid);
                 if (!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
                  {
@@ -111,7 +112,7 @@ fastify.post("/api/v1/getTour", function (req, res) { return __awaiter(void 0, v
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                tourId = parseInt(req.body.tourId);
+                tourId = req.body.tourId;
                 userId = parseInt(req.body.userId);
                 clientKey = req.body.clientKey;
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
