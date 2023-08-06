@@ -91,7 +91,6 @@ fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, 
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
                 userValid = _a.sent();
-                console.log(userId);
                 console.log(userValid);
                 if (!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
                  {

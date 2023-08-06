@@ -106,6 +106,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
         
         let tourArr:Tour[] = await api.LoadTours(currentUser.id, currentUser.clientKey);
 
+        console.log(tourArr);
+
         setTours(tourArr);
         
     }
