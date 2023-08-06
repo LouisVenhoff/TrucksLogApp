@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useId, useState } from "react";
 import "./tourDisplayStyle.css";
 import TourElement from "./tourElement/tourElement";
 import { TourState } from "../../claases/tour/tour";
@@ -6,14 +6,38 @@ import { TourState } from "../../claases/tour/tour";
 import Tour from "../../claases/tour/tour";
 
 type TourDisplayProps ={
-    tour:Tour
+    tourData:Tour[] 
 }
 
-const TourDisplay:React.FC<TourDisplayProps> = ({tour}) => 
+
+const TourDisplay:React.FC<TourDisplayProps> = ({tourData}) => 
 {
+
+    const[tourElements, setTourElements] = useState<JSX.Element[]>();
+    
+
+
+    useEffect(() => {
+       convertTourData();
+    },[tourData]);
+
+
+    const convertTourData = ()=> {
+        let tempTours:JSX.Element[] = [];
+
+        for(let i = 0; i < tourData.length; i++)
+        {
+            // tempTours.push(<TourElement start={tourData[i].startPos} target={tourData[i].targetPos} date={tourData[i].TimeString} state={tourData[i].state}/>);
+            tempTours.push(<TourElement start={tourData[i].startPos} target={tourData[i].targetPos} date={(`${tourData[i].day}.${tourData[i].month}.${tourData[i].year}`)} state={tourData[i].state}/>);
+        }
+        setTourElements(tempTours);
+    }
+
+
     return(
         <div className="TourDisplayMainDiv">
-            <TourElement start={tour.startPos} target={tour.targetPos} date={tour.TimeString} state={tour.state}/>
+          {tourElements}
+
         </div>
     );
 }

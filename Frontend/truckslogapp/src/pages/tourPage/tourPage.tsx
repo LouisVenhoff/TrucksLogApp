@@ -17,7 +17,7 @@ type TourPageProps = {
 
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
-const SCROLL_ELEMENTS_THRESHOLD = 5;
+const SCROLL_ELEMENTS_THRESHOLD = 3;
 
 const TourPage: React.FC<TourPageProps> = ({api}) => {
 
@@ -32,14 +32,25 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const [headerOpacity, setHeaderOpacity] = useState<number>(0);
     //Tours
     const [tours, setTours] = useState<Tour[]>([]);
-    const [tourElements, setTourElements] = useState<JSX.Element[]>([]);
-
+   
     const [infoText, setInfoText] = useState<string>("Noch keine Fahrten!");
 
 
     //Player information
     const [avatarSize, setAvatarSize] = useState<number>(1);
     const [avatarPosition, setAvatarPosition] = useState<number>(0);
+
+
+    useEffect(() => {
+
+      //TODO:Load all Tours
+      // Parse Tours to Tour Obj
+      // Load Tours in tours state
+      loadTours();
+
+    },[]);
+
+
 
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
         if(tours.length > SCROLL_ELEMENTS_THRESHOLD)
@@ -50,7 +61,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
       })
 
     useEffect(() => {
-      updateElements(tours);
+      
 
       if(tours.length === 0)
       {
@@ -62,29 +73,9 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
       }
     },[tours]);
 
-// updateElements checks for changes in the tours array. When change events occure, the displayed tours will update
-    const updateElements = (tourData:Tour[]) =>
-    {
-      let tempElements:JSX.Element[] = [];
-
-      for(let i = 0; i < tourData.length; i++)
-      {
-        tempElements.push(transformTour(tourData[i]));
-      }
-
-      setTourElements(tempElements);
-
-    }
-    const transformTour = (tour:Tour):JSX.Element =>{
-
-        return(<TourDisplay tour={tour}/>);
-
-    } 
-
     const calculateAvatarTransform = (scrollRate:number, displayThreashold:number) => 
     {
         let sizeFactor:number = 1 - scrollRate;
-        console.log(sizeFactor);
         if(sizeFactor < displayThreashold)
         {
             setAvatarPosition(AVATAR_HIDE_BOTTOM);
@@ -109,6 +100,19 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     }
 
 
+
+    const loadTours = async () =>
+    {
+        
+        let tourArr:Tour[] = await api.LoadTours(currentUser.id, currentUser.clientKey);
+
+        console.log(tourArr);
+
+        setTours(tourArr);
+        
+    }
+
+
 return (
     <div ref={elementRef} className="TourPageMainDiv">
       <motion.div className="TourPageHeaderDiv" style={{opacity:(headerOpacity)}}>
@@ -122,7 +126,7 @@ return (
       </div>
       <div className="TourPageDataTableSpace">
             <h1>{infoText}</h1>
-            {tourElements}
+            <TourDisplay tourData={tours} />
       </div>
     </div>
   );

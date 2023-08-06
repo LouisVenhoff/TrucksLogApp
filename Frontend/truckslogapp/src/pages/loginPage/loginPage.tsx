@@ -37,15 +37,11 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
             return;
         }
   
-        console.log(loginObj);
-  
         let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar);
   
         dispatch(login(usrObj.getReduxObj()));
         dispatch(switchPage(Pages.TOUR_LIST));
     } 
-
-
 
     const [email, setEmail] = useState<string>("");
     const [emailValid, setEmailValid] = useState<boolean>(false);
@@ -66,7 +62,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
     {
        //Open register form from TrucksLog homepage
     }
-
+    
     const checkEmail = (email:string):boolean => {
         let emailRegex = new RegExp("^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$");
         let result = emailRegex.test(email);
@@ -86,9 +82,9 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
                  <img className="LoginPageLogoImg" src={Logo}/>
             </div>
             <div className="LoginPageControlsDiv">
-                <Input isInvalid={!emailValid} placeholder="Email" backgroundColor="white" onChange={(e:any) => {emailChangeHandler(e.target.value)}}/>
-                <Input placeholder="Passwort" backgroundColor="white" onChange={(e:any) => {setPassword(e.target.value)}}/>
-                <Button isActive={!emailValid} colorScheme="teal" onClick={() => {loginHandler()}}>Login</Button>
+                <Input isInvalid={!emailValid} placeholder="Email" backgroundColor="white"  onChange={(e:any) => {emailChangeHandler(e.target.value)}}/>
+                <Input placeholder="Passwort" backgroundColor="white"  onChange={(e:any) => {setPassword(e.target.value)}}/>
+                <Button isActive={!emailValid} colorScheme="teal"  onClick={() => {loginHandler()}}>Login</Button>
                 <Button colorScheme="teal" onClick={() => {registerHandler()}}>Registieren</Button>
             </div>
         </div>

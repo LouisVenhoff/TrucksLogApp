@@ -82,57 +82,9 @@ class Tour {
     public ceTour: number = 0;
     public vsTour: number = 0;
 
-
-    constructor(dataset: any) {
-        this.resolveData(dataset);
-    }
-
     public get TimeString():string
     {
         return `${this.day} : ${this.month}`;
-    }
-
-
-    private resolveData(dataset: any) {
-
-        this.game = this.resolveGame(dataset.spiel);
-        this.state = this.resolveState(dataset.status);
-        this.nickname = dataset.nickname;
-        this.company = dataset.in_spedition;
-        this.day = dataset.tag;
-        this.month = dataset.monat;
-        this.year = dataset.year;
-        this.kw = dataset.kw;
-        this.tourId = dataset.id;
-        this.startPos = dataset.startort;
-        this.startCompany = dataset.startfirma;
-        this.targetPos = dataset.zielort;
-        this.targetCompany = dataset.zielfirma;
-        this.weight = dataset.gewicht;
-        this.charge = dataset.ladung;
-        this.income = dataset.einkommen;
-        this.kmPrice = dataset.kilometerpreis;
-        this.fullDistance = dataset.gesamt_km;
-        this.restDistance = dataset.rest_km;
-        this.traveledDistance = dataset.gef_km;
-        this.startTime = dataset.start_datetime;
-        this.endTime = dataset.end_datetime;
-        this.freightDamage = dataset.frachtschaden;
-        this.tankVolume = dataset.lkw_tankvolume;
-        this.startFuel = dataset.start_fuel;
-        this.endFuel = dataset.abgabe_fuel;
-        this.fuelConsumption = this.startFuel - this.endFuel;
-        this.truckODOStart = dataset.odometer_start;
-        this.truckODOEnd = dataset.odometer_end;
-        this.truckDistance = this.truckODOEnd - this.truckODOStart;
-        this.maxSpeed = dataset.max_speed;
-
-        this.billDate = dataset.in_abrechnung;
-
-        this.notes = dataset.admin_notizen;
-
-        this.ceTour = dataset.CE_TOUR;
-        this.vsTour = dataset.VS_TOUR;
     }
 
     private resolveGame(gameName: string): Game {
