@@ -28,7 +28,7 @@ const TourDisplay:React.FC<TourDisplayProps> = ({tourData}) =>
         for(let i = 0; i < tourData.length; i++)
         {
             // tempTours.push(<TourElement start={tourData[i].startPos} target={tourData[i].targetPos} date={tourData[i].TimeString} state={tourData[i].state}/>);
-            tempTours.push(<TourElement start={tourData[i].startPos} target={tourData[i].targetPos} date={(tourData[i].day + ":" + tourData[i].month)} state={tourData[i].state}/>);
+            tempTours.push(<TourElement start={tourData[i].startPos} target={tourData[i].targetPos} date={(`${tourData[i].day}.${tourData[i].month}.${tourData[i].year}`)} state={tourData[i].state}/>);
         }
         setTourElements(tempTours);
     }

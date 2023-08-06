@@ -162,7 +162,7 @@ class Tour {
         this.company = dataset.in_spedition;
         this.day = dataset.tag;
         this.month = dataset.monat;
-        this.year = dataset.year;
+        this.year = dataset.jahr;
         this.kw = dataset.kw;
         this.tourId = dataset.id;
         this.startPos = dataset.startort;

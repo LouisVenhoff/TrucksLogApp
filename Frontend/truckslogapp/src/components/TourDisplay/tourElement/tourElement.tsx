@@ -67,11 +67,12 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
         <div className="TourElementSymbolDiv">
             <img src={tourSymbol}/>
         </div>
-        <div className="TourElementDescription">
-            <h1>{start} - {target}</h1>
+        <div>
+
         </div>
-        <div className="TourElementDate">
-            <h1>{date}</h1>
+        <div className="TourElementDescription">
+            <h3>{start} - {target}</h3>
+            <h3>{date}</h3>
         </div>
     </div>
     );
