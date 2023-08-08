@@ -9,6 +9,9 @@ import Old from "../../../resources/symbols/old.png";
 import Rejected from "../../../resources/symbols/rejected.png";
 import { TourState } from "../../../claases/tour/tour";
 
+import { Icon, IconButton } from "@chakra-ui/react";
+import { PlusSquareIcon } from "@chakra-ui/icons";
+
 type TourElementProps = {
     start:string,
     target:string,
@@ -73,6 +76,9 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
         <div className="TourElementDescription">
             <h3>{start} - {target}</h3>
             <h3>{date}</h3>
+        </div>
+        <div className="TourElementBillBtnDiv">
+            <IconButton icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={() => {window.alert(`${start} pressed!`)}}/>
         </div>
     </div>
     );

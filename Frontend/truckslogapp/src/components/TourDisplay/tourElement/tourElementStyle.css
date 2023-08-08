@@ -12,6 +12,7 @@
 
 }
 
+
 .TourElementSymbolDiv{
     position:relative;
     width:50px;
@@ -42,4 +43,10 @@
     font-weight:bold;
     left:300px;
 
+}
+
+.TourElementBillBtnDiv
+{
+    margin-left:auto;
+    margin-right:20px;
 }
