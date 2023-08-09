@@ -8,6 +8,7 @@
     overflow-x:hidden;
     width:100%;
     height:100%;
+    z-index:-3;
 }
 
 .TourPageBackBtn
@@ -53,7 +54,7 @@
     justify-content:center;
     margin:auto;
     overflow-x:visible;
-    
+    z-index:1
 }
 
 
@@ -63,5 +64,5 @@
     height:inherit;
     background-color:#595c5f;
     border-radius:10px;
-    z-index:-1;
+    z-index:1
 }
