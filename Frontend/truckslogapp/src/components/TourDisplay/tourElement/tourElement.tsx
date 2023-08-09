@@ -11,6 +11,7 @@ import { TourState } from "../../../claases/tour/tour";
 
 import { Icon, IconButton } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
+import {MdShoppingCartCheckout} from "react-icons/md";
 
 type TourElementProps = {
     start:string,
@@ -22,9 +23,12 @@ type TourElementProps = {
 const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) => {
     
     const [tourSymbol, setTourSymbol] = useState<string>();
-    
+    const [billingActive, setBillingActive] = useState<boolean>(false);
+
     useEffect(() => {
         loadTourSymbol(state);
+
+        setBillingActive(state == TourState.COMPLETED ? true : false);
     },[state]);
 
 
@@ -63,6 +67,14 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
     }
 
 
+    const billingHandler = () => {
+        if(billingActive)
+        {
+            window.alert("Hello World");
+        }
+    }
+
+
     
     
     return(
@@ -78,7 +90,7 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
             <h3>{date}</h3>
         </div>
         <div className="TourElementBillBtnDiv">
-            <IconButton icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={() => {window.alert(`${start} pressed!`)}}/>
+            <IconButton isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
         </div>
     </div>
     );
