@@ -93,6 +93,7 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
         </div>
         <div className="TourElementBillBtnDiv">
             <IconButton isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
+            {/* <IconButton isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
         </div>
     </div>
     );

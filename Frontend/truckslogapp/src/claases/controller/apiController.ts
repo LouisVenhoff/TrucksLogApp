@@ -72,8 +72,10 @@ class ApiController {
 
   public calcTour(userId:number,tourId:number, clientKey:string)
   {
+      console.log(userId, tourId, clientKey);  
+
       this.sendPost("/api/v1/calcTour", {
-        id:userId,
+        userId:userId,
         clientKey:clientKey,
         tourId:tourId
       });

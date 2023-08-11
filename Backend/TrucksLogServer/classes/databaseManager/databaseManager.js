@@ -141,12 +141,12 @@ var DatabaseManager = /** @class */ (function () {
             var userClientKey;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key FROM user WHERE id = ?", data.userId)];
+                    case 0: return [4 /*yield*/, this.getClientKey(data.userId)];
                     case 1:
                         userClientKey = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 try {
-                                    if (userClientKey[0].client_key === data.clientKey) {
+                                    if (userClientKey === data.clientKey) {
                                         resolve(true);
                                     }
                                     else {
@@ -154,6 +154,7 @@ var DatabaseManager = /** @class */ (function () {
                                     }
                                 }
                                 catch (e) {
+                                    console.log(e);
                                     resolve(false);
                                 }
                             })];

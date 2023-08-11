@@ -114,6 +114,11 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
         
     }
 
+    const calculateTour = async (tourId:number) => 
+    {
+          api.calcTour(currentUser.id, tourId, currentUser.clientKey);
+    }
+
 
 return (
     <div ref={elementRef} className="TourPageMainDiv">
@@ -128,7 +133,7 @@ return (
       </div>
       <div className="TourPageDataTableSpace">
             <h1>{infoText}</h1>
-            <TourDisplay tourData={tours} />
+            <TourDisplay tourData={tours} calcCallback={(id:number) => {calculateTour(id)}}  />
       </div>
     </div>
   );

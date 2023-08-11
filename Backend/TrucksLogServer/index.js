@@ -140,6 +140,7 @@ fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, 
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
                 passValid = _a.sent();
+                console.log("Akzeptiert:", passValid);
                 if (!passValid) {
                     res.code(403).send();
                     return [2 /*return*/];
