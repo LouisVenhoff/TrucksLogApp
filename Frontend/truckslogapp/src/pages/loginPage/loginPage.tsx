@@ -14,11 +14,13 @@ import { switchPage } from "../../features/page";
 import { switchLoadingScreen } from "../../features/loadingScreen";
 
 import { Pages } from "../../enums/pages";
+import { clearInterval } from "timers";
 
 type LoginPageProps = 
 {
     api:ApiController
 }
+
 
 
 
@@ -78,6 +80,8 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
         setEmail(value);
         setEmailValid(checkEmail(value));
     }
+
+   
 
 
     return(

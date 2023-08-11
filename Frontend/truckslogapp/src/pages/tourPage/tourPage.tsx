@@ -27,6 +27,10 @@ const SYNC_TIME = 60000;
 
 let syncInterval:any;
 
+//Loader
+const SHOW_LOADER_TIME = 750;
+let loadingTimeout:any;
+
 const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const currentUser = useSelector((state:any) => state.user.value);
@@ -134,7 +138,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const calculateTour = async (tourId:number) => 
     {
-          dispatch(switchLoadingScreen(true));
+         startLoading()
         
           let result:CalcState = await api.calcTour(currentUser.id, tourId, currentUser.clientKey);
 
@@ -145,8 +149,21 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
           loadTours();
 
-          dispatch(switchLoadingScreen(false));
+         stopLoading();
     }
+
+    //Loader
+    const startLoading = () => 
+    {
+        loadingTimeout = setTimeout(() => {dispatch(switchLoadingScreen(true));}, SHOW_LOADER_TIME);
+    }
+
+    const stopLoading = () => 
+    {
+        clearTimeout(loadingTimeout);
+        dispatch(switchLoadingScreen(false));
+    }
+
 
 
 return (

@@ -1,14 +1,14 @@
 import {PayloadAction, createSlice} from "@reduxjs/toolkit";
 
 
-
 export const loadingScreenSlice = createSlice({
     name:"laodingScreen",
     initialState:{value:{isShowed:false}},
     reducers:{
         switchLoadingScreen:(state, action:PayloadAction<boolean>) => {
-            
-            state.value.isShowed = action.payload;
+
+        state.value.isShowed = action.payload;
+
         }
     }
 });
