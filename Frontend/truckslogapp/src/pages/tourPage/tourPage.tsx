@@ -124,6 +124,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
           {
             Toaster.show("Fehler beim abrechenen", AlertType.ERROR,1000);
           }
+
+          loadTours();
     }
 
 
