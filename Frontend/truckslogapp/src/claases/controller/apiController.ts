@@ -22,25 +22,24 @@ class ApiController {
     this.queryPattern = `http://${this.hostname}:${this.port}`;
   }
 
-  public async LoadTours(id:number, clientKey:string):Promise<Tour[]>
-  {
-    
-    let result:any = await this.sendPost("/api/v1/getTours",{
-          userId:id,
-          clientKey:clientKey
-      })
+  public async LoadTours(id: number, clientKey: string): Promise<Tour[]> {
 
-    
+    let result: any = await this.sendPost("/api/v1/getTours", {
+      userId: id,
+      clientKey: clientKey
+    })
 
-    let tourArr:Tour[] = this.createTourArr(result.data);
+
+
+    let tourArr: Tour[] = this.createTourArr(result.data);
 
     return new Promise((resolve, reject) => {
 
-        resolve(tourArr);
+      resolve(tourArr);
 
     });
 
-    
+
   }
 
 
@@ -63,53 +62,56 @@ class ApiController {
         tempUser.clientKey = result.data.clientKey;
         tempUser.avatar = result.data.avatar;
         resolve(tempUser);
-      } catch 
+      } catch
       {
         reject();
       }
     });
   }
 
-  public calcTour(userId:number,tourId:number, clientKey:string)
-  {
-      console.log(userId, tourId, clientKey);  
+  public calcTour(userId: number, tourId: number, clientKey: string): Promise<number> {
+    console.log(userId, tourId, clientKey);
 
+    return new Promise(async (resolve, reject) => {
       this.sendPost("/api/v1/calcTour", {
-        userId:userId,
-        clientKey:clientKey,
-        tourId:tourId
+        userId: userId,
+        clientKey: clientKey,
+        tourId: tourId
+      })
+      .then((res:any) => {
+          resolve(res.data.calcResult)
       });
+    });
+
+
   }
 
   private async sendPost(uri: string, body: any): Promise<any> {
-    
+
     return new Promise(async (resolve, reject) => {
-      try
-      {
+      try {
         resolve(await axios.post(`${this.queryPattern}${uri}`, body));
       }
       catch
       {
         Toaster.show("Server nicht erreichbar", AlertType.ERROR, 1500);
       }
-      
+
     });
   }
 
-  private createTourArr(input:any[]):Tour[]
-  {
-      let output:Tour[] = [];
+  private createTourArr(input: any[]): Tour[] {
+    let output: Tour[] = [];
 
-      for(let i = 0; i < input.length; i++)
-      {
-        output.push(input[i] as Tour);
-      }
-      console.log("Toures", output);
-      return output;
+    for (let i = 0; i < input.length; i++) {
+      output.push(input[i] as Tour);
+    }
+    console.log("Toures", output);
+    return output;
 
   }
 
-  
+
 }
 
 export default ApiController;

@@ -8,8 +8,10 @@ import {useSelector} from "react-redux";
 
 
 import {motion, useMotionValueEvent, useScroll} from "framer-motion";
-import Tour from "../../claases/tour/tour";
+import Tour, { CalcState } from "../../claases/tour/tour";
 import ApiController from "../../claases/controller/apiController";
+import Toaster from "../../claases/toaster/toaster";
+import { AlertType } from "../../components/alertComponent/alertComponent";
 
 
 
@@ -116,7 +118,12 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const calculateTour = async (tourId:number) => 
     {
-          api.calcTour(currentUser.id, tourId, currentUser.clientKey);
+          let result:CalcState = await api.calcTour(currentUser.id, tourId, currentUser.clientKey);
+
+          if(result !== CalcState.TOUR_OK)
+          {
+            Toaster.show("Fehler beim abrechenen", AlertType.ERROR,1000);
+          }
     }
 
 

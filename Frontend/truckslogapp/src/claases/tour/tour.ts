@@ -19,6 +19,7 @@ export enum TourState {
 }
 
 export enum CalcState {
+    UNDEFINED,
     TOUR_OK,
     TOUR_STATE_ERROR,
     DISTANCE_INCORRECT,
