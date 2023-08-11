@@ -22,6 +22,9 @@ type TourPageProps = {
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
 const SCROLL_ELEMENTS_THRESHOLD = 3;
+const SYNC_TIME = 60000;
+
+let syncInterval:any;
 
 const TourPage: React.FC<TourPageProps> = ({api}) => {
 
@@ -63,6 +66,17 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
           calculateHeaderOpacity(latest, 10);
         }
       })
+
+    useEffect(() => {
+        syncInterval = setInterval(() => {
+          loadTours();
+        },SYNC_TIME)
+
+        return(() => {
+          clearInterval(syncInterval);
+        });
+    },[]);
+
 
     useEffect(() => {
       
