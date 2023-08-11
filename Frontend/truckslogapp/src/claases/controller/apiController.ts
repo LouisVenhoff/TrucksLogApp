@@ -70,6 +70,15 @@ class ApiController {
     });
   }
 
+  public calcTour(userId:number,tourId:number, clientKey:string)
+  {
+      this.sendPost("/api/v1/calcTour", {
+        id:userId,
+        clientKey:clientKey,
+        tourId:tourId
+      });
+  }
+
   private async sendPost(uri: string, body: any): Promise<any> {
     
     return new Promise(async (resolve, reject) => {

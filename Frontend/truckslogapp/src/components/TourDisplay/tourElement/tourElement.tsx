@@ -14,13 +14,15 @@ import { PlusSquareIcon } from "@chakra-ui/icons";
 import {MdShoppingCartCheckout} from "react-icons/md";
 
 type TourElementProps = {
+    tourId:number,
     start:string,
     target:string,
     state:TourState,
     date:string,
+    calcCallback?:(id:number) => void
 }
 
-const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) => {
+const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, date, calcCallback}) => {
     
     const [tourSymbol, setTourSymbol] = useState<string>();
     const [billingActive, setBillingActive] = useState<boolean>(false);
@@ -68,9 +70,9 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
 
 
     const billingHandler = () => {
-        if(billingActive)
+        if(billingActive && calcCallback !== undefined)
         {
-            window.alert("Hello World");
+            calcCallback(tourId);
         }
     }
 

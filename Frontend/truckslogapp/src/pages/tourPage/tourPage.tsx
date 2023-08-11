@@ -11,7 +11,7 @@ import {motion, useMotionValueEvent, useScroll} from "framer-motion";
 import Tour from "../../claases/tour/tour";
 import ApiController from "../../claases/controller/apiController";
 
-import {MdShoppingCartCheckout} from "react-icons/md";
+
 
 type TourPageProps = {
   api:ApiController
