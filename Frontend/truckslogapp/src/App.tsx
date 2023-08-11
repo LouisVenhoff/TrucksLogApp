@@ -33,12 +33,20 @@ function App() {
 
   const user: any = useSelector((state: any) => state.user.value);
   const currentPage = useSelector((state: any) => state.page.value);
+  const loadingScreen = useSelector((state:any) => state.loadingScreen.value);
 
   const [activePage, setActivePage] = useState<JSX.Element>();
+  const [laodingScreenOpened, setLoadingScreenOpened] = useState<boolean>(false);
 
   useEffect(() => {
     loadPage(currentPage.page);
   }, [currentPage]);
+
+  useEffect(() => {
+
+      setLoadingScreenOpened(loadingScreen.isShowed);
+
+  },[loadingScreen]);
 
 
   const api = new ApiController("localhost", 3000);
@@ -66,7 +74,7 @@ function App() {
   return (
     <div className="App">
       <AlertProvider />
-      <Modal isOpen={false} onClose={() => { }} size="xs">
+      <Modal isOpen={laodingScreenOpened} onClose={() => { }} size="xs">
         <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px)'>
           <ModalContent>
             <ModalHeader>LadeDaten . . .</ModalHeader>

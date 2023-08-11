@@ -5,7 +5,8 @@ import { ArrowLeftIcon } from "@chakra-ui/icons";
 import TrucksLogLogo from "../../resources/TrucksLogLogo.png";
 import Header from "../../components/header/header";
 import {useSelector} from "react-redux";
-
+import {useDispatch} from "react-redux";
+import { switchLoadingScreen } from "../../features/loadingScreen";
 
 import {motion, useMotionValueEvent, useScroll} from "framer-motion";
 import Tour, { CalcState } from "../../claases/tour/tour";
@@ -30,6 +31,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const currentUser = useSelector((state:any) => state.user.value);
 
+    const dispatch = useDispatch();
 
     const elementRef = useRef(null);
 
@@ -132,6 +134,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const calculateTour = async (tourId:number) => 
     {
+          dispatch(switchLoadingScreen(true));
+        
           let result:CalcState = await api.calcTour(currentUser.id, tourId, currentUser.clientKey);
 
           if(result !== CalcState.TOUR_OK)
@@ -140,6 +144,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
           }
 
           loadTours();
+
+          dispatch(switchLoadingScreen(false));
     }
 
 
