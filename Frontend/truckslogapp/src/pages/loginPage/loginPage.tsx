@@ -11,12 +11,16 @@ import UserObj from "../../claases/user/userObj";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/user";
 import { switchPage } from "../../features/page";
+import { switchLoadingScreen } from "../../features/loadingScreen";
+
 import { Pages } from "../../enums/pages";
+import { clearInterval } from "timers";
 
 type LoginPageProps = 
 {
     api:ApiController
 }
+
 
 
 
@@ -29,6 +33,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
     const loginFunc = async (email:string, password:string) => 
     {
        
+        dispatch(switchLoadingScreen(true));
         
         let loginObj:any = await api.Login(email, password);
         if(loginObj.id === -1)
@@ -39,6 +44,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
   
         let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar);
   
+        dispatch(switchLoadingScreen(false));
         dispatch(login(usrObj.getReduxObj()));
         dispatch(switchPage(Pages.TOUR_LIST));
     } 
@@ -74,6 +80,8 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
         setEmail(value);
         setEmailValid(checkEmail(value));
     }
+
+   
 
 
     return(

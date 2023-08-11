@@ -8,11 +8,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import userReducer from "./features/user";
 import pageReducer from "./features/page";
+import loadingScreenReducer from "./features/loadingScreen";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
-    page: pageReducer
+    page: pageReducer,
+    loadingScreen: loadingScreenReducer,
   },
 });
 

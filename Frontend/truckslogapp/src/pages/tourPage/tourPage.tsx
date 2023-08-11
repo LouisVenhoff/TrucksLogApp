@@ -5,7 +5,8 @@ import { ArrowLeftIcon } from "@chakra-ui/icons";
 import TrucksLogLogo from "../../resources/TrucksLogLogo.png";
 import Header from "../../components/header/header";
 import {useSelector} from "react-redux";
-
+import {useDispatch} from "react-redux";
+import { switchLoadingScreen } from "../../features/loadingScreen";
 
 import {motion, useMotionValueEvent, useScroll} from "framer-motion";
 import Tour, { CalcState } from "../../claases/tour/tour";
@@ -26,10 +27,15 @@ const SYNC_TIME = 60000;
 
 let syncInterval:any;
 
+//Loader
+const SHOW_LOADER_TIME = 750;
+let loadingTimeout:any;
+
 const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const currentUser = useSelector((state:any) => state.user.value);
 
+    const dispatch = useDispatch();
 
     const elementRef = useRef(null);
 
@@ -132,6 +138,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const calculateTour = async (tourId:number) => 
     {
+         startLoading()
+        
           let result:CalcState = await api.calcTour(currentUser.id, tourId, currentUser.clientKey);
 
           if(result !== CalcState.TOUR_OK)
@@ -140,7 +148,22 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
           }
 
           loadTours();
+
+         stopLoading();
     }
+
+    //Loader
+    const startLoading = () => 
+    {
+        loadingTimeout = setTimeout(() => {dispatch(switchLoadingScreen(true));}, SHOW_LOADER_TIME);
+    }
+
+    const stopLoading = () => 
+    {
+        clearTimeout(loadingTimeout);
+        dispatch(switchLoadingScreen(false));
+    }
+
 
 
 return (

@@ -16,47 +16,78 @@ import { switchPage } from './features/page';
 
 import { Pages } from './enums/pages';
 
+
+//Backdrop
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Spinner,
+} from '@chakra-ui/react'
+
 function App() {
-  
-  const user:any = useSelector((state:any) => state.user.value);
-  const currentPage = useSelector((state:any) => state.page.value);
+
+  const user: any = useSelector((state: any) => state.user.value);
+  const currentPage = useSelector((state: any) => state.page.value);
+  const loadingScreen = useSelector((state:any) => state.loadingScreen.value);
 
   const [activePage, setActivePage] = useState<JSX.Element>();
+  const [laodingScreenOpened, setLoadingScreenOpened] = useState<boolean>(false);
 
   useEffect(() => {
     loadPage(currentPage.page);
-  },[currentPage]);
+  }, [currentPage]);
+
+  useEffect(() => {
+
+      setLoadingScreenOpened(loadingScreen.isShowed);
+
+  },[loadingScreen]);
 
 
   const api = new ApiController("localhost", 3000);
-  
+
   const dispatch = useDispatch();
-  
 
 
-  const loadPage = (page:Pages) => 
-  {
-      switch(page)
-      {
-        case Pages.LOGIN:
-          setActivePage(<LoginPage api={api}/>);
-          break;
-        case Pages.TOUR_LIST:
-          setActivePage(<TourPage api={api} />);
-          break;
-        case Pages.TOUR_DETAIL:
-          break;
-      }
+
+  const loadPage = (page: Pages) => {
+    switch (page) {
+      case Pages.LOGIN:
+        setActivePage(<LoginPage api={api} />);
+        break;
+      case Pages.TOUR_LIST:
+        setActivePage(<TourPage api={api} />);
+        break;
+      case Pages.TOUR_DETAIL:
+        break;
+    }
   }
 
 
-  
+
 
   return (
     <div className="App">
-        <AlertProvider />
-        {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
-        {activePage}
+      <AlertProvider />
+      <Modal isOpen={laodingScreenOpened} onClose={() => { }} size="xs">
+        <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px)'>
+          <ModalContent>
+            <ModalHeader>LadeDaten . . .</ModalHeader>
+            <ModalBody style={{display:"flex", justifyContent:"center"}}>
+              <Spinner thickness='4px' size='xl' margin={100} />
+            </ModalBody>
+          </ModalContent>
+        </ModalOverlay>
+      </Modal>
+
+
+      {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
+      {activePage}
     </div>
   );
 }
