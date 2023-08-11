@@ -102,6 +102,8 @@ fastify.post("/api/v1/calcTour", async (req:any, res:any) => {
 
     let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
 
+    console.log("Akzeptiert:", passValid);
+
     if(!passValid){
         res.code(403).send();
         return;

@@ -7,9 +7,8 @@
     display:flex;
     flex-direction:row;
     justify-content:flex-start;
-    z-index: -1;
+    z-index: 2;
     align-items:center;
-
 }
 
 .TourElementSymbolDiv{
@@ -42,4 +41,11 @@
     font-weight:bold;
     left:300px;
 
+}
+
+.TourElementBillBtnDiv
+{
+    margin-left:auto;
+    margin-right:20px;
+    z-index:3;
 }

@@ -9,19 +9,28 @@ import Old from "../../../resources/symbols/old.png";
 import Rejected from "../../../resources/symbols/rejected.png";
 import { TourState } from "../../../claases/tour/tour";
 
+import { Icon, IconButton } from "@chakra-ui/react";
+import { PlusSquareIcon } from "@chakra-ui/icons";
+import {MdShoppingCartCheckout} from "react-icons/md";
+
 type TourElementProps = {
+    tourId:number,
     start:string,
     target:string,
     state:TourState,
     date:string,
+    calcCallback?:(id:number) => void
 }
 
-const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) => {
+const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, date, calcCallback}) => {
     
     const [tourSymbol, setTourSymbol] = useState<string>();
-    
+    const [billingActive, setBillingActive] = useState<boolean>(false);
+
     useEffect(() => {
         loadTourSymbol(state);
+
+        setBillingActive(state == TourState.COMPLETED ? true : false);
     },[state]);
 
 
@@ -60,6 +69,14 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
     }
 
 
+    const billingHandler = () => {
+        if(billingActive && calcCallback !== undefined)
+        {
+            calcCallback(tourId);
+        }
+    }
+
+
     
     
     return(
@@ -73,6 +90,10 @@ const TourElement:React.FC<TourElementProps> = ({start, target, state, date}) =>
         <div className="TourElementDescription">
             <h3>{start} - {target}</h3>
             <h3>{date}</h3>
+        </div>
+        <div className="TourElementBillBtnDiv">
+            <IconButton isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
+            {/* <IconButton isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
         </div>
     </div>
     );

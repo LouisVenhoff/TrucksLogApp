@@ -124,12 +124,12 @@ class DatabaseManager {
 
     public async validateRequest(data: ValidationObj): Promise<boolean> {
 
-        let userClientKey: any = await this.runQuery("SELECT client_key FROM user WHERE id = ?", data.userId);
-
-
+        
+        let userClientKey:string = await this.getClientKey(data.userId);
+        
         return new Promise((resolve, reject) => {
             try {
-                if (userClientKey[0].client_key === data.clientKey) {
+                if (userClientKey === data.clientKey) {
                     resolve(true);
                 }
                 else {
@@ -138,6 +138,7 @@ class DatabaseManager {
             }
             catch(e:any)
             {
+                console.log(e);
                 resolve(false);
             }
 
@@ -152,7 +153,7 @@ class DatabaseManager {
     public async loadTours(userId: number): Promise<Tour[]> {
         //TODO: Laded alle benötigten Informationen aus einer Tour und Speichere diese in eine Tour Objekt
 
-        let userClientKey: any = await this.getClientKey(userId);
+        let userClientKey:string = await this.getClientKey(userId);
 
         let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey);
 

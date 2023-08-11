@@ -8,8 +8,12 @@ import {useSelector} from "react-redux";
 
 
 import {motion, useMotionValueEvent, useScroll} from "framer-motion";
-import Tour from "../../claases/tour/tour";
+import Tour, { CalcState } from "../../claases/tour/tour";
 import ApiController from "../../claases/controller/apiController";
+import Toaster from "../../claases/toaster/toaster";
+import { AlertType } from "../../components/alertComponent/alertComponent";
+
+
 
 type TourPageProps = {
   api:ApiController
@@ -18,6 +22,9 @@ type TourPageProps = {
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
 const SCROLL_ELEMENTS_THRESHOLD = 3;
+const SYNC_TIME = 60000;
+
+let syncInterval:any;
 
 const TourPage: React.FC<TourPageProps> = ({api}) => {
 
@@ -59,6 +66,17 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
           calculateHeaderOpacity(latest, 10);
         }
       })
+
+    useEffect(() => {
+        syncInterval = setInterval(() => {
+          loadTours();
+        },SYNC_TIME)
+
+        return(() => {
+          clearInterval(syncInterval);
+        });
+    },[]);
+
 
     useEffect(() => {
       
@@ -112,6 +130,18 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
         
     }
 
+    const calculateTour = async (tourId:number) => 
+    {
+          let result:CalcState = await api.calcTour(currentUser.id, tourId, currentUser.clientKey);
+
+          if(result !== CalcState.TOUR_OK)
+          {
+            Toaster.show("Fehler beim abrechenen", AlertType.ERROR,1000);
+          }
+
+          loadTours();
+    }
+
 
 return (
     <div ref={elementRef} className="TourPageMainDiv">
@@ -126,7 +156,7 @@ return (
       </div>
       <div className="TourPageDataTableSpace">
             <h1>{infoText}</h1>
-            <TourDisplay tourData={tours} />
+            <TourDisplay tourData={tours} calcCallback={(id:number) => {calculateTour(id)}}  />
       </div>
     </div>
   );
