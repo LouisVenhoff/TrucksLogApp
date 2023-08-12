@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./loginPageStyle.css";
 import Logo from "../../resources/TrucksLogLogo.png";
-import { Input, Button } from "@chakra-ui/react";
+import { Input, Button, Checkbox } from "@chakra-ui/react";
 
 import Toaster from "../../claases/toaster/toaster";
 import { AlertType } from "../../components/alertComponent/alertComponent";
@@ -81,7 +81,10 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
         setEmailValid(checkEmail(value));
     }
 
-   
+    const loginSaveHandler = (isChecked:any) => {
+        
+    }
+
 
 
     return(
@@ -94,6 +97,12 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
                 <Input placeholder="Passwort" backgroundColor="white"  onChange={(e:any) => {setPassword(e.target.value)}}/>
                 <Button isActive={!emailValid} colorScheme="teal"  onClick={() => {loginHandler()}}>Login</Button>
                 <Button colorScheme="teal" onClick={() => {registerHandler()}}>Registieren</Button>
+                <div className="LoginPageCheckboxDiv">
+                    <Checkbox size="lg" style={{color:"whitesmoke"}} colorScheme="teal" onChange={(e:any) => {loginSaveHandler(e.target.checked)}}>
+                        Login speichern
+                    </Checkbox>
+                </div>
+                
             </div>
         </div>
     );
