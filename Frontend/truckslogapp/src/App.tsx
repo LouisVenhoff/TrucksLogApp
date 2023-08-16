@@ -31,13 +31,14 @@ import {
   ModalCloseButton,
   Spinner,
 } from '@chakra-ui/react'
+import useMenu from './hooks/useMenu';
 
 function App() {
 
   const user: any = useSelector((state: any) => state.user.value);
   const currentPage = useSelector((state: any) => state.page.value);
   const loadingScreen = useSelector((state:any) => state.loadingScreen.value);
-  const menu = useSelector((state:any) => state.menu.value);
+  const menu = useMenu();
 
 
   const [activePage, setActivePage] = useState<JSX.Element>();
@@ -58,7 +59,7 @@ function App() {
 
   useEffect(() => {
 
-      setMenuOpened(menu.opened);
+      setMenuOpened(menu.menuOpened);
 
   },[menu]);
 
@@ -81,8 +82,6 @@ function App() {
         break;
     }
   }
-
-
 
 
   return (

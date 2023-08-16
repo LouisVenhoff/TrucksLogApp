@@ -12,7 +12,7 @@ export const menuSlice = createSlice({
 });
 
 
-export const setOpened = menuSlice.actions;
+export const {setOpened} = menuSlice.actions;
 
 
 export default menuSlice.reducer;
