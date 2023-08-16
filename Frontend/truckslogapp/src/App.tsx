@@ -7,6 +7,9 @@ import ApiController from './claases/controller/apiController';
 import AlertComponent, { AlertType } from './components/alertComponent/alertComponent';
 import AlertProvider from './components/alertProvider/alertProvider';
 import Toaster from './claases/toaster/toaster';
+import HamburgerMenu from './components/hamburgerMenu/hamburgerMenu';
+
+
 import UserObj from './claases/user/userObj';
 import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
@@ -34,9 +37,14 @@ function App() {
   const user: any = useSelector((state: any) => state.user.value);
   const currentPage = useSelector((state: any) => state.page.value);
   const loadingScreen = useSelector((state:any) => state.loadingScreen.value);
+  const menu = useSelector((state:any) => state.menu.value);
+
 
   const [activePage, setActivePage] = useState<JSX.Element>();
   const [laodingScreenOpened, setLoadingScreenOpened] = useState<boolean>(false);
+  const [menuOpened, setMenuOpened] = useState<boolean>(false);
+
+
 
   useEffect(() => {
     loadPage(currentPage.page);
@@ -47,6 +55,12 @@ function App() {
       setLoadingScreenOpened(loadingScreen.isShowed);
 
   },[loadingScreen]);
+
+  useEffect(() => {
+
+      setMenuOpened(menu.opened);
+
+  },[menu]);
 
 
   const api = new ApiController("localhost", 3000);
@@ -85,7 +99,7 @@ function App() {
         </ModalOverlay>
       </Modal>
 
-
+      <HamburgerMenu isOpen={menuOpened} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
       {activePage}
     </div>

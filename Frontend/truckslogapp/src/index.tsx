@@ -9,12 +9,14 @@ import { Provider } from "react-redux";
 import userReducer from "./features/user";
 import pageReducer from "./features/page";
 import loadingScreenReducer from "./features/loadingScreen";
+import menuReducer from "./features/menu";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     page: pageReducer,
     loadingScreen: loadingScreenReducer,
+    menu: menuReducer
   },
 });
 

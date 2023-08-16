@@ -1,0 +1,16 @@
+.MenuButtonMainDiv{
+    position:relative;
+    width:100%;
+    height:70px;
+    border-width: 2px 0px 0px 0px;
+    border-color:black;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+
+    font-weight: bold;
+    font-size: 100;
+}
+
+
