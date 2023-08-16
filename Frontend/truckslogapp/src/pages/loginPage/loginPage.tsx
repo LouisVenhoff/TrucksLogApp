@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./loginPageStyle.css";
 import Logo from "../../resources/TrucksLogLogo.png";
-import { Input, Button } from "@chakra-ui/react";
+import { Input, Button, Checkbox } from "@chakra-ui/react";
 
 import Toaster from "../../claases/toaster/toaster";
 import { AlertType } from "../../components/alertComponent/alertComponent";
@@ -15,6 +15,7 @@ import { switchLoadingScreen } from "../../features/loadingScreen";
 
 import { Pages } from "../../enums/pages";
 import { clearInterval } from "timers";
+import LoginDataStorage from "../../claases/loginDataStorage/loginDataStorage";
 
 type LoginPageProps = 
 {
@@ -27,7 +28,29 @@ type LoginPageProps =
 const LoginPage:React.FC<LoginPageProps> = ({api}) => 
 {
 
+    const [email, setEmail] = useState<string>("");
+    const [emailValid, setEmailValid] = useState<boolean>(false);
+    const [password, setPassword] = useState<string>("");
+    const [autoLoginOn, setAutoLogin] = useState<boolean>(false);
+
+
     const dispatch = useDispatch();
+
+    const savedData:LoginDataStorage = new LoginDataStorage();
+
+    useEffect(() => {
+        //savedData.clearData();
+        tryAutoLogin();
+    },[]);
+
+    const tryAutoLogin = async () => {
+        let loginObj:any = await savedData.loadData();
+        console.log(loginObj);
+        if(loginObj.email !== undefined && loginObj.email !== null)
+        {
+            loginFunc(loginObj.email, loginObj.password);
+        }
+    }
 
 
     const loginFunc = async (email:string, password:string) => 
@@ -49,17 +72,19 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
         dispatch(switchPage(Pages.TOUR_LIST));
     } 
 
-    const [email, setEmail] = useState<string>("");
-    const [emailValid, setEmailValid] = useState<boolean>(false);
-
-    const [password, setPassword] = useState<string>("");
+   
     
 
-    const loginHandler = () => 
+    const loginHandler = async() => 
     {
         if(!emailValid)
         {
             return;
+        }
+
+        if(autoLoginOn)
+        {
+            await savedData.storeData(email, password);
         }
         loginFunc(email, password);
     }
@@ -81,7 +106,15 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
         setEmailValid(checkEmail(value));
     }
 
-   
+    const loginSaveHandler = (isChecked:any) => {
+        setAutoLogin(isChecked);
+
+        if(isChecked === false)
+        {
+            savedData.clearData();
+        }
+    }
+
 
 
     return(
@@ -91,9 +124,15 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
             </div>
             <div className="LoginPageControlsDiv">
                 <Input isInvalid={!emailValid} placeholder="Email" backgroundColor="white"  onChange={(e:any) => {emailChangeHandler(e.target.value)}}/>
-                <Input placeholder="Passwort" backgroundColor="white"  onChange={(e:any) => {setPassword(e.target.value)}}/>
+                <Input placeholder="Passwort" pr='4.5rem' type="password" backgroundColor="white"  onChange={(e:any) => {setPassword(e.target.value)}}/>
                 <Button isActive={!emailValid} colorScheme="teal"  onClick={() => {loginHandler()}}>Login</Button>
                 <Button colorScheme="teal" onClick={() => {registerHandler()}}>Registieren</Button>
+                <div className="LoginPageCheckboxDiv">
+                    <Checkbox size="lg" style={{color:"whitesmoke"}} colorScheme="teal" onChange={(e:any) => {loginSaveHandler(e.target.checked)}}>
+                        Login speichern
+                    </Checkbox>
+                </div>
+                
             </div>
         </div>
     );

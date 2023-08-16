@@ -7,11 +7,12 @@ import Tour from "../../claases/tour/tour";
 
 type TourDisplayProps ={
     tourData:Tour[],
+    noDataText:string,
     calcCallback:(id:number) => void 
 }
 
 
-const TourDisplay:React.FC<TourDisplayProps> = ({tourData, calcCallback}) => 
+const TourDisplay:React.FC<TourDisplayProps> = ({tourData, noDataText, calcCallback}) => 
 {
 
     const[tourElements, setTourElements] = useState<JSX.Element[]>();
@@ -37,6 +38,7 @@ const TourDisplay:React.FC<TourDisplayProps> = ({tourData, calcCallback}) =>
 
     return(
         <div className="TourDisplayMainDiv">
+          <h2>{noDataText}</h2>
           {tourElements}
 
         </div>

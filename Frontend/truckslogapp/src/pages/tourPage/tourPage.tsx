@@ -178,8 +178,7 @@ return (
         <h1>Willkommen, {currentUser.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
-            <h1>{infoText}</h1>
-            <TourDisplay tourData={tours} calcCallback={(id:number) => {calculateTour(id)}}  />
+            <TourDisplay noDataText={infoText} tourData={tours} calcCallback={(id:number) => {calculateTour(id)}}  />
       </div>
     </div>
   );

@@ -25,10 +25,16 @@
 .LoginPageControlsDiv{
     position:relative;
     top:20px;
-    height:200px;
+    height:230px;
     width:350px;
     display:flex;
     flex-direction:column;
     justify-content:space-around;
 
+}
+
+.LoginPageCheckboxDiv
+{
+    position:relative;
+    top:10px;
 }
