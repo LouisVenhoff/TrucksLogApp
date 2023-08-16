@@ -124,7 +124,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
             </div>
             <div className="LoginPageControlsDiv">
                 <Input isInvalid={!emailValid} placeholder="Email" backgroundColor="white"  onChange={(e:any) => {emailChangeHandler(e.target.value)}}/>
-                <Input placeholder="Passwort" backgroundColor="white"  onChange={(e:any) => {setPassword(e.target.value)}}/>
+                <Input placeholder="Passwort" pr='4.5rem' type="password" backgroundColor="white"  onChange={(e:any) => {setPassword(e.target.value)}}/>
                 <Button isActive={!emailValid} colorScheme="teal"  onClick={() => {loginHandler()}}>Login</Button>
                 <Button colorScheme="teal" onClick={() => {registerHandler()}}>Registieren</Button>
                 <div className="LoginPageCheckboxDiv">
