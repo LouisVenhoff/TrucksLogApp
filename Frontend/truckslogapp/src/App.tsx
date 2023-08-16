@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 
 import { login } from './features/user';
 import { switchPage } from './features/page';
+import { setOpened } from './features/menu';
 
 import { Pages } from './enums/pages';
 
@@ -60,14 +61,12 @@ function App() {
   useEffect(() => {
 
       setMenuOpened(menu.menuOpened);
-
   },[menu]);
 
 
   const api = new ApiController("localhost", 3000);
 
   const dispatch = useDispatch();
-
 
 
   const loadPage = (page: Pages) => {
@@ -87,7 +86,7 @@ function App() {
   return (
     <div className="App">
       <AlertProvider />
-      <Modal isOpen={laodingScreenOpened} onClose={() => { }} size="xs">
+      <Modal isOpen={laodingScreenOpened} onClose={() => {dispatch(setOpened(false))}} size="xs">
         <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px)'>
           <ModalContent>
             <ModalHeader>LadeDaten . . .</ModalHeader>
@@ -98,7 +97,7 @@ function App() {
         </ModalOverlay>
       </Modal>
 
-      <HamburgerMenu isOpen={menuOpened} />
+      <HamburgerMenu isOpen={menuOpened} closeCallback={() => {menu.showMenu(false)}} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
       {activePage}
     </div>

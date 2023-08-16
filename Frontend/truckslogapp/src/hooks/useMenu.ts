@@ -13,15 +13,15 @@ export default function useMenu()
 
 
     useEffect(() => {
-        setMenuOpened(menuRedux.opened);
+        setMenuOpened(menuRedux.opened)
     },[menuRedux]);
-    
 
-    const toggleMenu = () => 
+    
+    const showMenu = (state:boolean) => 
     {
-        dispatch(setOpened(!menuOpened));
+        dispatch(setOpened(state));
     }
 
-    return {menuOpened, toggleMenu};
+    return {menuOpened, showMenu};
 
 }
