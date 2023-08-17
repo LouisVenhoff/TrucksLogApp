@@ -16,6 +16,7 @@ import { AlertType } from "../../components/alertComponent/alertComponent";
 import useMenu from "../../hooks/useMenu";
 
 import {HamburgerIcon} from "@chakra-ui/icons";
+import useLoader from "../../hooks/useLoader";
 
 
 
@@ -43,6 +44,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const elementRef = useRef(null);
 
     const menu = useMenu();
+    const loader = useLoader();
 
     //Animation
     const {scrollYProgress} = useScroll({container:elementRef});
@@ -160,13 +162,13 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     //Loader
     const startLoading = () => 
     {
-        loadingTimeout = setTimeout(() => {dispatch(switchLoadingScreen(true));}, SHOW_LOADER_TIME);
+        loadingTimeout = setTimeout(() => {loader.controlLoader(true);}, SHOW_LOADER_TIME);
     }
 
     const stopLoading = () => 
     {
         clearTimeout(loadingTimeout);
-        dispatch(switchLoadingScreen(false));
+        loader.controlLoader(false);
     }
 
 
