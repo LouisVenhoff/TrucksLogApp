@@ -15,6 +15,8 @@ import Toaster from "../../claases/toaster/toaster";
 import { AlertType } from "../../components/alertComponent/alertComponent";
 import useMenu from "../../hooks/useMenu";
 
+import {HamburgerIcon} from "@chakra-ui/icons";
+
 
 
 type TourPageProps = {
@@ -174,6 +176,9 @@ return (
       <motion.div className="TourPageHeaderDiv" style={{opacity:(headerOpacity)}}>
         <Header />
       </motion.div>
+      <div className="TourPageMenuButtonDiv">
+          <HamburgerIcon  boxSize={10} onClick={() => {menu.showMenu(true)}}/>
+      </div>
       <div className="TourPageAvatarDiv">
             <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src={currentUser.avatar} />
       </div>
