@@ -7,12 +7,16 @@ import ApiController from './claases/controller/apiController';
 import AlertComponent, { AlertType } from './components/alertComponent/alertComponent';
 import AlertProvider from './components/alertProvider/alertProvider';
 import Toaster from './claases/toaster/toaster';
+import HamburgerMenu from './components/hamburgerMenu/hamburgerMenu';
+
+
 import UserObj from './claases/user/userObj';
 import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
 
 import { login } from './features/user';
 import { switchPage } from './features/page';
+import { setOpened } from './features/menu';
 
 import { Pages } from './enums/pages';
 
@@ -28,15 +32,21 @@ import {
   ModalCloseButton,
   Spinner,
 } from '@chakra-ui/react'
+import useMenu from './hooks/useMenu';
 
 function App() {
 
   const user: any = useSelector((state: any) => state.user.value);
   const currentPage = useSelector((state: any) => state.page.value);
   const loadingScreen = useSelector((state:any) => state.loadingScreen.value);
+  const menu = useMenu();
+
 
   const [activePage, setActivePage] = useState<JSX.Element>();
   const [laodingScreenOpened, setLoadingScreenOpened] = useState<boolean>(false);
+  const [menuOpened, setMenuOpened] = useState<boolean>(false);
+
+
 
   useEffect(() => {
     loadPage(currentPage.page);
@@ -48,11 +58,15 @@ function App() {
 
   },[loadingScreen]);
 
+  useEffect(() => {
+
+      setMenuOpened(menu.menuOpened);
+  },[menu]);
+
 
   const api = new ApiController("localhost", 3000);
 
   const dispatch = useDispatch();
-
 
 
   const loadPage = (page: Pages) => {
@@ -69,12 +83,10 @@ function App() {
   }
 
 
-
-
   return (
     <div className="App">
       <AlertProvider />
-      <Modal isOpen={laodingScreenOpened} onClose={() => { }} size="xs">
+      <Modal isOpen={laodingScreenOpened} onClose={() => {dispatch(setOpened(false))}} size="xs">
         <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px)'>
           <ModalContent>
             <ModalHeader>LadeDaten . . .</ModalHeader>
@@ -85,7 +97,7 @@ function App() {
         </ModalOverlay>
       </Modal>
 
-
+      <HamburgerMenu isOpen={menuOpened} closeCallback={() => {menu.showMenu(false)}} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
       {activePage}
     </div>

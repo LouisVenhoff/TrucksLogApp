@@ -13,6 +13,9 @@ import Tour, { CalcState } from "../../claases/tour/tour";
 import ApiController from "../../claases/controller/apiController";
 import Toaster from "../../claases/toaster/toaster";
 import { AlertType } from "../../components/alertComponent/alertComponent";
+import useMenu from "../../hooks/useMenu";
+
+import {HamburgerIcon} from "@chakra-ui/icons";
 
 
 
@@ -39,6 +42,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const elementRef = useRef(null);
 
+    const menu = useMenu();
+
     //Animation
     const {scrollYProgress} = useScroll({container:elementRef});
     const [scrollRate, setScrollRate] = useState<number>(1);
@@ -60,7 +65,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
       // Parse Tours to Tour Obj
       // Load Tours in tours state
       loadTours();
-
+    
     },[]);
 
 
@@ -171,6 +176,9 @@ return (
       <motion.div className="TourPageHeaderDiv" style={{opacity:(headerOpacity)}}>
         <Header />
       </motion.div>
+      <div className="TourPageMenuButtonDiv">
+          <HamburgerIcon  boxSize={10} onClick={() => {menu.showMenu(true)}}/>
+      </div>
       <div className="TourPageAvatarDiv">
             <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src={currentUser.avatar} />
       </div>

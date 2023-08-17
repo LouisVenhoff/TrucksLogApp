@@ -25,7 +25,7 @@ temp/
 .sourcemaps/
 .sass-cache/
 .tmp/
-hooks/
+
 
 # Ionic 3 plugins files
 platforms/
