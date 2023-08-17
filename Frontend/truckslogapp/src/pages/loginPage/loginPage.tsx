@@ -16,6 +16,7 @@ import { switchLoadingScreen } from "../../features/loadingScreen";
 import { Pages } from "../../enums/pages";
 import { clearInterval } from "timers";
 import LoginDataStorage from "../../claases/loginDataStorage/loginDataStorage";
+import usePage from "../../hooks/usePage";
 
 type LoginPageProps = 
 {
@@ -33,8 +34,8 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
     const [password, setPassword] = useState<string>("");
     const [autoLoginOn, setAutoLogin] = useState<boolean>(false);
 
-
     const dispatch = useDispatch();
+    const pageManager = usePage();
 
     const savedData:LoginDataStorage = new LoginDataStorage();
 
@@ -69,7 +70,8 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
   
         dispatch(switchLoadingScreen(false));
         dispatch(login(usrObj.getReduxObj()));
-        dispatch(switchPage(Pages.TOUR_LIST));
+        //dispatch(switchPage(Pages.TOUR_LIST));
+        pageManager.loadPage(Pages.TOUR_LIST);
     } 
 
    

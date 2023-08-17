@@ -17,6 +17,7 @@ import {
   import { useDispatch } from "react-redux";
   import { switchPage } from "../../features/page";
   import { Pages } from "../../enums/pages";
+import usePage from "../../hooks/usePage";
 
 
 
@@ -29,8 +30,8 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
 {
     const [open, setOpen] = useState<boolean>(false);
 
-    const dispatch = useDispatch();
-
+    const dispatch = useDispatch(); 
+    const pageManager = usePage();
 
     useEffect(() => {
         setOpen(isOpen);
@@ -60,7 +61,7 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
         closeMenu();
         let storageInterface:LoginDataStorage = new LoginDataStorage();
         storageInterface.clearData();
-        dispatch(switchPage(Pages.LOGIN));
+        pageManager.loadPage(Pages.LOGIN);
     }
 
 

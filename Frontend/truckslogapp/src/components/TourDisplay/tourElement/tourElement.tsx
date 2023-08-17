@@ -11,7 +11,7 @@ import { TourState } from "../../../claases/tour/tour";
 
 import { Icon, IconButton } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
-import {MdShoppingCartCheckout} from "react-icons/md";
+// import {MdShoppingCartCheckout} from "react-icons/md";
 
 type TourElementProps = {
     tourId:number,
@@ -92,8 +92,8 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
             <h3>{date}</h3>
         </div>
         <div className="TourElementBillBtnDiv">
-            <IconButton isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
-            {/* <IconButton isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
+            {/* <IconButton isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
+            <IconButton isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
         </div>
     </div>
     );
