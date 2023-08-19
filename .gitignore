@@ -4,7 +4,7 @@
 
 ###TrucksLogServer
 config.json
-
+certificates/
 
 ### Ionic3 ###
 # Log an tmp data

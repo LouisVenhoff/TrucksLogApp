@@ -36,11 +36,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var certReader_1 = require("./classes/certReader/certReader");
 var configReader_1 = require("./classes/configReader/configReader");
 var databaseManager_1 = require("./classes/databaseManager/databaseManager");
 var cors_1 = require("@fastify/cors");
+var fs = require("fs");
+var certReader = new certReader_1.default("certificates");
 var fastify = require("fastify")({
-    logger: false
+    logger: false,
+    https: {
+        key: fs.readFileSync(certReader.keyFile),
+        cert: fs.readFileSync(certReader.certificateFile)
+    }
 });
 fastify.register(cors_1.default, {});
 var confReader = new configReader_1.default("config.json", function (conf) { startServer(conf); });

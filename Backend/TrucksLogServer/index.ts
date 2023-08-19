@@ -1,18 +1,26 @@
+import CertReader from "./classes/certReader/certReader";
 import ConfigReader, { Config } from "./classes/configReader/configReader";
 import DatabaseManager from "./classes/databaseManager/databaseManager";
 import Tour from "./classes/tour/tour";
 import cors from "@fastify/cors"
 
+const fs = require("fs");
+
+
+const certReader: CertReader = new CertReader("certificates");
+
 const fastify = require("fastify")({
-    logger: false
+    logger: false,
+    https:{
+        key: fs.readFileSync(certReader.keyFile),
+        cert: fs.readFileSync(certReader.certificateFile)
+    }
 })
 
-fastify.register(cors, {
-
-})
-
+fastify.register(cors, {})
 
 const confReader: ConfigReader = new ConfigReader("config.json", (conf: Config) => { startServer(conf) });
+
 var dbManager: DatabaseManager;
 
 fastify.get("/", (req:any, res:any) => {
