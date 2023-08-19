@@ -19,7 +19,7 @@ class ApiController {
   constructor(hostname: string, port: number) {
     this.hostname = hostname;
     this.port = port.toString();
-    this.queryPattern = `http://${this.hostname}:${this.port}`;
+    this.queryPattern = `https://${this.hostname}:${this.port}`;
   }
 
   public async LoadTours(id: number, clientKey: string): Promise<Tour[]> {
