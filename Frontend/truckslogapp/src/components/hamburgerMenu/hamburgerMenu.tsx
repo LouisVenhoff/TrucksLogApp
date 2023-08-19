@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./hamburgerMenuStyle.css";
 import MenuButton from "./menuButton/menuButton";
+import {Browser} from "@capacitor/browser";
 
 import {
     Drawer,
@@ -48,8 +49,8 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
         }
     }
 
-    const showImprint = () => {
-        //TODO: implicit
+    const redirectImprint = async() => {
+        await Browser.open({url: "https://www.truckslog.de/?s=SYSTEM/impressum"});
     }
 
     const showCredits = () => {
@@ -74,7 +75,7 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
                 <DrawerCloseButton />
                 <DrawerHeader>Menü</DrawerHeader>
                 <DrawerBody className="HamburgerBody">
-                    <MenuButton name="Impressum" onClick={showImprint} />
+                    <MenuButton name="Impressum" onClick={redirectImprint} />
                     <MenuButton name="Credits" onClick={showCredits}/>
                     <MenuButton name="Logout" onClick={logout}/>
                 </DrawerBody>
