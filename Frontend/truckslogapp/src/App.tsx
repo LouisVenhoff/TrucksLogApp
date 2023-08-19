@@ -33,6 +33,7 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import useMenu from './hooks/useMenu';
+import CreditsPage from './pages/creditsPage/creditsPage';
 
 function App() {
 
@@ -79,6 +80,9 @@ function App() {
         break;
       case Pages.TOUR_DETAIL:
         break;
+      case Pages.CREDITS:
+        setActivePage(<CreditsPage />);
+        break;
     }
   }
 
@@ -100,6 +104,7 @@ function App() {
       <HamburgerMenu isOpen={menuOpened} closeCallback={() => {menu.showMenu(false)}} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
       {activePage}
+      {/* <CreditsPage /> */}
     </div>
   );
 }

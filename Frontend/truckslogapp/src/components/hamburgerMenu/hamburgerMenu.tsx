@@ -49,13 +49,22 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
         }
     }
 
+    const showTourPage = () => 
+    {
+        closeMenu();
+        pageManager.loadPage(Pages.TOUR_LIST);
+    }
+
+
     const redirectImprint = async() => {
         await Browser.open({url: "https://www.truckslog.de/?s=SYSTEM/impressum"});
     }
 
     const showCredits = () => {
-        //TODO: implicit
+        closeMenu();
+        pageManager.loadPage(Pages.CREDITS);
     }
+
 
     const logout = () => {
         //TODO: clear Login store
@@ -75,6 +84,7 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
                 <DrawerCloseButton />
                 <DrawerHeader>Menü</DrawerHeader>
                 <DrawerBody className="HamburgerBody">
+                    <MenuButton name="Meine Touren" onClick={showTourPage} />
                     <MenuButton name="Impressum" onClick={redirectImprint} />
                     <MenuButton name="Credits" onClick={showCredits}/>
                     <MenuButton name="Logout" onClick={logout}/>
