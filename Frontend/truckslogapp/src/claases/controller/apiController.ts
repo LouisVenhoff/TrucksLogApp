@@ -3,6 +3,7 @@ import Toaster from "../toaster/toaster";
 import { AlertType } from "../../components/alertComponent/alertComponent";
 import Tour from "../tour/tour";
 
+
 type UserObj = {
   id: number;
   username: string;
@@ -10,15 +11,19 @@ type UserObj = {
   avatar: string;
 };
 
+
 class ApiController {
   private hostname: string;
   private port: string;
   private queryPattern: string;
+  private errorCallback: () => void;
 
+ 
 
-  constructor(hostname: string, port: number) {
+  constructor(hostname: string, port: number, errorCallback:() => void) {
     this.hostname = hostname;
     this.port = port.toString();
+    this.errorCallback = errorCallback;
     this.queryPattern = `https://${this.hostname}:${this.port}`;
   }
 
@@ -94,6 +99,7 @@ class ApiController {
       }
       catch
       {
+        this.errorCallback();
         Toaster.show("Server nicht erreichbar", AlertType.ERROR, 1500);
       }
 

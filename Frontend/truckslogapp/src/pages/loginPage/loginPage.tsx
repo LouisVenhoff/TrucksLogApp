@@ -23,9 +23,6 @@ type LoginPageProps =
     api:ApiController
 }
 
-
-
-
 const LoginPage:React.FC<LoginPageProps> = ({api}) => 
 {
 
@@ -63,6 +60,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
         let loginObj:any = await api.Login(email, password);
         if(loginObj.id === -1)
         {
+            loader.controlLoader(false);
             Toaster.show("Email oder Passwort falsch", AlertType.WARNING, 1500);
             return;
         }

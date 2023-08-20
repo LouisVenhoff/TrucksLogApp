@@ -13,6 +13,7 @@ import HamburgerMenu from './components/hamburgerMenu/hamburgerMenu';
 import UserObj from './claases/user/userObj';
 import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
+import useLoader from "./hooks/useLoader";
 
 import { login } from './features/user';
 import { switchPage } from './features/page';
@@ -41,6 +42,7 @@ function App() {
   const currentPage = useSelector((state: any) => state.page.value);
   const loadingScreen = useSelector((state:any) => state.loadingScreen.value);
   const menu = useMenu();
+  const loader = useLoader();
 
 
   const [activePage, setActivePage] = useState<JSX.Element>();
@@ -65,7 +67,7 @@ function App() {
   },[menu]);
 
 
-  const api = new ApiController("localhost", 3000);
+  const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
 
   const dispatch = useDispatch();
 

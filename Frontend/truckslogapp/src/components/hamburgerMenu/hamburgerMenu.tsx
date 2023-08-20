@@ -31,7 +31,6 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
 {
     const [open, setOpen] = useState<boolean>(false);
 
-    const dispatch = useDispatch(); 
     const pageManager = usePage();
 
     useEffect(() => {
