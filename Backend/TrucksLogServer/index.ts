@@ -30,9 +30,6 @@ fastify.get("/", (req:any, res:any) => {
 
 fastify.post("/api/v1/login", async (req:any, res:any) => {
 
-    console.log(req.body.mail);
-    console.log(req.body.passwd);
-    
     if (dbManager == undefined) {
         res.code(500).send();
         return;
@@ -52,7 +49,6 @@ fastify.post("/api/v1/login", async (req:any, res:any) => {
         username = usrInfo.username;
     }
 
-    console.log(userId);
     res.code(200).send({userId:userId,username:username ,clientKey:clientKey, avatar:avatarLink});
 
 });
@@ -65,7 +61,7 @@ fastify.post("/api/v1/getTours", async (req:any, res:any) => {
     let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
     
 
-    console.log(userValid);
+   
 
     if(!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
     {
@@ -109,8 +105,6 @@ fastify.post("/api/v1/calcTour", async (req:any, res:any) => {
     let clientKey:string = req.body.clientKey;
 
     let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
-
-    console.log("Akzeptiert:", passValid);
 
     if(!passValid){
         res.code(403).send();

@@ -88,13 +88,11 @@ var DatabaseManager = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail)];
                     case 1:
                         userInfo = _a.sent();
-                        console.log(userInfo);
                         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                                 var passOk;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
-                                            console.log(userInfo);
                                             if (userInfo.length === 0 || userInfo === undefined) {
                                                 resolve(-1);
                                                 return [2 /*return*/];
@@ -154,7 +152,6 @@ var DatabaseManager = /** @class */ (function () {
                                     }
                                 }
                                 catch (e) {
-                                    console.log(e);
                                     resolve(false);
                                 }
                             })];
@@ -224,7 +221,6 @@ var DatabaseManager = /** @class */ (function () {
                     case 1:
                         tourColumn = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
-                                console.log(tourColumn.length);
                                 if (tourColumn.length === 0) {
                                     resolve(false);
                                     return;

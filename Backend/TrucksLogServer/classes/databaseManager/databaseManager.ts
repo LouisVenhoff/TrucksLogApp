@@ -80,11 +80,10 @@ class DatabaseManager {
             //Return: UserId
 
             let userInfo:any = await this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail);
-            console.log(userInfo); 
+         
             
 
             return new Promise(async (resolve, reject) => {
-                console.log(userInfo);
                 if(userInfo.length === 0 || userInfo === undefined)
                 {
                     resolve(-1);
@@ -138,7 +137,6 @@ class DatabaseManager {
             }
             catch(e:any)
             {
-                console.log(e);
                 resolve(false);
             }
 
@@ -197,7 +195,6 @@ class DatabaseManager {
 
 
         return new Promise((resolve, reject) => {
-                console.log(tourColumn.length);
             if (tourColumn.length === 0) {
                 resolve(false);
                 return;

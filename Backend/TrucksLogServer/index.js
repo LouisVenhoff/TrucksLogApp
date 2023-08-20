@@ -60,8 +60,6 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.body.mail);
-                console.log(req.body.passwd);
                 if (dbManager == undefined) {
                     res.code(500).send();
                     return [2 /*return*/];
@@ -81,7 +79,6 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
                 username = usrInfo.username;
                 _a.label = 3;
             case 3:
-                console.log(userId);
                 res.code(200).send({ userId: userId, username: username, clientKey: clientKey, avatar: avatarLink });
                 return [2 /*return*/];
         }
@@ -98,7 +95,6 @@ fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, 
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
                 userValid = _a.sent();
-                console.log(userValid);
                 if (!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
                  {
                     res.code(403).send();
@@ -147,7 +143,6 @@ fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, 
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
                 passValid = _a.sent();
-                console.log("Akzeptiert:", passValid);
                 if (!passValid) {
                     res.code(403).send();
                     return [2 /*return*/];
