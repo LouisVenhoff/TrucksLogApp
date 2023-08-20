@@ -60,6 +60,11 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
         await Browser.open({url: "https://www.truckslog.de/?s=SYSTEM/impressum"});
     }
 
+    const redirectDataSec = async() => {
+        await Browser.open({url: "https://www.truckslog.de/?s=SYSTEM/datenschutz"});
+    }
+    
+
     const showCredits = () => {
         closeMenu();
         pageManager.loadPage(Pages.CREDITS);
@@ -86,6 +91,7 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
                 <DrawerBody className="HamburgerBody">
                     <MenuButton name="Meine Touren" onClick={showTourPage} />
                     <MenuButton name="Impressum" onClick={redirectImprint} />
+                    <MenuButton name="Datenschutz" onClick={redirectDataSec} />
                     <MenuButton name="Credits" onClick={showCredits}/>
                     <MenuButton name="Logout" onClick={logout}/>
                 </DrawerBody>
