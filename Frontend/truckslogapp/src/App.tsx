@@ -67,7 +67,7 @@ function App() {
   },[menu]);
 
 
-  const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
+  const api = new ApiController("81.169.174.46", 3014, () => {loader.controlLoader(false)});
 
   const dispatch = useDispatch();
 

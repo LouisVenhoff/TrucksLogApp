@@ -192,3 +192,5 @@ sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/node,react,ionic3
 *.http
+Backend/TrucksLogServer/truckslog_app_server.exe
+Backend/TrucksLogServer/TrucksLogAppServer

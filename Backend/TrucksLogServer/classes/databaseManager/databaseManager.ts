@@ -1,10 +1,11 @@
 import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { Config } from "../configReader/configReader";
 import Tour from "../tour/tour";
-import bcrypt from "bcrypt";
+
 import CryptoHelper from "../cryptoHelper/cryptoHelper";
 const mysql = require("mysql");
 
+const bcrypt = require("bcrypt");
 
 export type ValidationObj = {
     userId: number,
