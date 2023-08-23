@@ -1,0 +1,23 @@
+.HeaderMainDiv
+{
+    position:absolute;
+    width:100%;
+    height:60px;
+    background-color:#0d6efe;
+    z-index:10;
+
+    display:felx;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    border-radius:0px 0px 5px 5px;
+}
+
+.HeaderLogoDiv{
+    position:relative;
+    width:100px;
+    height:60px;
+    align-self:center;
+    bottom:15px;
+    left:150px;
+}
