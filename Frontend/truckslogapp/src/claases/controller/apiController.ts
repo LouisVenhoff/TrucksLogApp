@@ -97,8 +97,9 @@ class ApiController {
       try {
         resolve(await axios.post(`${this.queryPattern}${uri}`, body));
       }
-      catch
+      catch(err:any)
       {
+        console.log(err.message);
         this.errorCallback();
         Toaster.show("Server nicht erreichbar", AlertType.ERROR, 1500);
       }

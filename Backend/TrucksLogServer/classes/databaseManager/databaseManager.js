@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tour_1 = require("../tour/tour");
 var cryptoHelper_1 = require("../cryptoHelper/cryptoHelper");
 var mysql = require("mysql");
+var bcrypt = require("bcrypt");
 var DatabaseManager = /** @class */ (function () {
     function DatabaseManager(databaseConfig, autoConnect) {
         this.connected = false;

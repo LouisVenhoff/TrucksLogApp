@@ -9,6 +9,9 @@ const fs = require("fs");
 
 const certReader: CertReader = new CertReader("certificates");
 
+const softwareVersion:string = "1.0.0";
+
+
 const fastify = require("fastify")({
     logger: false,
     https:{
@@ -24,7 +27,7 @@ const confReader: ConfigReader = new ConfigReader("config.json", (conf: Config) 
 var dbManager: DatabaseManager;
 
 fastify.get("/", (req:any, res:any) => {
-    res.send({ Status: "OK" })
+    res.send({ Status: "OK", version: softwareVersion })
 })
 
 
@@ -140,12 +143,12 @@ const startServer = (conf: Config) => {
 
     dbManager = new DatabaseManager(conf, true);
 
-    fastify.listen({ port: conf.port }, (err: any, addr: any) => {
+    fastify.listen({ port: conf.port, host:'0.0.0.0' }, (err: any, addr: any) => {
 
         if (err) {
             throw (err);
         }
-        console.log("Listening on port: " + 3000);
+        console.log("Listening on port: " + conf.port);
 
     });
 }

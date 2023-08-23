@@ -42,6 +42,7 @@ var databaseManager_1 = require("./classes/databaseManager/databaseManager");
 var cors_1 = require("@fastify/cors");
 var fs = require("fs");
 var certReader = new certReader_1.default("certificates");
+var softwareVersion = "1.0.0";
 var fastify = require("fastify")({
     logger: false,
     https: {
@@ -53,7 +54,7 @@ fastify.register(cors_1.default, {});
 var confReader = new configReader_1.default("config.json", function (conf) { startServer(conf); });
 var dbManager;
 fastify.get("/", function (req, res) {
-    res.send({ Status: "OK" });
+    res.send({ Status: "OK", version: softwareVersion });
 });
 fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, clientKey, avatarLink, username, usrInfo;
@@ -171,10 +172,10 @@ fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, 
 }); });
 var startServer = function (conf) {
     dbManager = new databaseManager_1.default(conf, true);
-    fastify.listen({ port: conf.port }, function (err, addr) {
+    fastify.listen({ port: conf.port, host: '0.0.0.0' }, function (err, addr) {
         if (err) {
             throw (err);
         }
-        console.log("Listening on port: " + 3000);
+        console.log("Listening on port: " + conf.port);
     });
 };
