@@ -22,7 +22,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "axios": "^1.4.0",
-    "capacitor-resources": "^2.0.5",
+    "cross-env": "^7.0.3",
     "framer-motion": "^10.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -38,7 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "resources": "capacitor-resources -p android"
+    "resources": "capacitor-resources -p android,ios"
   },
   "eslintConfig": {
     "extends": [
