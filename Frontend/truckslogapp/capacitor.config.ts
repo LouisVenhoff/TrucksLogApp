@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'TrucksLogApp',
   webDir: 'build',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    allowNavigation: ["app.truckslog.de"]
   }
 };
 

@@ -99,7 +99,7 @@ class ApiController {
       }
       catch(err:any)
       {
-        console.log(err.message);
+        console.log(err);
         this.errorCallback();
         Toaster.show("Server nicht erreichbar", AlertType.ERROR, 1500);
       }
