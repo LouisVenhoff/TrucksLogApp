@@ -182,7 +182,7 @@ return (
           <HamburgerIcon  boxSize={10} onClick={() => {menu.showMenu(true)}}/>
       </div>
       <div className="TourPageAvatarDiv">
-            <motion.img style={{scale: avatarSize}} animate={{y:avatarPosition}}  src={currentUser.avatar} />
+            <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={currentUser.avatar} />
       </div>
       <div className="TourPageWelcomeTextDiv">
         <h1>Willkommen, {currentUser.name}</h1>
