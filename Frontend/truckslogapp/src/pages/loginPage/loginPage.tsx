@@ -104,9 +104,11 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
 
     const emailChangeHandler = (value:string) => 
     {
-        setEmail(value);
-        setEmailValid(checkEmail(value));
+        let emailValue = value.trimEnd();
+        setEmail(emailValue);
+        setEmailValid(checkEmail(emailValue));
     }
+
 
     const loginSaveHandler = (isChecked:any) => {
         setAutoLogin(isChecked);
