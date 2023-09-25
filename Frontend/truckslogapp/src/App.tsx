@@ -67,7 +67,7 @@ function App() {
   },[menu]);
 
 
-  const api:ApiController = new ApiController("app.truckslog.de", 3014, () => {loader.controlLoader(false)});
+ const api:ApiController = new ApiController("app.truckslog.de", 3014, () => {loader.controlLoader(false)});
  //const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
   const dispatch = useDispatch();
 
