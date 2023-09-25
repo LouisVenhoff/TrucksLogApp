@@ -252,11 +252,12 @@ var DatabaseManager = /** @class */ (function () {
             var userInfoObj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key, nickname,  profilbild FROM user WHERE id = ?", userId)];
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT client_key, user.nickname,  profilbild, fb.fahrer_abrechnen AS billPermission FROM user JOIN fahrer__berechtigungen fb ON email = fb.fahrer_id WHERE user.id = ?", userId)];
                     case 1:
                         userInfoObj = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
-                                resolve({ username: userInfoObj[0].nickname, clientKey: userInfoObj[0].client_key, avatar: userInfoObj[0].profilbild });
+                                var tempBillPermission = userInfoObj[0].billPermission === 1 ? true : false;
+                                resolve({ username: userInfoObj[0].nickname, clientKey: userInfoObj[0].client_key, avatar: userInfoObj[0].profilbild, billPermission: tempBillPermission });
                             })];
                 }
             });
