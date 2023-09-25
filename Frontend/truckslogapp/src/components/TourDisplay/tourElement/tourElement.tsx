@@ -11,6 +11,8 @@ import { TourState } from "../../../claases/tour/tour";
 
 import { Icon, IconButton } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
+
+import { useSelector } from "react-redux";
 // import {MdShoppingCartCheckout} from "react-icons/md";
 
 type TourElementProps = {
@@ -27,10 +29,13 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
     const [tourSymbol, setTourSymbol] = useState<string>();
     const [billingActive, setBillingActive] = useState<boolean>(false);
 
+    const userRedux = useSelector((state:any) => state.user.value);
+
+
     useEffect(() => {
         loadTourSymbol(state);
 
-        setBillingActive(state == TourState.COMPLETED ? true : false);
+        setBillingActive(state === TourState.COMPLETED && userRedux.billPermission === true ? true : false);
     },[state]);
 
 

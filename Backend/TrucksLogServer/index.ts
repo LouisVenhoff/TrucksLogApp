@@ -42,7 +42,8 @@ fastify.post("/api/v1/login", async (req:any, res:any) => {
     let clientKey:string = "";
     let avatarLink:string = "";
     let username:string = "";
-    
+    let billPermission:boolean = false;
+
     if(userId !== -1)
     {
         let usrInfo = await dbManager.getUserInfo(userId);
@@ -50,9 +51,10 @@ fastify.post("/api/v1/login", async (req:any, res:any) => {
         clientKey = usrInfo.clientKey;
         avatarLink = usrInfo.avatar;
         username = usrInfo.username;
+        billPermission = usrInfo.billPermission;
     }
 
-    res.code(200).send({userId:userId,username:username ,clientKey:clientKey, avatar:avatarLink});
+    res.code(200).send({userId:userId,username:username ,clientKey:clientKey, avatar:avatarLink, billPermission:billPermission});
 
 });
 

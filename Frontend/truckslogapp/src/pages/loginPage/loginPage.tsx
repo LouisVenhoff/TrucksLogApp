@@ -65,7 +65,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
             return;
         }
   
-        let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar);
+        let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar, loginObj.billPermission);
   
         loader.controlLoader(false);
         

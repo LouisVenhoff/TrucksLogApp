@@ -9,6 +9,7 @@ type UserObj = {
   username: string;
   clientKey: string;
   avatar: string;
+  billPermission:boolean
 };
 
 
@@ -61,11 +62,13 @@ class ApiController {
           username: "",
           clientKey: "",
           avatar: "",
+          billPermission: false
         };
         tempUser.id = result.data.userId;
         tempUser.username = result.data.username;
         tempUser.clientKey = result.data.clientKey;
         tempUser.avatar = result.data.avatar;
+        tempUser.billPermission = result.data.billPermission;
         resolve(tempUser);
       } catch
       {
