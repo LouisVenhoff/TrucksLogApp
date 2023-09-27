@@ -107,8 +107,8 @@ function App() {
 
       <HamburgerMenu isOpen={menuOpened} closeCallback={() => {menu.showMenu(false)}} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
-      {/* {activePage} */}
-      <DetailPage />
+      {activePage}
+      {/* <DetailPage /> */}
       {/* <CreditsPage /> */}
     </div>
   );

@@ -17,6 +17,7 @@ import useMenu from "../../hooks/useMenu";
 
 import {HamburgerIcon} from "@chakra-ui/icons";
 import useLoader from "../../hooks/useLoader";
+import { Interactions } from "../../enums/interactions";
 
 
 
@@ -143,6 +144,27 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
         
     }
 
+
+    const interactionsHandler = (id:number, type:Interactions) => 
+    {
+
+      switch(type){
+        case Interactions.CALCULATE:
+            calculateTour(id);
+        break;
+        case Interactions.VIEW:
+            showTour(id);
+          break;
+      }
+
+    }
+
+
+    const showTour = (tourId:number) => 
+    {
+        window.alert(`Showing tour : ${tourId}`);
+    }
+
     const calculateTour = async (tourId:number) => 
     {
          startLoading()
@@ -188,7 +210,7 @@ return (
         <h1>Willkommen, {currentUser.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
-            <TourDisplay noDataText={infoText} tourData={tours} calcCallback={(id:number) => {calculateTour(id)}}  />
+            <TourDisplay noDataText={infoText} tourData={tours} interactionCallback={(id:number, type:Interactions) => {interactionsHandler(id, type)}}  />
       </div>
     </div>
   );
