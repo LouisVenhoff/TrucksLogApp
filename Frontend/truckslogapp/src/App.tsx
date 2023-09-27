@@ -87,6 +87,9 @@ function App() {
       case Pages.CREDITS:
         setActivePage(<CreditsPage />);
         break;
+      case Pages.DETAIL_PAGE:
+        setActivePage(<DetailPage api={api} />);
+        break;
     }
   }
 

@@ -10,13 +10,15 @@ import userReducer from "./features/user";
 import pageReducer from "./features/page";
 import loadingScreenReducer from "./features/loadingScreen";
 import menuReducer from "./features/menu";
+import tourReducer from "./features/tourData";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     page: pageReducer,
     loadingScreen: loadingScreenReducer,
-    menu: menuReducer
+    menu: menuReducer,
+    tour: tourReducer
   },
 });
 

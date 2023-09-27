@@ -7,15 +7,16 @@ import useMenu from "../../hooks/useMenu";
 import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 import TourProgressView from "./tourProgressView/tourProgressView";
 import Tour from "../../claases/tour/tour";
+import ApiController from "../../claases/controller/apiController";
 
 
 
 type DetailPageProps = {
-tourData?:Tour
+    api:ApiController
 }
 
 
-const DetailPage:React.FC<DetailPageProps> = ({tourData}) => 
+const DetailPage:React.FC<DetailPageProps> = ({api}) => 
 {
 
     const menu = useMenu();
