@@ -8,12 +8,12 @@ export default function useTour()
     
     const tourRedux = useSelector((state:any) => state.tour.value);
 
-    const [currentTourId, setCurrentTourId] = useState<number>(tourRedux.tourId);
+    const [tourId, setTourId] = useState<number>(tourRedux.tourId);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setCurrentTourId(tourRedux.tourId);
+        setTourId(tourRedux.tourId);
     },[tourRedux.tourID]);
 
 
@@ -22,5 +22,6 @@ export default function useTour()
         select(id);
     }
 
+    return{tourId, setTour}
 
 }
