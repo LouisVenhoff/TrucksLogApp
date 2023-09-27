@@ -21,6 +21,8 @@ import { setOpened } from './features/menu';
 
 import { Pages } from './enums/pages';
 
+import DetailPage from './pages/detailPage/detailPage';
+
 
 //Backdrop
 import {
@@ -105,7 +107,8 @@ function App() {
 
       <HamburgerMenu isOpen={menuOpened} closeCallback={() => {menu.showMenu(false)}} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
-      {activePage}
+      {/* {activePage} */}
+      <DetailPage />
       {/* <CreditsPage /> */}
     </div>
   );
