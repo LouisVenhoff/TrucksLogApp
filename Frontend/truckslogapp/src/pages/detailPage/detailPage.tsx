@@ -9,7 +9,7 @@ import TourProgressView from "./tourProgressView/tourProgressView";
 import Tour from "../../claases/tour/tour";
 import ApiController from "../../claases/controller/apiController";
 import useTour from "../../hooks/useTour";
-
+import {useSelector} from "react-redux";
 
 
 type DetailPageProps = {
@@ -22,12 +22,28 @@ const DetailPage:React.FC<DetailPageProps> = ({api}) =>
 
     const[tourObj, setTourObj] = useState<Tour>()
     
+    const [full, setFull] = useState<number>(0);
+    const [traveled, setTraveled] = useState<number>(0);
+
+
     const tourData:any = useTour();
     const menu = useMenu();
+
+    const userRedux:any = useSelector((state:any) => state.user.value);
+
 
     useEffect(() => {
         fetchTourData(tourData.tourId);
     },[]);
+
+    useEffect(() => {
+        if(tourObj !== undefined)
+        {
+            setFull(tourObj.fullDistance);
+            setTraveled(tourObj.fullDistance - tourObj.restDistance);
+        }
+    },[tourObj]);
+
 
     const openMenu = () => 
     {
@@ -37,7 +53,8 @@ const DetailPage:React.FC<DetailPageProps> = ({api}) =>
 
     const fetchTourData = async (id:number) => 
     {
-        //TODO:Load all the tour data from id
+        let fetchedTour = await api.LoadSingleTour(userRedux.id,id, userRedux.clientKey);
+        setTourObj(fetchedTour);
     }
 
 
@@ -50,7 +67,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api}) =>
             <HamburgerIcon boxSize={10} onClick={() => {openMenu()}}/>
         </div>
         <div className="DetailPageTourProgress">
-           <TourProgressView fullDistance={200} traveledDistance={26} />
+           <TourProgressView fullDistance={full} traveledDistance={traveled} />
         </div>
     </div>
     );

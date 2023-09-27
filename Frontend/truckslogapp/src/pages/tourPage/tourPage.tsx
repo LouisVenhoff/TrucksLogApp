@@ -18,6 +18,9 @@ import useMenu from "../../hooks/useMenu";
 import {HamburgerIcon} from "@chakra-ui/icons";
 import useLoader from "../../hooks/useLoader";
 import { Interactions } from "../../enums/interactions";
+import useTour from "../../hooks/useTour";
+import usePage from "../../hooks/usePage";
+import { Pages } from "../../enums/pages";
 
 
 
@@ -46,6 +49,10 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const menu = useMenu();
     const loader = useLoader();
+
+
+    const pageController = usePage();
+    const tourData = useTour();
 
     //Animation
     const {scrollYProgress} = useScroll({container:elementRef});
@@ -162,7 +169,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     const showTour = (tourId:number) => 
     {
-        window.alert(`Showing tour : ${tourId}`);
+        tourData.setTour(tourId);
+        pageController.loadPage(Pages.DETAIL_PAGE);   
     }
 
     const calculateTour = async (tourId:number) => 

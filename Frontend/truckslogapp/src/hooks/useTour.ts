@@ -19,7 +19,8 @@ export default function useTour()
 
     const setTour = (id:number) => 
     {   
-        select(id);
+        dispatch(select(id));
+        
     }
 
     return{tourId, setTour}
