@@ -45,7 +45,7 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
     {
         switch(tourState)
         {
-            case TourState.AUF_FAHRT:
+            case TourState.ON_TOUR:
                 setTourSymbol(onTrack);
                 break;
             case TourState.COMPLETED:
