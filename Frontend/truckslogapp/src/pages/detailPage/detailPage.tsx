@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./detailPageStyle.css";
 import Header from "../../components/header/header";
 import HamburgerMenu from "../../components/hamburgerMenu/hamburgerMenu";
@@ -13,11 +13,12 @@ import {useSelector} from "react-redux";
 
 
 type DetailPageProps = {
-    api:ApiController
+    api:ApiController,
+    refreshInterval:number
 }
 
 
-const DetailPage:React.FC<DetailPageProps> = ({api}) => 
+const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) => 
 {
 
     const[tourObj, setTourObj] = useState<Tour>()
@@ -31,9 +32,17 @@ const DetailPage:React.FC<DetailPageProps> = ({api}) =>
 
     const userRedux:any = useSelector((state:any) => state.user.value);
 
+    let fetchTimer:any = useRef();
+  
+
 
     useEffect(() => {
-        fetchTourData(tourData.tourId);
+        // fetchTourData(tourData.tourId);
+        startDataFetching();
+        return(() => {
+            clearInterval(fetchTimer.current);
+        });
+        
     },[]);
 
     useEffect(() => {
@@ -43,6 +52,13 @@ const DetailPage:React.FC<DetailPageProps> = ({api}) =>
             setTraveled(tourObj.fullDistance - tourObj.restDistance);
         }
     },[tourObj]);
+
+    const startDataFetching = () => 
+    {
+        fetchTourData(tourData.tourId);
+        fetchTimer.current = setInterval(() => {fetchTourData(tourData.tourId)}, refreshInterval);
+    }
+
 
 
     const openMenu = () => 

@@ -88,7 +88,7 @@ function App() {
         setActivePage(<CreditsPage />);
         break;
       case Pages.DETAIL_PAGE:
-        setActivePage(<DetailPage api={api} />);
+        setActivePage(<DetailPage api={api} refreshInterval={60000} />);
         break;
     }
   }

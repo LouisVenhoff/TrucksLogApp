@@ -33,7 +33,12 @@ const TourProgressView:React.FC<TourProgressViewProps> = ({fullDistance, travele
 
         let percentageValue = traveled / singlePercent;
 
-        return percentageValue;
+        if(isNaN(percentageValue))
+        {
+            return 0;
+        }
+
+        return parseInt(percentageValue.toFixed(0));
     }
 
 
