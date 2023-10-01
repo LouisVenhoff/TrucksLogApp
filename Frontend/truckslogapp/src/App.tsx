@@ -21,6 +21,8 @@ import { setOpened } from './features/menu';
 
 import { Pages } from './enums/pages';
 
+import DetailPage from './pages/detailPage/detailPage';
+
 
 //Backdrop
 import {
@@ -85,6 +87,9 @@ function App() {
       case Pages.CREDITS:
         setActivePage(<CreditsPage />);
         break;
+      case Pages.DETAIL_PAGE:
+        setActivePage(<DetailPage api={api} refreshInterval={60000} />);
+        break;
     }
   }
 
@@ -106,6 +111,7 @@ function App() {
       <HamburgerMenu isOpen={menuOpened} closeCallback={() => {menu.showMenu(false)}} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
       {activePage}
+      {/* <DetailPage /> */}
       {/* <CreditsPage /> */}
     </div>
   );

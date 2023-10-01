@@ -48,6 +48,31 @@ class ApiController {
 
   }
 
+  public async LoadSingleTour(userId:number, tourId:number, clientKey:string):Promise<Tour>
+  {
+      let result:any = await this.sendPost("/api/v1/getTour", {
+        userId:userId,
+        clientKey:clientKey,
+        tourId:tourId
+      });
+
+      let currentTour:Tour;
+
+      try
+      {
+        currentTour = result.data;
+      }
+      catch
+      {
+        throw("Technical Error! Server data in wrong format!");
+      }
+      
+      
+      return new Promise((resolve, reject) => {
+          resolve(currentTour);
+      });
+  }
+
 
   public async Login(email: string, password: string): Promise<UserObj> {
     let result: any = await this.sendPost("/api/v1/login", {

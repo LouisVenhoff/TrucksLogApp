@@ -7,7 +7,7 @@ export enum Game {
 }
 
 export enum TourState {
-    AUF_FAHRT,
+    ON_TOUR,
     COMPLETED,
     REJECTED,
     CANCELLED,
@@ -101,7 +101,7 @@ class Tour {
     private resolveState(stateStr: string): TourState {
         switch (stateStr) {
             case "Auf Fahrt":
-                return (TourState.AUF_FAHRT);
+                return (TourState.ON_TOUR);
                 break;
             case "Abgeschlossen":
                 return (TourState.COMPLETED);

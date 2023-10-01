@@ -4,15 +4,16 @@ import TourElement from "./tourElement/tourElement";
 import { TourState } from "../../claases/tour/tour";
 
 import Tour from "../../claases/tour/tour";
+import { Interactions } from "../../enums/interactions";
 
 type TourDisplayProps ={
     tourData:Tour[],
     noDataText:string,
-    calcCallback:(id:number) => void 
+    interactionCallback:(id:number, type:Interactions) => void 
 }
 
 
-const TourDisplay:React.FC<TourDisplayProps> = ({tourData, noDataText, calcCallback}) => 
+const TourDisplay:React.FC<TourDisplayProps> = ({tourData, noDataText, interactionCallback}) => 
 {
 
     const[tourElements, setTourElements] = useState<JSX.Element[]>();
@@ -30,7 +31,7 @@ const TourDisplay:React.FC<TourDisplayProps> = ({tourData, noDataText, calcCallb
         for(let i = 0; i < tourData.length; i++)
         {
             // tempTours.push(<TourElement start={tourData[i].startPos} target={tourData[i].targetPos} date={tourData[i].TimeString} state={tourData[i].state}/>);
-            tempTours.push(<TourElement tourId={tourData[i].tourId} start={tourData[i].startPos} target={tourData[i].targetPos} date={(`${tourData[i].day}.${tourData[i].month}.${tourData[i].year}`)} state={tourData[i].state} calcCallback={(id:number) => {calcCallback(id)}}/>);
+            tempTours.push(<TourElement tourId={tourData[i].tourId} start={tourData[i].startPos} target={tourData[i].targetPos} date={(`${tourData[i].day}.${tourData[i].month}.${tourData[i].year}`)} state={tourData[i].state} interactionCallback={(id:number, type:Interactions) => {interactionCallback(id, type)}}/>);
         }
         setTourElements(tempTours);
     }
