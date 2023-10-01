@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./detailPageStyle.css";
 import Header from "../../components/header/header";
 import HamburgerMenu from "../../components/hamburgerMenu/hamburgerMenu";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import useMenu from "../../hooks/useMenu";
 import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 import TourProgressView from "./tourProgressView/tourProgressView";
@@ -11,6 +11,8 @@ import Tour, { TourState } from "../../claases/tour/tour";
 import ApiController from "../../claases/controller/apiController";
 import useTour from "../../hooks/useTour";
 import {useSelector} from "react-redux";
+import usePage from "../../hooks/usePage";
+import { Pages } from "../../enums/pages";
 
 
 type DetailPageProps = {
@@ -30,6 +32,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
 
     const tourData:any = useTour();
     const menu = useMenu();
+    const pageHook = usePage();
 
     const userRedux:any = useSelector((state:any) => state.user.value);
 
@@ -62,9 +65,9 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
 
 
 
-    const openMenu = () => 
+    const returnToTourPage = () => 
     {
-        menu.showMenu(true);
+        pageHook.loadPage(Pages.TOUR_LIST);
     }
 
 
@@ -114,7 +117,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
             <Header />
         </div>
         <div className="DetailPageHamburgerBtnDiv">
-            <HamburgerIcon boxSize={10} onClick={() => {openMenu()}}/>
+            <ArrowBackIcon boxSize={10} onClick={() => {returnToTourPage()}}/>
         </div>
         <div className="DetailPageTourProgress">
            <TourProgressView fullDistance={full} traveledDistance={traveled} />
@@ -137,9 +140,9 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
             <DataViewCell label="⛽ Start-Tankinhalt" value={Math.trunc(tourObj!.startFuel).toString()+ "Liter"} />
             <DataViewCell label="⛽ Ende-Tankinhalt" value={Math.trunc(tourObj!.endFuel).toString() + "Liter"} />
             <DataViewCell label="⛽ Verbrauch-Tankinhalt" value={Math.trunc(tourObj!.fuelConsumption).toString() + "Liter"} />
-            <DataViewCell label="📟 Start-Kilometer-LKW" value={tourObj!.truckODOStart.toString() + "KM"} />
-            <DataViewCell label="📟 Ende-Kilometer-LKW" value={tourObj!.truckODOEnd.toString() + "KM"} />
-            <DataViewCell label="📟 Diff.-Kilometer-LKW" value={tourObj!.truckDistance.toString() + "KM"} />
+            <DataViewCell label="📟 Start-KM-LKW" value={Math.trunc(tourObj!.truckODOStart).toString() + "KM"} />
+            <DataViewCell label="📟 Ende-KM-LKW" value={Math.trunc(tourObj!.truckODOEnd).toString() + "KM"} />
+            <DataViewCell label="📟 Diff.-KM-LKW" value={Math.trunc(tourObj!.truckDistance).toString() + "KM"} />
             <DataViewCell label="🚀 Max. Speed" value={Math.trunc(tourObj!.startFuel).toString() + "KM/H"} />
             <DataViewCell label="💲 Abgerechnet" value={tourObj.billDate} />
             <DataViewCell label="💡 Notizen" value={tourObj.notes} />

@@ -44,7 +44,6 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
 
     const tryAutoLogin = async () => {
         let loginObj:any = await savedData.loadData();
-        console.log(loginObj);
         if(loginObj.email !== undefined && loginObj.email !== null)
         {
             loginFunc(loginObj.email, loginObj.password);
