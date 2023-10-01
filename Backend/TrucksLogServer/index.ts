@@ -9,7 +9,7 @@ const fs = require("fs");
 
 const certReader: CertReader = new CertReader("certificates");
 
-const softwareVersion:string = "1.0.0";
+const softwareVersion:string = "1.1.0";
 
 
 const fastify = require("fastify")({
@@ -150,6 +150,7 @@ const startServer = (conf: Config) => {
         if (err) {
             throw (err);
         }
+        console.log("TrucksLogAPP Server Version: " + softwareVersion);
         console.log("Listening on port: " + conf.port);
 
     });
