@@ -67,6 +67,11 @@ class ApiController {
         throw("Technical Error! Server data in wrong format!");
       }
       
+      //Hotfix: Provide that consumed Fuel Level is not negative
+      if(currentTour.fuelConsumption < 0)
+      {
+        currentTour.fuelConsumption *= -1;
+      }
       
       return new Promise((resolve, reject) => {
           resolve(currentTour);

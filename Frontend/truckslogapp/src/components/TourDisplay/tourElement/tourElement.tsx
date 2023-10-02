@@ -17,34 +17,32 @@ import { Interactions } from "../../../enums/interactions";
 // import {MdShoppingCartCheckout} from "react-icons/md";
 
 type TourElementProps = {
-    tourId:number,
-    start:string,
-    target:string,
-    state:TourState,
-    date:string,
-    interactionCallback?:(id:number, type:Interactions) => void,
+    tourId: number,
+    start: string,
+    target: string,
+    state: TourState,
+    date: string,
+    interactionCallback?: (id: number, type: Interactions) => void,
 }
 
-const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, date, interactionCallback}) => {
-    
+const TourElement: React.FC<TourElementProps> = ({ tourId, start, target, state, date, interactionCallback }) => {
+
     const [tourSymbol, setTourSymbol] = useState<string>();
     const [billingActive, setBillingActive] = useState<boolean>(false);
 
-    const userRedux = useSelector((state:any) => state.user.value);
+    const userRedux = useSelector((state: any) => state.user.value);
 
 
     useEffect(() => {
         loadTourSymbol(state);
 
         setBillingActive(state === TourState.COMPLETED && userRedux.billPermission === true ? true : false);
-    },[state]);
+    }, [state]);
 
 
-    
-    const loadTourSymbol = (tourState:TourState) => 
-    {
-        switch(tourState)
-        {
+
+    const loadTourSymbol = (tourState: TourState) => {
+        switch (tourState) {
             case TourState.ON_TOUR:
                 setTourSymbol(onTrack);
                 break;
@@ -69,47 +67,44 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
                 break;
             default:
                 break;
-            
+
 
         }
     }
 
 
     const billingHandler = () => {
-        if(billingActive && interactionCallback !== undefined)
-        {
+        if (billingActive && interactionCallback !== undefined) {
             interactionCallback(tourId, Interactions.CALCULATE);
         }
     }
 
 
     const viewHandler = () => {
-        if(interactionCallback !== undefined)
-        {
+        if (interactionCallback !== undefined) {
             interactionCallback(tourId, Interactions.VIEW);
         }
     }
 
 
-    
-    
-    return(
-    <div className="TourElementMainDiv" onClick={viewHandler}>
-        <div className="TourElementSymbolDiv">
-            <img src={tourSymbol}/>
-        </div>
-        <div>
 
+
+    return (
+        <div className="TourElementMainDiv">
+            <div className="TourElementSymbolDiv">
+                <img src={tourSymbol} />
+            </div>
+            <div className="TourElementInfoClickDiv" onClick={viewHandler}>
+                <div className="TourElementDescription">
+                    <h3>{start} - {target}</h3>
+                    <h3>{date}</h3>
+                </div>
+            </div>
+            <div className="TourElementBillBtnDiv">
+                {/* <IconButton style={{display:billingActive ? "" : "none"}} isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
+                <IconButton style={{ display: billingActive ? "" : "none" }} isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler} />
+            </div>
         </div>
-        <div className="TourElementDescription">
-            <h3>{start} - {target}</h3>
-            <h3>{date}</h3>
-        </div>
-        <div className="TourElementBillBtnDiv">
-            {/* <IconButton style={{display:billingActive ? "" : "none"}} isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
-            <IconButton style={{display:billingActive ? "" : "none"}} isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
-        </div>
-    </div>
     );
 }
 
