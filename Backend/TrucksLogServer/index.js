@@ -42,7 +42,7 @@ var databaseManager_1 = require("./classes/databaseManager/databaseManager");
 var cors_1 = require("@fastify/cors");
 var fs = require("fs");
 var certReader = new certReader_1.default("certificates");
-var softwareVersion = "1.0.0";
+var softwareVersion = "1.1.0";
 var fastify = require("fastify")({
     logger: false,
     https: {
@@ -178,6 +178,7 @@ var startServer = function (conf) {
         if (err) {
             throw (err);
         }
+        console.log("TrucksLogAPP Server Version: " + softwareVersion);
         console.log("Listening on port: " + conf.port);
     });
 };
