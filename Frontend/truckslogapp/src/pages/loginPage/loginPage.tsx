@@ -44,7 +44,6 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
 
     const tryAutoLogin = async () => {
         let loginObj:any = await savedData.loadData();
-        console.log(loginObj);
         if(loginObj.email !== undefined && loginObj.email !== null)
         {
             loginFunc(loginObj.email, loginObj.password);
@@ -65,7 +64,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
             return;
         }
   
-        let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar);
+        let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar, loginObj.billPermission);
   
         loader.controlLoader(false);
         
@@ -104,9 +103,11 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
 
     const emailChangeHandler = (value:string) => 
     {
-        setEmail(value);
-        setEmailValid(checkEmail(value));
+        let emailValue = value.trimEnd();
+        setEmail(emailValue);
+        setEmailValid(checkEmail(emailValue));
     }
+
 
     const loginSaveHandler = (isChecked:any) => {
         setAutoLogin(isChecked);

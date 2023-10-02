@@ -42,7 +42,7 @@ var databaseManager_1 = require("./classes/databaseManager/databaseManager");
 var cors_1 = require("@fastify/cors");
 var fs = require("fs");
 var certReader = new certReader_1.default("certificates");
-var softwareVersion = "1.0.0";
+var softwareVersion = "1.1.0";
 var fastify = require("fastify")({
     logger: false,
     https: {
@@ -57,7 +57,7 @@ fastify.get("/", function (req, res) {
     res.send({ Status: "OK", version: softwareVersion });
 });
 fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, clientKey, avatarLink, username, usrInfo;
+    var userId, clientKey, avatarLink, username, billPermission, usrInfo;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -71,6 +71,7 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
                 clientKey = "";
                 avatarLink = "";
                 username = "";
+                billPermission = false;
                 if (!(userId !== -1)) return [3 /*break*/, 3];
                 return [4 /*yield*/, dbManager.getUserInfo(userId)];
             case 2:
@@ -78,9 +79,10 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
                 clientKey = usrInfo.clientKey;
                 avatarLink = usrInfo.avatar;
                 username = usrInfo.username;
+                billPermission = usrInfo.billPermission;
                 _a.label = 3;
             case 3:
-                res.code(200).send({ userId: userId, username: username, clientKey: clientKey, avatar: avatarLink });
+                res.code(200).send({ userId: userId, username: username, clientKey: clientKey, avatar: avatarLink, billPermission: billPermission });
                 return [2 /*return*/];
         }
     });
@@ -176,6 +178,7 @@ var startServer = function (conf) {
         if (err) {
             throw (err);
         }
+        console.log("TrucksLogAPP Server Version: " + softwareVersion);
         console.log("Listening on port: " + conf.port);
     });
 };

@@ -9,6 +9,7 @@ type UserObj = {
   username: string;
   clientKey: string;
   avatar: string;
+  billPermission:boolean
 };
 
 
@@ -47,6 +48,31 @@ class ApiController {
 
   }
 
+  public async LoadSingleTour(userId:number, tourId:number, clientKey:string):Promise<Tour>
+  {
+      let result:any = await this.sendPost("/api/v1/getTour", {
+        userId:userId,
+        clientKey:clientKey,
+        tourId:tourId
+      });
+
+      let currentTour:Tour;
+
+      try
+      {
+        currentTour = result.data;
+      }
+      catch
+      {
+        throw("Technical Error! Server data in wrong format!");
+      }
+      
+      
+      return new Promise((resolve, reject) => {
+          resolve(currentTour);
+      });
+  }
+
 
   public async Login(email: string, password: string): Promise<UserObj> {
     let result: any = await this.sendPost("/api/v1/login", {
@@ -61,11 +87,13 @@ class ApiController {
           username: "",
           clientKey: "",
           avatar: "",
+          billPermission: false
         };
         tempUser.id = result.data.userId;
         tempUser.username = result.data.username;
         tempUser.clientKey = result.data.clientKey;
         tempUser.avatar = result.data.avatar;
+        tempUser.billPermission = result.data.billPermission;
         resolve(tempUser);
       } catch
       {
@@ -99,7 +127,7 @@ class ApiController {
       }
       catch(err:any)
       {
-        console.log(err.message);
+        console.log(err);
         this.errorCallback();
         Toaster.show("Server nicht erreichbar", AlertType.ERROR, 1500);
       }

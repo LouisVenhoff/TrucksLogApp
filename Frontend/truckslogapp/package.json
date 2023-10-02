@@ -12,7 +12,6 @@
     "@chakra-ui/react": "^2.8.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@jcesarmobile/ssl-skip": "^0.2.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -22,6 +21,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "axios": "^1.4.0",
+    "cross-env": "^7.0.3",
     "framer-motion": "^10.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,7 +36,8 @@
     "start": "set Port=3014 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "resources": "capacitor-resources -p android,ios"
   },
   "eslintConfig": {
     "extends": [

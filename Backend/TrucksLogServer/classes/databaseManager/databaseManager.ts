@@ -15,7 +15,8 @@ export type ValidationObj = {
 type UserInfoObj = {
     username:string;
     clientKey:string,
-    avatar:string
+    avatar:string,
+    billPermission:boolean
 }
 
 
@@ -215,13 +216,20 @@ class DatabaseManager {
 
     public async getUserInfo(userId:number):Promise<UserInfoObj>
     {
-        let userInfoObj = await this.runQuery("SELECT client_key, nickname,  profilbild FROM user WHERE id = ?", userId);
+        let userInfoObj = await this.runQuery("SELECT client_key, user.nickname,  profilbild, fb.fahrer_abrechnen AS billPermission FROM user JOIN fahrer__berechtigungen fb ON email = fb.fahrer_id WHERE user.id = ?", userId);
     
         return new Promise((resolve, reject) => {
-            resolve({username:userInfoObj[0].nickname, clientKey:userInfoObj[0].client_key, avatar:userInfoObj[0].profilbild});
+            
+            let tempBillPermission:boolean = userInfoObj[0].billPermission === 1 ? true : false
+            
+            
+            resolve({username:userInfoObj[0].nickname, clientKey:userInfoObj[0].client_key, avatar:userInfoObj[0].profilbild, billPermission:tempBillPermission});
         });
     
     }
+
+   
+
 
 
     private async runQuery(query: string, ...args:any): Promise<any> {

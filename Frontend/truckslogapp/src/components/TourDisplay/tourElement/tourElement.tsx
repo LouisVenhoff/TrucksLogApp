@@ -11,7 +11,10 @@ import { TourState } from "../../../claases/tour/tour";
 
 import { Icon, IconButton } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
-//import {MdShoppingCartCheckout} from "react-icons/md";
+
+import { useSelector } from "react-redux";
+import { Interactions } from "../../../enums/interactions";
+// import {MdShoppingCartCheckout} from "react-icons/md";
 
 type TourElementProps = {
     tourId:number,
@@ -19,18 +22,21 @@ type TourElementProps = {
     target:string,
     state:TourState,
     date:string,
-    calcCallback?:(id:number) => void
+    interactionCallback?:(id:number, type:Interactions) => void,
 }
 
-const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, date, calcCallback}) => {
+const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, date, interactionCallback}) => {
     
     const [tourSymbol, setTourSymbol] = useState<string>();
     const [billingActive, setBillingActive] = useState<boolean>(false);
 
+    const userRedux = useSelector((state:any) => state.user.value);
+
+
     useEffect(() => {
         loadTourSymbol(state);
 
-        setBillingActive(state == TourState.COMPLETED ? true : false);
+        setBillingActive(state === TourState.COMPLETED && userRedux.billPermission === true ? true : false);
     },[state]);
 
 
@@ -39,7 +45,7 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
     {
         switch(tourState)
         {
-            case TourState.AUF_FAHRT:
+            case TourState.ON_TOUR:
                 setTourSymbol(onTrack);
                 break;
             case TourState.COMPLETED:
@@ -70,9 +76,17 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
 
 
     const billingHandler = () => {
-        if(billingActive && calcCallback !== undefined)
+        if(billingActive && interactionCallback !== undefined)
         {
-            calcCallback(tourId);
+            interactionCallback(tourId, Interactions.CALCULATE);
+        }
+    }
+
+
+    const viewHandler = () => {
+        if(interactionCallback !== undefined)
+        {
+            interactionCallback(tourId, Interactions.VIEW);
         }
     }
 
@@ -80,7 +94,7 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
     
     
     return(
-    <div className="TourElementMainDiv">
+    <div className="TourElementMainDiv" onClick={viewHandler}>
         <div className="TourElementSymbolDiv">
             <img src={tourSymbol}/>
         </div>
@@ -92,8 +106,8 @@ const TourElement:React.FC<TourElementProps> = ({tourId, start, target, state, d
             <h3>{date}</h3>
         </div>
         <div className="TourElementBillBtnDiv">
-            {/* <IconButton isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
-            <IconButton isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
+            {/* <IconButton style={{display:billingActive ? "" : "none"}} isActive={!billingActive} icon={<Icon as={MdShoppingCartCheckout} />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/> */}
+            <IconButton style={{display:billingActive ? "" : "none"}} isActive={!billingActive} icon={<PlusSquareIcon />} aria-label="Abrechnen" colorScheme="messenger" onClick={billingHandler}/>
         </div>
     </div>
     );

@@ -21,6 +21,8 @@ import { setOpened } from './features/menu';
 
 import { Pages } from './enums/pages';
 
+import DetailPage from './pages/detailPage/detailPage';
+
 
 //Backdrop
 import {
@@ -67,8 +69,8 @@ function App() {
   },[menu]);
 
 
-  const api = new ApiController("81.169.174.46", 3014, () => {loader.controlLoader(false)});
-
+ const api:ApiController = new ApiController("app.truckslog.de", 3014, () => {loader.controlLoader(false)});
+ //const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
   const dispatch = useDispatch();
 
 
@@ -84,6 +86,9 @@ function App() {
         break;
       case Pages.CREDITS:
         setActivePage(<CreditsPage />);
+        break;
+      case Pages.DETAIL_PAGE:
+        setActivePage(<DetailPage api={api} refreshInterval={60000} />);
         break;
     }
   }
@@ -106,6 +111,7 @@ function App() {
       <HamburgerMenu isOpen={menuOpened} closeCallback={() => {menu.showMenu(false)}} />
       {/* <TourPage accountName="Driver" avatarStr="https://abload.de/img/2000tojen.png" userTours={[]}/> */}
       {activePage}
+      {/* <DetailPage /> */}
       {/* <CreditsPage /> */}
     </div>
   );
