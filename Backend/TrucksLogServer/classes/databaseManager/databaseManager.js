@@ -163,6 +163,7 @@ var DatabaseManager = /** @class */ (function () {
     DatabaseManager.prototype.loadTours = function (userId) {
         return __awaiter(this, void 0, void 0, function () {
             var userClientKey, userTours;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getClientKey(userId)];
@@ -171,29 +172,55 @@ var DatabaseManager = /** @class */ (function () {
                         return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey)];
                     case 2:
                         userTours = _a.sent();
-                        return [2 /*return*/, new Promise(function (resolve, reject) {
-                                if (userTours.length === 0) {
-                                    resolve([]);
-                                }
-                                var tourArr = [];
-                                for (var i = 0; i < userTours.length; i++) {
-                                    tourArr.push(new tour_1.default(userTours[i]));
-                                }
-                                resolve(tourArr);
-                            })];
+                        return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                                var tourArr, i, tempTour, _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            if (userTours.length === 0) {
+                                                resolve([]);
+                                            }
+                                            tourArr = [];
+                                            i = 0;
+                                            _b.label = 1;
+                                        case 1:
+                                            if (!(i < userTours.length)) return [3 /*break*/, 5];
+                                            tempTour = new tour_1.default(userTours[i]);
+                                            if (!(tempTour.tourId !== null)) return [3 /*break*/, 3];
+                                            _a = tempTour;
+                                            return [4 /*yield*/, this.loadRefuelAmount(tempTour.tourId)];
+                                        case 2:
+                                            _a.refueled = _b.sent();
+                                            _b.label = 3;
+                                        case 3:
+                                            tourArr.push(tempTour);
+                                            _b.label = 4;
+                                        case 4:
+                                            i++;
+                                            return [3 /*break*/, 1];
+                                        case 5:
+                                            resolve(tourArr);
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                 }
             });
         });
     };
     DatabaseManager.prototype.loadTourById = function (tourId) {
         return __awaiter(this, void 0, void 0, function () {
-            var resolvedTour, outTour;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var resolvedTour, outTour, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE id = ?", tourId)];
                     case 1:
-                        resolvedTour = _a.sent();
+                        resolvedTour = _b.sent();
                         outTour = new tour_1.default(resolvedTour[0]);
+                        _a = outTour;
+                        return [4 /*yield*/, this.loadRefuelAmount(tourId)];
+                    case 2:
+                        _a.refueled = _b.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 resolve(outTour);
                             })];
@@ -258,6 +285,27 @@ var DatabaseManager = /** @class */ (function () {
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 var tempBillPermission = userInfoObj[0].billPermission === 1 ? true : false;
                                 resolve({ username: userInfoObj[0].nickname, clientKey: userInfoObj[0].client_key, avatar: userInfoObj[0].profilbild, billPermission: tempBillPermission });
+                            })];
+                }
+            });
+        });
+    };
+    DatabaseManager.prototype.loadRefuelAmount = function (tourId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var fuelDbData, refueledAmount;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT liter FROM c_tourtable a  LEFT JOIN c_tanken b ON a.tour_id = b.tour_id WHERE a.id = ?;", tourId)];
+                    case 1:
+                        fuelDbData = _a.sent();
+                        refueledAmount = fuelDbData[0].liter;
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                if (refueledAmount !== null) {
+                                    resolve(refueledAmount);
+                                }
+                                else {
+                                    resolve(0);
+                                }
                             })];
                 }
             });

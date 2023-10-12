@@ -157,7 +157,7 @@ class DatabaseManager {
 
         let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey);
 
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
 
             if (userTours.length === 0) {
                 resolve([]);
@@ -166,7 +166,15 @@ class DatabaseManager {
             let tourArr: Tour[] = [];
 
             for (let i = 0; i < userTours.length; i++) {
-                tourArr.push(new Tour(userTours[i]));
+                
+                let tempTour:Tour = new Tour(userTours[i]);
+
+                if(tempTour.tourId !== null)
+                {
+                    tempTour.refueled = await this.loadRefuelAmount(tempTour.tourId);
+                }
+
+                tourArr.push(tempTour);
             }
 
             resolve(tourArr);
@@ -179,11 +187,12 @@ class DatabaseManager {
 
         let outTour = new Tour(resolvedTour[0]);
 
+        outTour.refueled = await this.loadRefuelAmount(tourId);
+
         return new Promise((resolve, reject) => {
             resolve(outTour);
         });
     }
-
 
     public async calculateTour(tourId: number) {
         await this.runQuery(`UPDATE c_tourtable SET status="In Abrechnung" WHERE id=?`, tourId);
@@ -228,10 +237,26 @@ class DatabaseManager {
     
     }
 
+    private async loadRefuelAmount(tourId:number):Promise<number>
+    {
+        
+        let fuelDbData:any = await this.runQuery("SELECT liter FROM c_tourtable a  LEFT JOIN c_tanken b ON a.tour_id = b.tour_id WHERE a.id = ?;", tourId);
+        
+        let refueledAmount:number = fuelDbData[0].liter;
+
+        return new Promise((resolve, reject) => {
+            if(refueledAmount !== null)
+            {
+                resolve(refueledAmount);
+            }
+            else
+            {
+                resolve(0);
+            }
+        });
+    }
+
    
-
-
-
     private async runQuery(query: string, ...args:any): Promise<any> {
 
 

@@ -143,6 +143,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
             <DataViewCell label="⛽ Start-Tankinhalt" value={Math.trunc(tourObj!.startFuel).toString()+ "Liter"} />
             <DataViewCell label="⛽ Ende-Tankinhalt" value={Math.trunc(tourObj!.endFuel).toString() + "Liter"} />
             <DataViewCell label="⛽ Verbrauch-Tankinhalt" value={Math.trunc(tourObj!.fuelConsumption).toString() + "Liter"} />
+            <DataViewCell label="⛽ Nachgetankt" value={Math.trunc(tourObj!.refueled).toString() + "Liter"}/>
             <DataViewCell label="📟 Start-KM-LKW" value={Math.trunc(tourObj!.truckODOStart).toString() + "KM"} />
             <DataViewCell label="📟 Ende-KM-LKW" value={Math.trunc(tourObj!.truckODOEnd).toString() + "KM"} />
             <DataViewCell label="📟 Diff.-KM-LKW" value={Math.trunc(tourObj!.truckDistance).toString() + "KM"} />

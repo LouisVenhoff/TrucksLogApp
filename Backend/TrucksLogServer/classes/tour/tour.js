@@ -59,6 +59,7 @@ var Tour = /** @class */ (function () {
         this.startFuel = 0;
         this.endFuel = 0;
         this.fuelConsumption = 0;
+        this.refueled = 0;
         this.truckODOStart = 0;
         this.truckODOEnd = 0;
         this.truckDistance = 0;
