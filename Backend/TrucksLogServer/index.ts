@@ -9,7 +9,7 @@ const fs = require("fs");
 
 const certReader: CertReader = new CertReader("certificates");
 
-const softwareVersion:string = "1.1.0";
+const softwareVersion:string = "1.2.0";
 
 
 const fastify = require("fastify")({
