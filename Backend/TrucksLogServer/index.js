@@ -172,6 +172,36 @@ fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, 
         }
     });
 }); });
+//Company Information
+fastify.post("/api/v1/getCompany", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var tempClientKey, companyObj;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                tempClientKey = req.body.clientKey;
+                return [4 /*yield*/, dbManager.getCompanyByClientKey(tempClientKey)];
+            case 1:
+                companyObj = _a.sent();
+                res.send(companyObj);
+                return [2 /*return*/];
+        }
+    });
+}); });
+fastify.post("/api/v1/getCompanyTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userClientKey, companyId, companyTours;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userClientKey = req.body.clientKey;
+                companyId = req.body.companyId;
+                return [4 /*yield*/, dbManager.loadCompanyTours(companyId)];
+            case 1:
+                companyTours = _a.sent();
+                res.send(companyTours);
+                return [2 /*return*/];
+        }
+    });
+}); });
 var startServer = function (conf) {
     dbManager = new databaseManager_1.default(conf, true);
     fastify.listen({ port: conf.port, host: '0.0.0.0' }, function (err, addr) {

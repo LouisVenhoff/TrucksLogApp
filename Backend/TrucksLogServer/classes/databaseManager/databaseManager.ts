@@ -19,6 +19,12 @@ type UserInfoObj = {
     billPermission:boolean
 }
 
+type CompanyInfoObj = {
+    companyId:number,
+    name:string,
+    avatar:string,    
+}
+
 
 class DatabaseManager {
 
@@ -159,25 +165,27 @@ class DatabaseManager {
 
         return new Promise(async (resolve, reject) => {
 
-            if (userTours.length === 0) {
-                resolve([]);
-            }
+            // if (userTours.length === 0) {
+            //     resolve([]);
+            // }
 
-            let tourArr: Tour[] = [];
+            // let tourArr: Tour[] = [];
 
-            for (let i = 0; i < userTours.length; i++) {
+            // for (let i = 0; i < userTours.length; i++) {
                 
-                let tempTour:Tour = new Tour(userTours[i]);
+            //     let tempTour:Tour = new Tour(userTours[i]);
 
-                if(tempTour.tourId !== null)
-                {
-                    tempTour.refueled = await this.loadRefuelAmount(tempTour.tourId);
-                }
+            //     if(tempTour.tourId !== null)
+            //     {
+            //         tempTour.refueled = await this.loadRefuelAmount(tempTour.tourId);
+            //     }
 
-                tourArr.push(tempTour);
-            }
+            //     tourArr.push(tempTour);
+            // }
 
-            resolve(tourArr);
+            // resolve(tourArr);
+            resolve(await this.convertRawTours(userTours));
+        
         });
 
     }
@@ -235,6 +243,61 @@ class DatabaseManager {
             resolve({username:userInfoObj[0].nickname, clientKey:userInfoObj[0].client_key, avatar:userInfoObj[0].profilbild, billPermission:tempBillPermission});
         });
     
+    }
+
+    public async getCompanyByClientKey(clientKey:string):Promise<CompanyInfoObj>
+    {
+        let companyRawData:any = await this.runQuery(`SELECT firmen.id, firmen.firmen_logo, firmen.firmenname FROM firmen
+        JOIN user ON user.in_spedition = firmen.firmenname
+        WHERE user.client_key = ?;`, clientKey);
+        
+        return new Promise((resolve:any, reject:any) => {
+            resolve(companyRawData);
+        });        
+    }
+
+    public async loadCompanyTours(companyNumber:string):Promise<Tour[]>
+    {
+        let companyTours:any = await this.runQuery(`SELECT t.*
+        FROM c_tourtable t
+        JOIN firmen f ON f.firmenname = t.in_spedition
+        WHERE f.id = ?
+        ORDER BY t.jahr DESC, t.monat DESC
+        LIMIT 50;`, companyNumber);
+
+        return new Promise(async (resolve, reject) => {
+            resolve(await this.convertRawTours(companyTours));
+        });
+    }
+
+    private async convertRawTours(rawTours:any[]):Promise<Tour[]>
+    {
+        
+        return new Promise(async (resolve, reject) => 
+        {   
+            if(rawTours.length === 0)
+            {
+                resolve([]);
+            }
+        
+            let tourArr:Tour[] = [];
+
+            for(let i = 0; i < rawTours.length; i++)
+            {
+                let tempTour:Tour = new Tour(rawTours[i]);
+
+                if(tempTour.tourId !== null)
+                {
+                    tempTour.refueled = await this.loadRefuelAmount(tempTour.tourId);
+                }
+                
+                tourArr.push(tempTour);
+            }
+
+            resolve(tourArr);
+        });
+
+        
     }
 
     private async loadRefuelAmount(tourId:number):Promise<number>
