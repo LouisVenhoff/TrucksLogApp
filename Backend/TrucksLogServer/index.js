@@ -174,13 +174,22 @@ fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, 
 }); });
 //Company Information
 fastify.post("/api/v1/getCompany", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tempClientKey, companyObj;
+    var userId, clientKey, passValid, tempClientKey, companyObj;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                userId = req.body.userId;
+                clientKey = req.body.clientKey;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
+            case 1:
+                passValid = _a.sent();
+                if (!passValid) {
+                    res.code(403).send();
+                    return [2 /*return*/];
+                }
                 tempClientKey = req.body.clientKey;
                 return [4 /*yield*/, dbManager.getCompanyByClientKey(tempClientKey)];
-            case 1:
+            case 2:
                 companyObj = _a.sent();
                 res.send(companyObj);
                 return [2 /*return*/];
@@ -188,14 +197,22 @@ fastify.post("/api/v1/getCompany", function (req, res) { return __awaiter(void 0
     });
 }); });
 fastify.post("/api/v1/getCompanyTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userClientKey, companyId, companyTours;
+    var userId, clientKey, passValid, companyId, companyTours;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                userClientKey = req.body.clientKey;
+                userId = req.body.userId;
+                clientKey = req.body.clientKey;
+                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
+            case 1:
+                passValid = _a.sent();
+                if (!passValid) {
+                    res.code(403).send();
+                    return [2 /*return*/];
+                }
                 companyId = req.body.companyId;
                 return [4 /*yield*/, dbManager.loadCompanyTours(companyId)];
-            case 1:
+            case 2:
                 companyTours = _a.sent();
                 res.send(companyTours);
                 return [2 /*return*/];

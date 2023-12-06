@@ -144,17 +144,33 @@ fastify.post("/api/v1/calcTour", async (req:any, res:any) => {
 //Company Information
 fastify.post("/api/v1/getCompany", async (req:any, res:any) => 
 {
-   //TODO: Add "middleware" for authentication !!
-   
-    let tempClientKey:string = req.body.clientKey;
+    let userId:number = req.body.userId;
+    let clientKey:string = req.body.clientKey;
+
+    let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
+
+    if(!passValid){
+        res.code(403).send();
+        return;
+   }
+
+   let tempClientKey:string = req.body.clientKey;
    let companyObj:any = await dbManager.getCompanyByClientKey(tempClientKey);
 
    res.send(companyObj);
 });
 
 fastify.post("/api/v1/getCompanyTours", async (req:any, res:any) => {
-    //TODO: Load all Tours from the specific company
-    let userClientKey:string = req.body.clientKey;
+    let userId:number = req.body.userId;
+    let clientKey:string = req.body.clientKey;
+
+    let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
+
+    if(!passValid){
+        res.code(403).send();
+        return;
+    }
+    
     let companyId:string = req.body.companyId;
 
     let companyTours:Tour[] = await dbManager.loadCompanyTours(companyId);
