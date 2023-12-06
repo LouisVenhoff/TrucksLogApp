@@ -3,6 +3,7 @@ import ConfigReader, { Config } from "./classes/configReader/configReader";
 import DatabaseManager from "./classes/databaseManager/databaseManager";
 import Tour from "./classes/tour/tour";
 import cors from "@fastify/cors"
+import { authClientKey } from "./middlewares/auth";
 
 const fs = require("fs");
 
@@ -25,6 +26,12 @@ fastify.register(cors, {})
 const confReader: ConfigReader = new ConfigReader("config.json", (conf: Config) => { startServer(conf) });
 
 var dbManager: DatabaseManager;
+
+const middleWareWrapper = (req:any, res:any, next:() => void) => 
+{
+    authClientKey(req, res, dbManager, next);
+}
+
 
 fastify.get("/", (req:any, res:any) => {
     res.send({ Status: "OK", version: softwareVersion })
@@ -60,14 +67,11 @@ fastify.post("/api/v1/login", async (req:any, res:any) => {
 
 //TODO: Get all Tours of an UserId
 
-fastify.post("/api/v1/getTours", async (req:any, res:any) => {
+fastify.post("/api/v1/getTours",{preHandler: [middleWareWrapper]}, async (req:any, res:any) => {
     let userId:number = req.body.userId;
     let clientKey:string = req.body.clientKey;
     let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
     
-
-   
-
     if(!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
     {
         res.code(403).send();
@@ -83,9 +87,11 @@ fastify.post("/api/v1/getTours", async (req:any, res:any) => {
     //TODO:Send full Dataset of user
 });
 
-fastify.post("/api/v1/getTour", async (req:any, res:any) => {
+
+
+fastify.post("/api/v1/getTour",{preHandler: [middleWareWrapper]}, async (req:any, res:any) => {
     let tourId:number = req.body.tourId;
-    let userId:number = parseInt(req.body.userId);
+    let userId:number = req.body.userId;
     let clientKey:string = req.body.clientKey;
 
     let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
@@ -102,23 +108,10 @@ fastify.post("/api/v1/getTour", async (req:any, res:any) => {
 })
 
 
-fastify.post("/api/v1/calcTour", async (req:any, res:any) => {
-    //TODO: Check and Calculate Tour
-
-    let tourId:number = parseInt(req.body.tourId);
+fastify.post("/api/v1/calcTour",{preHandler: [middleWareWrapper]}, async (req:any, res:any) => {
     let userId:number = req.body.userId;
-    let clientKey:string = req.body.clientKey;
-
-    let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
-
-    if(!passValid){
-        res.code(403).send();
-        return;
-    }
-
+    let tourId:number = req.body.tourId;
     let userIsTourDriver:boolean = await dbManager.checkUserTour(userId, tourId);
-    
-
     if(!userIsTourDriver)
     {
         res.code(403).send();
@@ -142,35 +135,16 @@ fastify.post("/api/v1/calcTour", async (req:any, res:any) => {
 
 
 //Company Information
-fastify.post("/api/v1/getCompany", async (req:any, res:any) => 
+fastify.post("/api/v1/getCompany",{preHandler: [middleWareWrapper]}, async (req:any, res:any) => 
 {
-    let userId:number = req.body.userId;
-    let clientKey:string = req.body.clientKey;
-
-    let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
-
-    if(!passValid){
-        res.code(403).send();
-        return;
-   }
-
    let tempClientKey:string = req.body.clientKey;
    let companyObj:any = await dbManager.getCompanyByClientKey(tempClientKey);
 
    res.send(companyObj);
 });
 
-fastify.post("/api/v1/getCompanyTours", async (req:any, res:any) => {
-    let userId:number = req.body.userId;
-    let clientKey:string = req.body.clientKey;
+fastify.post("/api/v1/getCompanyTours",{preHandler: [middleWareWrapper]}, async (req:any, res:any) => {
 
-    let passValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
-
-    if(!passValid){
-        res.code(403).send();
-        return;
-    }
-    
     let companyId:string = req.body.companyId;
 
     let companyTours:Tour[] = await dbManager.loadCompanyTours(companyId);
@@ -193,6 +167,9 @@ const startServer = (conf: Config) => {
 
     });
 }
+
+
+
 
 
 
