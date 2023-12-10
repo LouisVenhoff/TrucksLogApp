@@ -12,6 +12,12 @@ type UserObj = {
   billPermission:boolean
 };
 
+type CompanyObj = {
+  id:number;
+  name:string;
+  avatar:string;
+}
+
 
 class ApiController {
   private hostname: string;
@@ -32,7 +38,7 @@ class ApiController {
 
     let result: any = await this.sendPost("/api/v1/getTours", {
       userId: id,
-      clientKey: clientKey
+      clientKey: clientKey,
     })
 
 
@@ -48,6 +54,7 @@ class ApiController {
 
   }
 
+ 
   public async LoadSingleTour(userId:number, tourId:number, clientKey:string):Promise<Tour>
   {
       let result:any = await this.sendPost("/api/v1/getTour", {
@@ -76,6 +83,40 @@ class ApiController {
       return new Promise((resolve, reject) => {
           resolve(currentTour);
       });
+  }
+
+  public async LoadCompanyTours(id:number, clientKey:string, companyId:number)
+  {
+      let result = await this.sendPost("/api/v1/getCompanyTours", {
+        userId: id,
+        clientKey: clientKey,
+        companyId: companyId,
+      });
+
+      let tourArr:Tour[] = this.createTourArr(result.data);
+
+      return new Promise((resolve, reject) => {
+        resolve(tourArr);
+      });
+  }
+
+  public async LoadCompanyData(id:number, clientKey:string):Promise<CompanyObj>
+  {
+    let result = await this.sendPost("/api/v1/getCompany",{
+      userId: id,
+      clientKey: clientKey
+    });
+
+    let company:CompanyObj = {
+      id: result.data.id,
+      name: result.data.name,
+      avatar: result.data.avatar,
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(company);
+    });
+    //TODO: Conver Information into Company Obj
   }
 
 
