@@ -99,7 +99,7 @@ function App() {
   return (
     <div className="App">
       <AlertProvider />
-      <Modal isOpen={laodingScreenOpened} onClose={() => {dispatch(setOpened(false))}} size="xs">
+      <Modal isOpen={laodingScreenOpened} onClose={() => {loader.controlLoader(false)}} size="xs">
         <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px)'>
           <ModalContent>
             <ModalHeader>LadeDaten . . .</ModalHeader>
