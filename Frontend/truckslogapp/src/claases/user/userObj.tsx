@@ -36,7 +36,6 @@ class UserObj extends TourData
 
     async updateTours()
     {
-        console.log("updating tours...");
         if(this.id === 0)
         {
             return [];

@@ -72,10 +72,6 @@ function App() {
       setMenuOpened(menu.menuOpened);
   },[menu]);
 
-
- const dispatch = useDispatch();
-
-
   const loadPage = (page: Pages) => {
     switch (page) {
       case Pages.LOGIN:
