@@ -21,11 +21,11 @@ import { Interactions } from "../../enums/interactions";
 import useTour from "../../hooks/useTour";
 import usePage from "../../hooks/usePage";
 import { Pages } from "../../enums/pages";
-
-
+import TourData from "../../claases/tourData/tourData";
 
 type TourPageProps = {
   api:ApiController
+  pageContent:TourData,
 };
 
 const AVATAR_HIDE_POSITION:number = 0.945;
@@ -39,12 +39,11 @@ let syncInterval:any;
 const SHOW_LOADER_TIME = 750;
 let loadingTimeout:any;
 
-const TourPage: React.FC<TourPageProps> = ({api}) => {
+const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
 
-    const currentUser = useSelector((state:any) => state.user.value);
+    const currentUserRedux = useSelector((state:any) => state.user.value);
 
-    const dispatch = useDispatch();
-
+    const [contentObj, setContentObj] = useState(pageContent);
     const elementRef = useRef(null);
 
     const menu = useMenu();
@@ -77,6 +76,10 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
       loadTours();
     
     },[]);
+
+    useEffect(() => {
+      setContentObj(pageContent);
+    },[pageContent]);
 
 
 
@@ -143,8 +146,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const loadTours = async () =>
     {
         
-        let tourArr:Tour[] = await api.LoadTours(currentUser.id, currentUser.clientKey);
-
+        let tourArr:Tour[] = await contentObj.updateTours();
+      
         tourArr.reverse();
 
         setTours(tourArr);
@@ -177,8 +180,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     {
          startLoading()
         
-          let result:CalcState = await api.calcTour(currentUser.id, tourId, currentUser.clientKey);
-
+          let result:CalcState = await api.calcTour(currentUserRedux.id, tourId, currentUserRedux.clientKey);
+  
           if(result !== CalcState.TOUR_OK)
           {
             Toaster.show("Fehler beim abrechenen", AlertType.ERROR,1000);
@@ -212,10 +215,10 @@ return (
           <HamburgerIcon  boxSize={10} onClick={() => {menu.showMenu(true)}}/>
       </div>
       <div className="TourPageAvatarDiv">
-            <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={currentUser.avatar} />
+            <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={contentObj.avatar} />
       </div>
       <div className="TourPageWelcomeTextDiv">
-        <h1>Willkommen, {currentUser.name}</h1>
+        <h1>Willkommen, {contentObj.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
             <TourDisplay noDataText={infoText} tourData={tours} interactionCallback={(id:number, type:Interactions) => {interactionsHandler(id, type)}}  />

@@ -41,8 +41,6 @@ class ApiController {
       clientKey: clientKey,
     })
 
-
-
     let tourArr: Tour[] = this.createTourArr(result.data);
 
     return new Promise((resolve, reject) => {
