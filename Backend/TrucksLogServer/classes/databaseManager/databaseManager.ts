@@ -247,12 +247,19 @@ class DatabaseManager {
 
     public async getCompanyByClientKey(clientKey:string):Promise<CompanyInfoObj>
     {
-        let companyRawData:any = await this.runQuery(`SELECT firmen.id, firmen.firmen_logo, firmen.firmenname FROM firmen
+        let companyRawData:any = await this.runQuery(`SELECT firmen.id, firmen.firmen_logo as avatar, firmen.firmenname as name FROM firmen
         JOIN user ON user.in_spedition = firmen.firmenname
         WHERE user.client_key = ?;`, clientKey);
         
         return new Promise((resolve:any, reject:any) => {
-            resolve(companyRawData);
+            
+            let companyObj:CompanyInfoObj = {
+                companyId: companyRawData[0].id,
+                name:companyRawData[0].name,
+                avatar:companyRawData[0].avatar
+            };
+
+            resolve(companyObj);
         });        
     }
 
