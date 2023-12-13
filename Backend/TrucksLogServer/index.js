@@ -43,7 +43,7 @@ var cors_1 = require("@fastify/cors");
 var auth_1 = require("./middlewares/auth");
 var fs = require("fs");
 var certReader = new certReader_1.default("certificates");
-var softwareVersion = "1.3.0";
+var softwareVersion = "1.3.1";
 var fastify = require("fastify")({
     logger: false,
     https: {

@@ -161,7 +161,10 @@ class DatabaseManager {
 
         let userClientKey:string = await this.getClientKey(userId);
 
-        let userTours: any = await this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey);
+        let userTours: any = await this.runQuery(`SELECT * 
+                                                 FROM c_tourtable t
+                                                 WHERE client_key = ?
+                                                 ORDER BY t.jahr DESC, t.monat DESC, t.tag DESC`, userClientKey);
 
         return new Promise(async (resolve, reject) => {
 
@@ -269,8 +272,8 @@ class DatabaseManager {
         FROM c_tourtable t
         JOIN firmen f ON f.firmenname = t.in_spedition
         WHERE f.id = ?
-        ORDER BY t.jahr DESC, t.monat DESC
-        LIMIT 50;`, companyNumber);
+        ORDER BY t.jahr DESC, t.monat DESC, t.tag DESC
+        LIMIT 20;`, companyNumber);
 
         return new Promise(async (resolve, reject) => {
             resolve(await this.convertRawTours(companyTours));
