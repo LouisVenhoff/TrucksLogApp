@@ -46,8 +46,8 @@ function App() {
   const menu = useMenu();
   const loader = useLoader();
 
-  const api:ApiController = new ApiController("app.truckslog.de", 3014, () => {loader.controlLoader(false)});
-  //const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
+  //const api:ApiController = new ApiController("app.truckslog.de", 3014, () => {loader.controlLoader(false)});
+  const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
 
   const userRef = useRef(new UserObj(userRedux.id, userRedux.name, userRedux.email, userRedux.password, userRedux.clientKey, userRedux.avatar, userRedux.billPermission, api));
   
@@ -77,8 +77,11 @@ function App() {
       case Pages.LOGIN:
         setActivePage(<LoginPage api={api} />);
         break;
-      case Pages.TOUR_LIST:
+      case Pages.TOUR_LIST_USER:
           setActivePage(<TourPage api={api} pageContent={userRef.current} />);
+        break;
+      case Pages.TOUR_LIST_COMPANY:
+        setActivePage(<TourPage api={api} pageContent={userRef.current.companyObj} />);
         break;
       case Pages.TOUR_DETAIL:
         break;

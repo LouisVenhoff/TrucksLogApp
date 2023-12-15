@@ -4,7 +4,7 @@ import { AlertType } from "../../components/alertComponent/alertComponent";
 import Tour from "../tour/tour";
 
 
-type UserObj = {
+export type UserObj = {
   id: number;
   username: string;
   clientKey: string;
@@ -12,8 +12,8 @@ type UserObj = {
   billPermission:boolean
 };
 
-type CompanyObj = {
-  id:number;
+export type CompanyObj = {
+  companyId:number;
   name:string;
   avatar:string;
 }
@@ -83,7 +83,7 @@ class ApiController {
       });
   }
 
-  public async LoadCompanyTours(id:number, clientKey:string, companyId:number)
+  public async LoadCompanyTours(id:number, clientKey:string, companyId:number):Promise<Tour[]>
   {
       let result = await this.sendPost("/api/v1/getCompanyTours", {
         userId: id,
@@ -106,7 +106,7 @@ class ApiController {
     });
 
     let company:CompanyObj = {
-      id: result.data.id,
+      companyId: result.data.companyId,
       name: result.data.name,
       avatar: result.data.avatar,
     }
@@ -114,7 +114,6 @@ class ApiController {
     return new Promise((resolve, reject) => {
       resolve(company);
     });
-    //TODO: Conver Information into Company Obj
   }
 
 
@@ -147,8 +146,7 @@ class ApiController {
   }
 
   public calcTour(userId: number, tourId: number, clientKey: string): Promise<number> {
-    console.log(userId, tourId, clientKey);
-
+  
     return new Promise(async (resolve, reject) => {
       this.sendPost("/api/v1/calcTour", {
         userId: userId,
@@ -185,7 +183,6 @@ class ApiController {
     for (let i = 0; i < input.length; i++) {
       output.push(input[i] as Tour);
     }
-    console.log("Toures", output);
     return output;
 
   }

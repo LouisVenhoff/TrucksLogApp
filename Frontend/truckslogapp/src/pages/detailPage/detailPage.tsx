@@ -67,7 +67,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
 
     const returnToTourPage = () => 
     {
-        pageHook.loadPage(Pages.TOUR_LIST);
+        pageHook.loadPage(Pages.TOUR_LIST_USER);
     }
 
 

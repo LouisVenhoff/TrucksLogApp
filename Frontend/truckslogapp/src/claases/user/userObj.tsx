@@ -1,6 +1,7 @@
 import TourData from "../tourData/tourData";
 import ApiController from "../controller/apiController";
 import Tour from "../tour/tour";
+import Company from "../company/company";
 
 class UserObj extends TourData
 {
@@ -15,6 +16,8 @@ class UserObj extends TourData
 
     private api:ApiController;
 
+    private company:Company;
+
     constructor(id:number, name:string, email:string, password:string, clientKey:string, avatar:string, billPermission:boolean, api:ApiController)
     {
         super();
@@ -27,6 +30,13 @@ class UserObj extends TourData
         this.avatar = avatar;
         this.billPermission = billPermission;
         this.api = api;
+
+        this.company = new Company(this.id, this.clientKey, api);
+    }
+
+    public get companyObj():Company
+    {
+        return this.company;
     }
 
     public getReduxObj():{id:number, name:string, email:string, clientKey:string, avatar:string, billPermission:boolean}
@@ -34,7 +44,7 @@ class UserObj extends TourData
         return{id:this.id, name:this.name, email:this.email, clientKey:this.clientKey, avatar:this.avatar, billPermission:this.billPermission}
     }
 
-    async updateTours()
+    async updateTours():Promise<Tour[]>
     {
         if(this.id === 0)
         {
@@ -42,7 +52,10 @@ class UserObj extends TourData
         }
 
         this.tours = await this.api.LoadTours(this.id, this.clientKey);
-        return this.tours;
+        
+        return new Promise((resolve, reject) => {
+            resolve(this.tours);
+        });
     }
 
 }

@@ -22,6 +22,7 @@ import useTour from "../../hooks/useTour";
 import usePage from "../../hooks/usePage";
 import { Pages } from "../../enums/pages";
 import TourData from "../../claases/tourData/tourData";
+import UserObj from "../../claases/user/userObj";
 
 type TourPageProps = {
   api:ApiController
@@ -31,8 +32,8 @@ type TourPageProps = {
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
 const SCROLL_ELEMENTS_THRESHOLD = 3;
-const SYNC_TIME = 60000;
-
+//const SYNC_TIME = 60000;
+const SYNC_TIME = 3000;
 let syncInterval:any;
 
 //Loader
@@ -43,7 +44,8 @@ const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
 
     const currentUserRedux = useSelector((state:any) => state.user.value);
 
-    const [contentObj, setContentObj] = useState(pageContent);
+    //const [contentObj, setContentObj] = useState<TourData>(pageContent);
+    const contentObj:any = useRef<TourData>(pageContent);
     const elementRef = useRef(null);
 
     const menu = useMenu();
@@ -78,7 +80,11 @@ const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
     },[]);
 
     useEffect(() => {
-      setContentObj(pageContent);
+      //setContentObj(pageContent);
+      contentObj.current = pageContent;
+      loadTours();
+
+      
     },[pageContent]);
 
 
@@ -146,14 +152,10 @@ const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
     const loadTours = async () =>
     {
         
-        let tourArr:Tour[] = await contentObj.updateTours();
-      
-        tourArr.reverse();
-
+        let tourArr:Tour[] = await contentObj.current.updateTours();
         setTours(tourArr);
         
     }
-
 
     const interactionsHandler = (id:number, type:Interactions) => 
     {
@@ -215,10 +217,10 @@ return (
           <HamburgerIcon  boxSize={10} onClick={() => {menu.showMenu(true)}}/>
       </div>
       <div className="TourPageAvatarDiv">
-            <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={contentObj.avatar} />
+            <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={contentObj.current.avatar} />
       </div>
       <div className="TourPageWelcomeTextDiv">
-        <h1>Willkommen, {contentObj.name}</h1>
+        <h1>Willkommen, {contentObj.current.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
             <TourDisplay noDataText={infoText} tourData={tours} interactionCallback={(id:number, type:Interactions) => {interactionsHandler(id, type)}}  />

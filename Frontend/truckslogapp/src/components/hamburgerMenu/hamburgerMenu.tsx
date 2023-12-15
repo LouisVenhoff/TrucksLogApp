@@ -48,10 +48,16 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
         }
     }
 
-    const showTourPage = () => 
+    const showUserTourPage = () => 
     {
         closeMenu();
-        pageManager.loadPage(Pages.TOUR_LIST);
+        pageManager.loadPage(Pages.TOUR_LIST_USER);
+    }
+
+    const showCompanyTourPage = () => 
+    {
+        closeMenu();
+        pageManager.loadPage(Pages.TOUR_LIST_COMPANY);
     }
 
 
@@ -88,7 +94,8 @@ const HamburgerMenu:React.FC<HamburgerMenuProps> = ({isOpen, closeCallback}) =>
                 <DrawerCloseButton />
                 <DrawerHeader>Menü</DrawerHeader>
                 <DrawerBody className="HamburgerBody">
-                    <MenuButton name="Meine Touren" onClick={showTourPage} />
+                    <MenuButton name="Meine Touren" onClick={showUserTourPage} />
+                    <MenuButton name="Meine Spedition" onClick={showCompanyTourPage} />
                     <MenuButton name="Impressum" onClick={redirectImprint} />
                     <MenuButton name="Datenschutz" onClick={redirectDataSec} />
                     <MenuButton name="Credits" onClick={showCredits}/>

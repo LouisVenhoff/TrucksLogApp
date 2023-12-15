@@ -70,7 +70,7 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
         
         dispatch(login(usrObj.getReduxObj()));
         //dispatch(switchPage(Pages.TOUR_LIST));
-        pageManager.loadPage(Pages.TOUR_LIST);
+        pageManager.loadPage(Pages.TOUR_LIST_USER);
         
     } 
 
