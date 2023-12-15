@@ -5,4 +5,5 @@ export enum Pages{
     TOUR_DETAIL,
     CREDITS,
     DETAIL_PAGE,
+    LAST_PAGE,
 }

@@ -65,9 +65,9 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
 
 
 
-    const returnToTourPage = () => 
+    const returnToLastPage = () => 
     {
-        pageHook.loadPage(Pages.TOUR_LIST_USER);
+        pageHook.loadPage(Pages.LAST_PAGE);
     }
 
 
@@ -120,7 +120,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
             <Header />
         </div>
         <div className="DetailPageHamburgerBtnDiv">
-            <ArrowBackIcon boxSize={10} onClick={() => {returnToTourPage()}}/>
+            <ArrowBackIcon boxSize={10} onClick={() => {returnToLastPage()}}/>
         </div>
         <div className="DetailPageTourProgress">
            <TourProgressView fullDistance={full} traveledDistance={traveled} />
