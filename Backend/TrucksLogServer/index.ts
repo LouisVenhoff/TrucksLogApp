@@ -15,10 +15,10 @@ const softwareVersion:string = "1.3.1";
 
 const fastify = require("fastify")({
     logger: false,
-    https:{
-        key: fs.readFileSync(certReader.keyFile),
-        cert: fs.readFileSync(certReader.certificateFile)
-    }
+    // https:{
+    //     key: fs.readFileSync(certReader.keyFile),
+    //     cert: fs.readFileSync(certReader.certificateFile)
+    // }
 })
 
 fastify.register(cors, {})

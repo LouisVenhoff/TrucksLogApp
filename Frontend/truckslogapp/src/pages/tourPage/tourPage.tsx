@@ -23,6 +23,7 @@ import usePage from "../../hooks/usePage";
 import { Pages } from "../../enums/pages";
 import TourData from "../../claases/tourData/tourData";
 import UserObj from "../../claases/user/userObj";
+import Company from "../../claases/company/company";
 
 type TourPageProps = {
   api:ApiController
@@ -69,6 +70,7 @@ const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
     const [avatarSize, setAvatarSize] = useState<number>(1);
     const [avatarPosition, setAvatarPosition] = useState<number>(0);
 
+    const [isCompanyPage, setIsCompanyPage] = useState<boolean>(pageContent instanceof Company);
 
     useEffect(() => {
 
@@ -76,14 +78,14 @@ const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
       // Parse Tours to Tour Obj
       // Load Tours in tours state
       loadTours();
-    
+      
     },[]);
 
     useEffect(() => {
       //setContentObj(pageContent);
       contentObj.current = pageContent;
       loadTours();
-
+      setIsCompanyPage(contentObj.current instanceof UserObj);
       
     },[pageContent]);
 
@@ -220,7 +222,7 @@ return (
             <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={contentObj.current.avatar} />
       </div>
       <div className="TourPageWelcomeTextDiv">
-        <h1>Willkommen, {contentObj.current.name}</h1>
+        <h1>{isCompanyPage ? "Willkommen, " : ""}{contentObj.current.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
             <TourDisplay noDataText={infoText} tourData={tours} interactionCallback={(id:number, type:Interactions) => {interactionsHandler(id, type)}}  />
