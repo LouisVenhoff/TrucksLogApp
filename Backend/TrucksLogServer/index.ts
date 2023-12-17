@@ -10,15 +10,15 @@ const fs = require("fs");
 
 const certReader: CertReader = new CertReader("certificates");
 
-const softwareVersion:string = "1.3.0";
+const softwareVersion:string = "2.0.0";
 
 
 const fastify = require("fastify")({
     logger: false,
-    https:{
-        key: fs.readFileSync(certReader.keyFile),
-        cert: fs.readFileSync(certReader.certificateFile)
-    }
+    // https:{
+    //     key: fs.readFileSync(certReader.keyFile),
+    //     cert: fs.readFileSync(certReader.certificateFile)
+    // }
 })
 
 fastify.register(cors, {})
@@ -109,15 +109,32 @@ fastify.post("/api/v1/getTour",{preHandler: [middleWareWrapper]}, async (req:any
 
 
 fastify.post("/api/v1/calcTour",{preHandler: [middleWareWrapper]}, async (req:any, res:any) => {
+    
     let userId:number = req.body.userId;
     let tourId:number = req.body.tourId;
+    let companyId:number = req.body.companyId;
+
+    console.log("CompId", companyId);
+    
+    //New authentication since 2.0.0
+   
+        let calculationPermission:boolean = await dbManager.checkUserPermission(userId, companyId);
+        if(!calculationPermission)
+        {
+            res.code(403).send();
+            return;
+        }
+
+    //This snipped checks if the user who wants to calculate a tour is also the driver
+    //Snipped is deprecated since V2.0.0
+    /*
     let userIsTourDriver:boolean = await dbManager.checkUserTour(userId, tourId);
     if(!userIsTourDriver)
     {
         res.code(403).send();
         return;
     }
-
+    */
 
     let currentTour:Tour = await dbManager.loadTourById(tourId);
 

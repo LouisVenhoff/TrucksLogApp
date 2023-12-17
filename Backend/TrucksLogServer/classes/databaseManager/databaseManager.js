@@ -169,7 +169,7 @@ var DatabaseManager = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getClientKey(userId)];
                     case 1:
                         userClientKey = _a.sent();
-                        return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey)];
+                        return [4 /*yield*/, this.runQuery("SELECT * \n                                                 FROM c_tourtable t\n                                                 WHERE client_key = ?\n                                                 ORDER BY t.start_uhrzeit DESC", userClientKey)];
                     case 2:
                         userTours = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
@@ -247,6 +247,31 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.checkUserPermission = function (userId, companyId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var permissionDataArr;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.runQuery("SELECT fahrer_abrechnen as calcPermission\n                                                            FROM fahrer__berechtigungen f\n                                                            JOIN user u ON u.email = f.fahrer_id\n                                                            WHERE u.id = ?\n                                                            AND u.in_spedition = (SELECT firmenname FROM firmen WHERE id = ?);", userId, companyId)];
+                                case 1:
+                                    permissionDataArr = _a.sent();
+                                    if (permissionDataArr.length >= 0) {
+                                        if (permissionDataArr[0].calcPermission === 1) {
+                                            resolve(true);
+                                            return [2 /*return*/];
+                                        }
+                                    }
+                                    resolve(false);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            });
+        });
+    };
     DatabaseManager.prototype.checkUserTour = function (userId, tourId) {
         return __awaiter(this, void 0, void 0, function () {
             var tourColumn;
@@ -302,11 +327,16 @@ var DatabaseManager = /** @class */ (function () {
             var companyRawData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT firmen.id, firmen.firmen_logo, firmen.firmenname FROM firmen\n        JOIN user ON user.in_spedition = firmen.firmenname\n        WHERE user.client_key = ?;", clientKey)];
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT firmen.id, firmen.firmen_logo as avatar, firmen.firmenname as name FROM firmen\n        JOIN user ON user.in_spedition = firmen.firmenname\n        WHERE user.client_key = ?;", clientKey)];
                     case 1:
                         companyRawData = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
-                                resolve(companyRawData);
+                                var companyObj = {
+                                    companyId: companyRawData[0].id,
+                                    name: companyRawData[0].name,
+                                    avatar: companyRawData[0].avatar
+                                };
+                                resolve(companyObj);
                             })];
                 }
             });
@@ -318,7 +348,7 @@ var DatabaseManager = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT t.*\n        FROM c_tourtable t\n        JOIN firmen f ON f.firmenname = t.in_spedition\n        WHERE f.id = ?\n        ORDER BY t.jahr DESC, t.monat DESC\n        LIMIT 50;", companyNumber)];
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT t.*\n        FROM c_tourtable t\n        JOIN firmen f ON f.firmenname = t.in_spedition\n        WHERE f.id = ?\n        ORDER BY t.start_uhrzeit DESC\n        LIMIT 20;", companyNumber)];
                     case 1:
                         companyTours = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {

@@ -43,13 +43,13 @@ var cors_1 = require("@fastify/cors");
 var auth_1 = require("./middlewares/auth");
 var fs = require("fs");
 var certReader = new certReader_1.default("certificates");
-var softwareVersion = "1.3.0";
+var softwareVersion = "2.0.0";
 var fastify = require("fastify")({
     logger: false,
-    https: {
-        key: fs.readFileSync(certReader.keyFile),
-        cert: fs.readFileSync(certReader.certificateFile)
-    }
+    // https:{
+    //     key: fs.readFileSync(certReader.keyFile),
+    //     cert: fs.readFileSync(certReader.certificateFile)
+    // }
 });
 fastify.register(cors_1.default, {});
 var confReader = new configReader_1.default("config.json", function (conf) { startServer(conf); });
@@ -140,16 +140,18 @@ fastify.post("/api/v1/getTour", { preHandler: [middleWareWrapper] }, function (r
     });
 }); });
 fastify.post("/api/v1/calcTour", { preHandler: [middleWareWrapper] }, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, tourId, userIsTourDriver, currentTour;
+    var userId, tourId, companyId, calculationPermission, currentTour;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 userId = req.body.userId;
                 tourId = req.body.tourId;
-                return [4 /*yield*/, dbManager.checkUserTour(userId, tourId)];
+                companyId = req.body.companyId;
+                console.log("CompId", companyId);
+                return [4 /*yield*/, dbManager.checkUserPermission(userId, companyId)];
             case 1:
-                userIsTourDriver = _a.sent();
-                if (!userIsTourDriver) {
+                calculationPermission = _a.sent();
+                if (!calculationPermission) {
                     res.code(403).send();
                     return [2 /*return*/];
                 }

@@ -9,10 +9,27 @@ export default function usePage()
 
     const dispatch = useDispatch();
 
+    const pageRedux = useSelector((state:any) => state.page.value);
+
+
 
     const loadPage = (page:Pages) => {
-        setCurrentPage(page);
-        dispatch(switchPage(page));
+        
+        
+        let nextPage:Pages;
+        
+        if(page === Pages.LAST_PAGE)
+        {   
+            setCurrentPage(pageRedux.lastPage);
+            nextPage = pageRedux.lastPage;
+        }
+        else
+        {
+            setCurrentPage(page);
+            nextPage = page;
+        }
+        
+        dispatch(switchPage(nextPage));
     }
 
     return{currentPage, loadPage}
