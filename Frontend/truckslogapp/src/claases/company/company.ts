@@ -56,6 +56,11 @@ class Company extends TourData
 
     public set tours(tours:Tour[]){}
 
+    public get companyObj():Company
+    {
+        return this;
+    }
+
     public async updateTours():Promise<Tour[]>
     {
         if(!this.isInitialized)

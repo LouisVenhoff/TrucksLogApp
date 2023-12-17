@@ -13,16 +13,16 @@ export type ValidationObj = {
 }
 
 type UserInfoObj = {
-    username:string;
-    clientKey:string,
-    avatar:string,
-    billPermission:boolean
+    username: string;
+    clientKey: string,
+    avatar: string,
+    billPermission: boolean
 }
 
 type CompanyInfoObj = {
-    companyId:number,
-    name:string,
-    avatar:string,    
+    companyId: number,
+    name: string,
+    avatar: string,
 }
 
 
@@ -65,7 +65,7 @@ class DatabaseManager {
             });
         }
 
-        this.dbConnection.connect(async (err:any) => {
+        this.dbConnection.connect(async (err: any) => {
 
             if (err) {
                 console.log("Database connection error occured!");
@@ -84,46 +84,40 @@ class DatabaseManager {
 
     public async processLogin(mail: string, password: string): Promise<number> {
 
-            //TODO: Load encrypted Password from DB an verify
-            //Return: UserId
+        //TODO: Load encrypted Password from DB an verify
+        //Return: UserId
 
-            let userInfo:any = await this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail);
-         
-            
+        let userInfo: any = await this.runQuery("SELECT passwort, id FROM user WHERE email = ?", mail);
 
-            return new Promise(async (resolve, reject) => {
-                if(userInfo.length === 0 || userInfo === undefined)
-                {
-                    resolve(-1);
-                    return;
-                }
-                
-                let passOk:boolean = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);
 
-                if(!passOk)
-                {
-                    resolve(-1);
-                }
-                else
-                {
-                    resolve(userInfo[0].id);
-                }
 
-            });
+        return new Promise(async (resolve, reject) => {
+            if (userInfo.length === 0 || userInfo === undefined) {
+                resolve(-1);
+                return;
+            }
+
+            let passOk: boolean = await CryptoHelper.checkPassWd(password, userInfo[0].passwort);
+
+            if (!passOk) {
+                resolve(-1);
+            }
+            else {
+                resolve(userInfo[0].id);
+            }
+
+        });
 
     }
 
-    public async getAvatar(userId:number):Promise<string>
-    {
-        let avatarLink:any = await this.runQuery("SELECT profilbild FROM user WHERE id = ?", userId);
+    public async getAvatar(userId: number): Promise<string> {
+        let avatarLink: any = await this.runQuery("SELECT profilbild FROM user WHERE id = ?", userId);
 
         return new Promise((resolve, reject) => {
-            if(avatarLink.length > 0)
-            {
+            if (avatarLink.length > 0) {
                 resolve(avatarLink[0].profilbild);
             }
-            else
-            {
+            else {
                 resolve("");
             }
         });
@@ -131,9 +125,9 @@ class DatabaseManager {
 
     public async validateRequest(data: ValidationObj): Promise<boolean> {
 
-        
-        let userClientKey:string = await this.getClientKey(data.userId);
-        
+
+        let userClientKey: string = await this.getClientKey(data.userId);
+
         return new Promise((resolve, reject) => {
             try {
                 if (userClientKey === data.clientKey) {
@@ -143,8 +137,7 @@ class DatabaseManager {
                     resolve(false);
                 }
             }
-            catch(e:any)
-            {
+            catch (e: any) {
                 resolve(false);
             }
 
@@ -159,7 +152,7 @@ class DatabaseManager {
     public async loadTours(userId: number): Promise<Tour[]> {
         //TODO: Laded alle benötigten Informationen aus einer Tour und Speichere diese in eine Tour Objekt
 
-        let userClientKey:string = await this.getClientKey(userId);
+        let userClientKey: string = await this.getClientKey(userId);
 
         let userTours: any = await this.runQuery(`SELECT * 
                                                  FROM c_tourtable t
@@ -175,7 +168,7 @@ class DatabaseManager {
             // let tourArr: Tour[] = [];
 
             // for (let i = 0; i < userTours.length; i++) {
-                
+
             //     let tempTour:Tour = new Tour(userTours[i]);
 
             //     if(tempTour.tourId !== null)
@@ -188,7 +181,7 @@ class DatabaseManager {
 
             // resolve(tourArr);
             resolve(await this.convertRawTours(userTours));
-        
+
         });
 
     }
@@ -209,6 +202,26 @@ class DatabaseManager {
         await this.runQuery(`UPDATE c_tourtable SET status="In Abrechnung" WHERE id=?`, tourId);
     }
 
+    public async checkUserPermission(userId: number, companyId: number): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
+            let permissionDataArr: any = await this.runQuery(`SELECT fahrer_abrechnen as calcPermission
+                                                            FROM fahrer__berechtigungen f
+                                                            JOIN user u ON u.email = f.fahrer_id
+                                                            WHERE u.id = ?
+                                                            AND u.in_spedition = (SELECT firmenname FROM firmen WHERE id = ?);`, userId, companyId);
+
+            if (permissionDataArr.length >= 0) {
+                if (permissionDataArr[0].calcPermission === 1) {
+                    resolve(true);
+                    return;
+                }
+            }
+            resolve(false);
+        });
+
+    }
+
+
     public async checkUserTour(userId: number, tourId: number): Promise<boolean> {
         let tourColumn: any = await this.runQuery(`SELECT c_tourtable.id AS TourId, user.id AS UserId FROM c_tourtable 
         JOIN user on user.client_key = c_tourtable.client_key
@@ -227,48 +240,45 @@ class DatabaseManager {
     }
 
     public async getClientKey(userId: number): Promise<string> {
-        let clientKey:any = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
+        let clientKey: any = await this.runQuery("SELECT client_key FROM user WHERE id = ?", userId);
 
         return new Promise((resolve, reject) => {
             resolve(clientKey[0].client_key);
         });
     }
 
-    public async getUserInfo(userId:number):Promise<UserInfoObj>
-    {
+    public async getUserInfo(userId: number): Promise<UserInfoObj> {
         let userInfoObj = await this.runQuery("SELECT client_key, user.nickname,  profilbild, fb.fahrer_abrechnen AS billPermission FROM user JOIN fahrer__berechtigungen fb ON email = fb.fahrer_id WHERE user.id = ?", userId);
-    
+
         return new Promise((resolve, reject) => {
-            
-            let tempBillPermission:boolean = userInfoObj[0].billPermission === 1 ? true : false
-            
-            
-            resolve({username:userInfoObj[0].nickname, clientKey:userInfoObj[0].client_key, avatar:userInfoObj[0].profilbild, billPermission:tempBillPermission});
+
+            let tempBillPermission: boolean = userInfoObj[0].billPermission === 1 ? true : false
+
+
+            resolve({ username: userInfoObj[0].nickname, clientKey: userInfoObj[0].client_key, avatar: userInfoObj[0].profilbild, billPermission: tempBillPermission });
         });
-    
+
     }
 
-    public async getCompanyByClientKey(clientKey:string):Promise<CompanyInfoObj>
-    {
-        let companyRawData:any = await this.runQuery(`SELECT firmen.id, firmen.firmen_logo as avatar, firmen.firmenname as name FROM firmen
+    public async getCompanyByClientKey(clientKey: string): Promise<CompanyInfoObj> {
+        let companyRawData: any = await this.runQuery(`SELECT firmen.id, firmen.firmen_logo as avatar, firmen.firmenname as name FROM firmen
         JOIN user ON user.in_spedition = firmen.firmenname
         WHERE user.client_key = ?;`, clientKey);
-        
-        return new Promise((resolve:any, reject:any) => {
-            
-            let companyObj:CompanyInfoObj = {
+
+        return new Promise((resolve: any, reject: any) => {
+
+            let companyObj: CompanyInfoObj = {
                 companyId: companyRawData[0].id,
-                name:companyRawData[0].name,
-                avatar:companyRawData[0].avatar
+                name: companyRawData[0].name,
+                avatar: companyRawData[0].avatar
             };
 
             resolve(companyObj);
-        });        
+        });
     }
 
-    public async loadCompanyTours(companyNumber:string):Promise<Tour[]>
-    {
-        let companyTours:any = await this.runQuery(`SELECT t.*
+    public async loadCompanyTours(companyNumber: string): Promise<Tour[]> {
+        let companyTours: any = await this.runQuery(`SELECT t.*
         FROM c_tourtable t
         JOIN firmen f ON f.firmenname = t.in_spedition
         WHERE f.id = ?
@@ -280,57 +290,49 @@ class DatabaseManager {
         });
     }
 
-    private async convertRawTours(rawTours:any[]):Promise<Tour[]>
-    {
-        
-        return new Promise(async (resolve, reject) => 
-        {   
-            if(rawTours.length === 0)
-            {
+    private async convertRawTours(rawTours: any[]): Promise<Tour[]> {
+
+        return new Promise(async (resolve, reject) => {
+            if (rawTours.length === 0) {
                 resolve([]);
             }
-        
-            let tourArr:Tour[] = [];
 
-            for(let i = 0; i < rawTours.length; i++)
-            {
-                let tempTour:Tour = new Tour(rawTours[i]);
+            let tourArr: Tour[] = [];
 
-                if(tempTour.tourId !== null)
-                {
+            for (let i = 0; i < rawTours.length; i++) {
+                let tempTour: Tour = new Tour(rawTours[i]);
+
+                if (tempTour.tourId !== null) {
                     tempTour.refueled = await this.loadRefuelAmount(tempTour.tourId);
                 }
-                
+
                 tourArr.push(tempTour);
             }
 
             resolve(tourArr);
         });
 
-        
+
     }
 
-    private async loadRefuelAmount(tourId:number):Promise<number>
-    {
-        
-        let fuelDbData:any = await this.runQuery("SELECT liter FROM c_tourtable a  LEFT JOIN c_tanken b ON a.tour_id = b.tour_id WHERE a.id = ?;", tourId);
-        
-        let refueledAmount:number = fuelDbData[0].liter;
+    private async loadRefuelAmount(tourId: number): Promise<number> {
+
+        let fuelDbData: any = await this.runQuery("SELECT liter FROM c_tourtable a  LEFT JOIN c_tanken b ON a.tour_id = b.tour_id WHERE a.id = ?;", tourId);
+
+        let refueledAmount: number = fuelDbData[0].liter;
 
         return new Promise((resolve, reject) => {
-            if(refueledAmount !== null)
-            {
+            if (refueledAmount !== null) {
                 resolve(refueledAmount);
             }
-            else
-            {
+            else {
                 resolve(0);
             }
         });
     }
 
-   
-    private async runQuery(query: string, ...args:any): Promise<any> {
+
+    private async runQuery(query: string, ...args: any): Promise<any> {
 
 
         return new Promise((resolve, reject) => {
@@ -352,7 +354,7 @@ class DatabaseManager {
 
     }
 
-    
+
 
 
 

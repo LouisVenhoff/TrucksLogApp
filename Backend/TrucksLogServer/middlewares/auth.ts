@@ -5,6 +5,8 @@ export const authClientKey =  async (req:any, res:any, dbManager:DatabaseManager
     let clientKey:string = req.body.clientKey;
     let userValid:boolean = await dbManager.validateRequest({userId:userId, clientKey:clientKey});
     
+
+
     if(!userValid) //Anfrage wurde nicht vom einem eingeloggten Nutzer erstellt
     {
         res.code(403).send();

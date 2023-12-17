@@ -247,6 +247,31 @@ var DatabaseManager = /** @class */ (function () {
             });
         });
     };
+    DatabaseManager.prototype.checkUserPermission = function (userId, companyId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var permissionDataArr;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.runQuery("SELECT fahrer_abrechnen as calcPermission\n                                                            FROM fahrer__berechtigungen f\n                                                            JOIN user u ON u.email = f.fahrer_id\n                                                            WHERE u.id = ?\n                                                            AND u.in_spedition = (SELECT firmenname FROM firmen WHERE id = ?);", userId, companyId)];
+                                case 1:
+                                    permissionDataArr = _a.sent();
+                                    if (permissionDataArr.length >= 0) {
+                                        if (permissionDataArr[0].calcPermission === 1) {
+                                            resolve(true);
+                                            return [2 /*return*/];
+                                        }
+                                    }
+                                    resolve(false);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            });
+        });
+    };
     DatabaseManager.prototype.checkUserTour = function (userId, tourId) {
         return __awaiter(this, void 0, void 0, function () {
             var tourColumn;

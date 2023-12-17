@@ -173,7 +173,6 @@ const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
 
     }
 
-
     const showTour = (tourId:number) => 
     {
         tourData.setTour(tourId);
@@ -184,7 +183,7 @@ const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
     {
          startLoading()
         
-          let result:CalcState = await api.calcTour(currentUserRedux.id, tourId, currentUserRedux.clientKey);
+          let result:CalcState = await api.calcTour(currentUserRedux.id, tourId, contentObj.current.companyObj.id, currentUserRedux.clientKey);
   
           if(result !== CalcState.TOUR_OK)
           {

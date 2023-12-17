@@ -146,13 +146,14 @@ class ApiController {
     });
   }
 
-  public calcTour(userId: number, tourId: number, clientKey: string): Promise<number> {
+  public calcTour(userId: number, tourId: number, companyId:number, clientKey: string): Promise<number> {
   
     return new Promise(async (resolve, reject) => {
       this.sendPost("/api/v1/calcTour", {
         userId: userId,
         clientKey: clientKey,
-        tourId: tourId
+        tourId: tourId,
+        companyId: companyId,
       })
       .then((res:any) => {
           resolve(res.data.calcResult)
