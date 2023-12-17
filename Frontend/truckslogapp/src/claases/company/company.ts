@@ -2,7 +2,7 @@ import ApiController from "../controller/apiController";
 import Tour from "../tour/tour";
 import TourData from "../tourData/tourData";
 import { CompanyObj } from "../controller/apiController";
-//Need Refactoring
+
 class Company extends TourData
 {
     private _id:number = 0;
@@ -33,28 +33,40 @@ class Company extends TourData
         return this._id
     }
 
-    public set id(id:number){}
+    public set id(id:number)
+    {
+        //Value is Readonly
+    }
 
     public get name():string
     {
         return this._name;
     }
 
-    public set name(name:string){}
+    public set name(name:string)
+    {
+        //Value is Readonly
+    }
 
     public get avatar():string
     {
         return this._avatar;
     }
 
-    public set avatar(avatar:string){}
+    public set avatar(avatar:string)
+    {
+         //Value is Readonly
+    }
 
     public get tours():Tour[]
     {
         return this._tours; 
     }
 
-    public set tours(tours:Tour[]){}
+    public set tours(tours:Tour[])
+    {
+        //Value is Readonly
+    }
 
     public get companyObj():Company
     {

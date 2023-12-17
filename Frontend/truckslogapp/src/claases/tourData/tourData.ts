@@ -3,9 +3,9 @@ import Tour from "../tour/tour";
 
 abstract class TourData
 {
-    protected abstract id:number;
-    protected abstract name:string;
-    protected abstract avatar:string;
+    public abstract id:number;
+    public abstract name:string;
+    public abstract avatar:string;
 
     protected abstract tours:Tour[];
 

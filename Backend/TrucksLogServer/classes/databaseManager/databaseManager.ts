@@ -157,7 +157,7 @@ class DatabaseManager {
         let userTours: any = await this.runQuery(`SELECT * 
                                                  FROM c_tourtable t
                                                  WHERE client_key = ?
-                                                 ORDER BY t.jahr DESC, t.monat DESC, t.tag DESC`, userClientKey);
+                                                 ORDER BY t.start_uhrzeit DESC`, userClientKey);
 
         return new Promise(async (resolve, reject) => {
 
@@ -282,7 +282,7 @@ class DatabaseManager {
         FROM c_tourtable t
         JOIN firmen f ON f.firmenname = t.in_spedition
         WHERE f.id = ?
-        ORDER BY t.jahr DESC, t.monat DESC, t.tag DESC
+        ORDER BY t.start_uhrzeit DESC
         LIMIT 20;`, companyNumber);
 
         return new Promise(async (resolve, reject) => {

@@ -169,7 +169,7 @@ var DatabaseManager = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getClientKey(userId)];
                     case 1:
                         userClientKey = _a.sent();
-                        return [4 /*yield*/, this.runQuery("SELECT * \n                                                 FROM c_tourtable t\n                                                 WHERE client_key = ?\n                                                 ORDER BY t.jahr DESC, t.monat DESC, t.tag DESC", userClientKey)];
+                        return [4 /*yield*/, this.runQuery("SELECT * \n                                                 FROM c_tourtable t\n                                                 WHERE client_key = ?\n                                                 ORDER BY t.start_uhrzeit DESC", userClientKey)];
                     case 2:
                         userTours = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
@@ -348,7 +348,7 @@ var DatabaseManager = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runQuery("SELECT t.*\n        FROM c_tourtable t\n        JOIN firmen f ON f.firmenname = t.in_spedition\n        WHERE f.id = ?\n        ORDER BY t.jahr DESC, t.monat DESC, t.tag DESC\n        LIMIT 20;", companyNumber)];
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT t.*\n        FROM c_tourtable t\n        JOIN firmen f ON f.firmenname = t.in_spedition\n        WHERE f.id = ?\n        ORDER BY t.start_uhrzeit DESC\n        LIMIT 20;", companyNumber)];
                     case 1:
                         companyTours = _a.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
