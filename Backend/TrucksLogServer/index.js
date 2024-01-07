@@ -46,10 +46,10 @@ var certReader = new certReader_1.default("certificates");
 var softwareVersion = "2.0.0";
 var fastify = require("fastify")({
     logger: false,
-    // https:{
-    //     key: fs.readFileSync(certReader.keyFile),
-    //     cert: fs.readFileSync(certReader.certificateFile)
-    // }
+    https: {
+        key: fs.readFileSync(certReader.keyFile),
+        cert: fs.readFileSync(certReader.certificateFile)
+    }
 });
 fastify.register(cors_1.default, {});
 var confReader = new configReader_1.default("config.json", function (conf) { startServer(conf); });
