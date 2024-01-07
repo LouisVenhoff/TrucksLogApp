@@ -64,13 +64,14 @@ const LoginPage:React.FC<LoginPageProps> = ({api}) =>
             return;
         }
   
-        let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar, loginObj.billPermission);
+        let usrObj:UserObj = new UserObj(loginObj.id, loginObj.username, email, password, loginObj.clientKey, loginObj.avatar, loginObj.billPermission, api);
   
         loader.controlLoader(false);
         
         dispatch(login(usrObj.getReduxObj()));
         //dispatch(switchPage(Pages.TOUR_LIST));
-        pageManager.loadPage(Pages.TOUR_LIST);
+        pageManager.loadPage(Pages.TOUR_LIST_USER);
+        
     } 
 
    

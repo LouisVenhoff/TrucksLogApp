@@ -49,3 +49,10 @@
     margin-right:20px;
     z-index:3;
 }
+
+.TourElementInfoClickDiv
+{
+    position:relative;
+    height:100%;
+    width:100%;
+}

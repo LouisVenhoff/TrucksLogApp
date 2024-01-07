@@ -163,37 +163,71 @@ var DatabaseManager = /** @class */ (function () {
     DatabaseManager.prototype.loadTours = function (userId) {
         return __awaiter(this, void 0, void 0, function () {
             var userClientKey, userTours;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getClientKey(userId)];
                     case 1:
                         userClientKey = _a.sent();
-                        return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE client_key = ?", userClientKey)];
+                        return [4 /*yield*/, this.runQuery("SELECT * \n                                                 FROM c_tourtable t\n                                                 WHERE client_key = ?\n                                                 ORDER BY t.start_uhrzeit DESC", userClientKey)];
                     case 2:
                         userTours = _a.sent();
-                        return [2 /*return*/, new Promise(function (resolve, reject) {
-                                if (userTours.length === 0) {
-                                    resolve([]);
-                                }
-                                var tourArr = [];
-                                for (var i = 0; i < userTours.length; i++) {
-                                    tourArr.push(new tour_1.default(userTours[i]));
-                                }
-                                resolve(tourArr);
-                            })];
+                        return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                                var _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            // if (userTours.length === 0) {
+                                            //     resolve([]);
+                                            // }
+                                            // let tourArr: Tour[] = [];
+                                            // for (let i = 0; i < userTours.length; i++) {
+                                            //     let tempTour:Tour = new Tour(userTours[i]);
+                                            //     if(tempTour.tourId !== null)
+                                            //     {
+                                            //         tempTour.refueled = await this.loadRefuelAmount(tempTour.tourId);
+                                            //     }
+                                            //     tourArr.push(tempTour);
+                                            // }
+                                            // resolve(tourArr);
+                                            _a = resolve;
+                                            return [4 /*yield*/, this.convertRawTours(userTours)];
+                                        case 1:
+                                            // if (userTours.length === 0) {
+                                            //     resolve([]);
+                                            // }
+                                            // let tourArr: Tour[] = [];
+                                            // for (let i = 0; i < userTours.length; i++) {
+                                            //     let tempTour:Tour = new Tour(userTours[i]);
+                                            //     if(tempTour.tourId !== null)
+                                            //     {
+                                            //         tempTour.refueled = await this.loadRefuelAmount(tempTour.tourId);
+                                            //     }
+                                            //     tourArr.push(tempTour);
+                                            // }
+                                            // resolve(tourArr);
+                                            _a.apply(void 0, [_b.sent()]);
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                 }
             });
         });
     };
     DatabaseManager.prototype.loadTourById = function (tourId) {
         return __awaiter(this, void 0, void 0, function () {
-            var resolvedTour, outTour;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var resolvedTour, outTour, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4 /*yield*/, this.runQuery("SELECT * FROM c_tourtable WHERE id = ?", tourId)];
                     case 1:
-                        resolvedTour = _a.sent();
+                        resolvedTour = _b.sent();
                         outTour = new tour_1.default(resolvedTour[0]);
+                        _a = outTour;
+                        return [4 /*yield*/, this.loadRefuelAmount(tourId)];
+                    case 2:
+                        _a.refueled = _b.sent();
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 resolve(outTour);
                             })];
@@ -210,6 +244,31 @@ var DatabaseManager = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/];
                 }
+            });
+        });
+    };
+    DatabaseManager.prototype.checkUserPermission = function (userId, companyId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var permissionDataArr;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.runQuery("SELECT fahrer_abrechnen as calcPermission\n                                                            FROM fahrer__berechtigungen f\n                                                            JOIN user u ON u.email = f.fahrer_id\n                                                            WHERE u.id = ?\n                                                            AND u.in_spedition = (SELECT firmenname FROM firmen WHERE id = ?);", userId, companyId)];
+                                case 1:
+                                    permissionDataArr = _a.sent();
+                                    if (permissionDataArr.length >= 0) {
+                                        if (permissionDataArr[0].calcPermission === 1) {
+                                            resolve(true);
+                                            return [2 /*return*/];
+                                        }
+                                    }
+                                    resolve(false);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
             });
         });
     };
@@ -258,6 +317,112 @@ var DatabaseManager = /** @class */ (function () {
                         return [2 /*return*/, new Promise(function (resolve, reject) {
                                 var tempBillPermission = userInfoObj[0].billPermission === 1 ? true : false;
                                 resolve({ username: userInfoObj[0].nickname, clientKey: userInfoObj[0].client_key, avatar: userInfoObj[0].profilbild, billPermission: tempBillPermission });
+                            })];
+                }
+            });
+        });
+    };
+    DatabaseManager.prototype.getCompanyByClientKey = function (clientKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var companyRawData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT firmen.id, firmen.firmen_logo as avatar, firmen.firmenname as name FROM firmen\n        JOIN user ON user.in_spedition = firmen.firmenname\n        WHERE user.client_key = ?;", clientKey)];
+                    case 1:
+                        companyRawData = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                var companyObj = {
+                                    companyId: companyRawData[0].id,
+                                    name: companyRawData[0].name,
+                                    avatar: companyRawData[0].avatar
+                                };
+                                resolve(companyObj);
+                            })];
+                }
+            });
+        });
+    };
+    DatabaseManager.prototype.loadCompanyTours = function (companyNumber) {
+        return __awaiter(this, void 0, void 0, function () {
+            var companyTours;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT t.*\n        FROM c_tourtable t\n        JOIN firmen f ON f.firmenname = t.in_spedition\n        WHERE f.id = ?\n        ORDER BY t.start_uhrzeit DESC\n        LIMIT 20;", companyNumber)];
+                    case 1:
+                        companyTours = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                                var _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            _a = resolve;
+                                            return [4 /*yield*/, this.convertRawTours(companyTours)];
+                                        case 1:
+                                            _a.apply(void 0, [_b.sent()]);
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
+                }
+            });
+        });
+    };
+    DatabaseManager.prototype.convertRawTours = function (rawTours) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var tourArr, i, tempTour, _a;
+                        return __generator(this, function (_b) {
+                            switch (_b.label) {
+                                case 0:
+                                    if (rawTours.length === 0) {
+                                        resolve([]);
+                                    }
+                                    tourArr = [];
+                                    i = 0;
+                                    _b.label = 1;
+                                case 1:
+                                    if (!(i < rawTours.length)) return [3 /*break*/, 5];
+                                    tempTour = new tour_1.default(rawTours[i]);
+                                    if (!(tempTour.tourId !== null)) return [3 /*break*/, 3];
+                                    _a = tempTour;
+                                    return [4 /*yield*/, this.loadRefuelAmount(tempTour.tourId)];
+                                case 2:
+                                    _a.refueled = _b.sent();
+                                    _b.label = 3;
+                                case 3:
+                                    tourArr.push(tempTour);
+                                    _b.label = 4;
+                                case 4:
+                                    i++;
+                                    return [3 /*break*/, 1];
+                                case 5:
+                                    resolve(tourArr);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            });
+        });
+    };
+    DatabaseManager.prototype.loadRefuelAmount = function (tourId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var fuelDbData, refueledAmount;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.runQuery("SELECT liter FROM c_tourtable a  LEFT JOIN c_tanken b ON a.tour_id = b.tour_id WHERE a.id = ?;", tourId)];
+                    case 1:
+                        fuelDbData = _a.sent();
+                        refueledAmount = fuelDbData[0].liter;
+                        return [2 /*return*/, new Promise(function (resolve, reject) {
+                                if (refueledAmount !== null) {
+                                    resolve(refueledAmount);
+                                }
+                                else {
+                                    resolve(0);
+                                }
                             })];
                 }
             });

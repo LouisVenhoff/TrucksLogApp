@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import LoginPage from './pages/loginPage/loginPage';
@@ -40,27 +40,31 @@ import CreditsPage from './pages/creditsPage/creditsPage';
 
 function App() {
 
-  const user: any = useSelector((state: any) => state.user.value);
+  const userRedux: any = useSelector((state: any) => state.user.value);
   const currentPage = useSelector((state: any) => state.page.value);
   const loadingScreen = useSelector((state:any) => state.loadingScreen.value);
   const menu = useMenu();
   const loader = useLoader();
 
+  const api:ApiController = new ApiController("app.truckslog.de", 3014, () => {loader.controlLoader(false)});
+  //const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
 
+  const userRef = useRef(new UserObj(userRedux.id, userRedux.name, userRedux.email, userRedux.password, userRedux.clientKey, userRedux.avatar, userRedux.billPermission, api));
+  
   const [activePage, setActivePage] = useState<JSX.Element>();
   const [laodingScreenOpened, setLoadingScreenOpened] = useState<boolean>(false);
   const [menuOpened, setMenuOpened] = useState<boolean>(false);
 
-
+  useEffect(() => {
+      userRef.current = new UserObj(userRedux.id, userRedux.name, userRedux.email, userRedux.password, userRedux.clientKey, userRedux.avatar, userRedux.billPermission, api);
+  }, [userRedux]);
 
   useEffect(() => {
     loadPage(currentPage.page);
   }, [currentPage]);
 
   useEffect(() => {
-
       setLoadingScreenOpened(loadingScreen.isShowed);
-
   },[loadingScreen]);
 
   useEffect(() => {
@@ -68,19 +72,16 @@ function App() {
       setMenuOpened(menu.menuOpened);
   },[menu]);
 
-
- const api:ApiController = new ApiController("app.truckslog.de", 3014, () => {loader.controlLoader(false)});
- //const api = new ApiController("localhost", 3000, () => {loader.controlLoader(false)});
-  const dispatch = useDispatch();
-
-
   const loadPage = (page: Pages) => {
     switch (page) {
       case Pages.LOGIN:
         setActivePage(<LoginPage api={api} />);
         break;
-      case Pages.TOUR_LIST:
-        setActivePage(<TourPage api={api} />);
+      case Pages.TOUR_LIST_USER:
+          setActivePage(<TourPage api={api} pageContent={userRef.current} />);
+        break;
+      case Pages.TOUR_LIST_COMPANY:
+        setActivePage(<TourPage api={api} pageContent={userRef.current.companyObj} />);
         break;
       case Pages.TOUR_DETAIL:
         break;
@@ -97,7 +98,7 @@ function App() {
   return (
     <div className="App">
       <AlertProvider />
-      <Modal isOpen={laodingScreenOpened} onClose={() => {dispatch(setOpened(false))}} size="xs">
+      <Modal isOpen={laodingScreenOpened} onClose={() => {loader.controlLoader(false)}} size="xs">
         <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px)'>
           <ModalContent>
             <ModalHeader>LadeDaten . . .</ModalHeader>

@@ -65,9 +65,9 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
 
 
 
-    const returnToTourPage = () => 
+    const returnToLastPage = () => 
     {
-        pageHook.loadPage(Pages.TOUR_LIST);
+        pageHook.loadPage(Pages.LAST_PAGE);
     }
 
 
@@ -88,7 +88,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
                 return "Abgeschlossen";
                 break;
             case TourState.REJECTED:
-                return "Angelehnt";
+                return "Abgelehnt";
                 break;
             case TourState.CANCELLED:
                 return "Abgebrochen";
@@ -98,6 +98,9 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
                 break;
             case TourState.IN_CHECK:
                 return "In Prüfung";
+                break;
+            case TourState.BILLING:
+                return "In Abrechnung"
                 break;
             case TourState.BILLED:
                 return "Abgerechnet";
@@ -117,7 +120,7 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
             <Header />
         </div>
         <div className="DetailPageHamburgerBtnDiv">
-            <ArrowBackIcon boxSize={10} onClick={() => {returnToTourPage()}}/>
+            <ArrowBackIcon boxSize={10} onClick={() => {returnToLastPage()}}/>
         </div>
         <div className="DetailPageTourProgress">
            <TourProgressView fullDistance={full} traveledDistance={traveled} />
@@ -140,10 +143,11 @@ const DetailPage:React.FC<DetailPageProps> = ({api, refreshInterval}) =>
             <DataViewCell label="⛽ Start-Tankinhalt" value={Math.trunc(tourObj!.startFuel).toString()+ "Liter"} />
             <DataViewCell label="⛽ Ende-Tankinhalt" value={Math.trunc(tourObj!.endFuel).toString() + "Liter"} />
             <DataViewCell label="⛽ Verbrauch-Tankinhalt" value={Math.trunc(tourObj!.fuelConsumption).toString() + "Liter"} />
+            <DataViewCell label="⛽ Nachgetankt" value={Math.trunc(tourObj!.refueled).toString() + "Liter"}/>
             <DataViewCell label="📟 Start-KM-LKW" value={Math.trunc(tourObj!.truckODOStart).toString() + "KM"} />
             <DataViewCell label="📟 Ende-KM-LKW" value={Math.trunc(tourObj!.truckODOEnd).toString() + "KM"} />
             <DataViewCell label="📟 Diff.-KM-LKW" value={Math.trunc(tourObj!.truckDistance).toString() + "KM"} />
-            <DataViewCell label="🚀 Max. Speed" value={Math.trunc(tourObj!.startFuel).toString() + "KM/H"} />
+            <DataViewCell label="🚀 Max. Speed" value={Math.trunc(tourObj!.maxSpeed).toString() + "KM/H"} />
             <DataViewCell label="💲 Abgerechnet" value={tourObj.billDate} />
             <DataViewCell label="💡 Notizen" value={tourObj.notes} />
             <DataViewCell label="💡 Status" value={getStateName(tourObj.state)} />

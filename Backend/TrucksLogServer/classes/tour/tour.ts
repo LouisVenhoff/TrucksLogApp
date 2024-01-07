@@ -66,6 +66,8 @@ class Tour {
     public startFuel: number = 0;
     public endFuel: number = 0;
     public fuelConsumption: number = 0;
+    public refueled:number = 0;
+
 
     public truckODOStart: number = 0;
     public truckODOEnd: number = 0;

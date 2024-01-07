@@ -4,13 +4,19 @@ import { AlertType } from "../../components/alertComponent/alertComponent";
 import Tour from "../tour/tour";
 
 
-type UserObj = {
+export type UserObj = {
   id: number;
   username: string;
   clientKey: string;
   avatar: string;
   billPermission:boolean
 };
+
+export type CompanyObj = {
+  companyId:number;
+  name:string;
+  avatar:string;
+}
 
 
 class ApiController {
@@ -26,16 +32,15 @@ class ApiController {
     this.port = port.toString();
     this.errorCallback = errorCallback;
     this.queryPattern = `https://${this.hostname}:${this.port}`;
+  
   }
 
   public async LoadTours(id: number, clientKey: string): Promise<Tour[]> {
 
     let result: any = await this.sendPost("/api/v1/getTours", {
       userId: id,
-      clientKey: clientKey
+      clientKey: clientKey,
     })
-
-
 
     let tourArr: Tour[] = this.createTourArr(result.data);
 
@@ -48,6 +53,7 @@ class ApiController {
 
   }
 
+ 
   public async LoadSingleTour(userId:number, tourId:number, clientKey:string):Promise<Tour>
   {
       let result:any = await this.sendPost("/api/v1/getTour", {
@@ -67,10 +73,48 @@ class ApiController {
         throw("Technical Error! Server data in wrong format!");
       }
       
+      //Hotfix: Provide that consumed Fuel Level is not negative
+      if(currentTour.fuelConsumption < 0)
+      {
+        currentTour.fuelConsumption *= -1;
+      }
       
       return new Promise((resolve, reject) => {
           resolve(currentTour);
       });
+  }
+
+  public async LoadCompanyTours(id:number, clientKey:string, companyId:number):Promise<Tour[]>
+  {
+      let result = await this.sendPost("/api/v1/getCompanyTours", {
+        userId: id,
+        clientKey: clientKey,
+        companyId: companyId,
+      });
+
+      let tourArr:Tour[] = this.createTourArr(result.data);
+
+      return new Promise((resolve, reject) => {
+        resolve(tourArr);
+      });
+  }
+
+  public async LoadCompanyData(id:number, clientKey:string):Promise<CompanyObj>
+  {
+    let result = await this.sendPost("/api/v1/getCompany",{
+      userId: id,
+      clientKey: clientKey
+    });
+
+    let company:CompanyObj = {
+      companyId: result.data.companyId,
+      name: result.data.name,
+      avatar: result.data.avatar,
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(company);
+    });
   }
 
 
@@ -102,14 +146,14 @@ class ApiController {
     });
   }
 
-  public calcTour(userId: number, tourId: number, clientKey: string): Promise<number> {
-    console.log(userId, tourId, clientKey);
-
+  public calcTour(userId: number, tourId: number, companyId:number, clientKey: string): Promise<number> {
+  
     return new Promise(async (resolve, reject) => {
       this.sendPost("/api/v1/calcTour", {
         userId: userId,
         clientKey: clientKey,
-        tourId: tourId
+        tourId: tourId,
+        companyId: companyId,
       })
       .then((res:any) => {
           resolve(res.data.calcResult)
@@ -141,7 +185,6 @@ class ApiController {
     for (let i = 0; i < input.length; i++) {
       output.push(input[i] as Tour);
     }
-    console.log("Toures", output);
     return output;
 
   }

@@ -40,9 +40,10 @@ var certReader_1 = require("./classes/certReader/certReader");
 var configReader_1 = require("./classes/configReader/configReader");
 var databaseManager_1 = require("./classes/databaseManager/databaseManager");
 var cors_1 = require("@fastify/cors");
+var auth_1 = require("./middlewares/auth");
 var fs = require("fs");
 var certReader = new certReader_1.default("certificates");
-var softwareVersion = "1.1.0";
+var softwareVersion = "2.0.0";
 var fastify = require("fastify")({
     logger: false,
     https: {
@@ -53,6 +54,9 @@ var fastify = require("fastify")({
 fastify.register(cors_1.default, {});
 var confReader = new configReader_1.default("config.json", function (conf) { startServer(conf); });
 var dbManager;
+var middleWareWrapper = function (req, res, next) {
+    (0, auth_1.authClientKey)(req, res, dbManager, next);
+};
 fastify.get("/", function (req, res) {
     res.send({ Status: "OK", version: softwareVersion });
 });
@@ -88,7 +92,7 @@ fastify.post("/api/v1/login", function (req, res) { return __awaiter(void 0, voi
     });
 }); });
 //TODO: Get all Tours of an UserId
-fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+fastify.post("/api/v1/getTours", { preHandler: [middleWareWrapper] }, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, clientKey, userValid, tours;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -112,13 +116,13 @@ fastify.post("/api/v1/getTours", function (req, res) { return __awaiter(void 0, 
         }
     });
 }); });
-fastify.post("/api/v1/getTour", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+fastify.post("/api/v1/getTour", { preHandler: [middleWareWrapper] }, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var tourId, userId, clientKey, userValid, currentTour;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 tourId = req.body.tourId;
-                userId = parseInt(req.body.userId);
+                userId = req.body.userId;
                 clientKey = req.body.clientKey;
                 return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
             case 1:
@@ -135,39 +139,62 @@ fastify.post("/api/v1/getTour", function (req, res) { return __awaiter(void 0, v
         }
     });
 }); });
-fastify.post("/api/v1/calcTour", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tourId, userId, clientKey, passValid, userIsTourDriver, currentTour;
+fastify.post("/api/v1/calcTour", { preHandler: [middleWareWrapper] }, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, tourId, companyId, calculationPermission, currentTour;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                tourId = parseInt(req.body.tourId);
                 userId = req.body.userId;
-                clientKey = req.body.clientKey;
-                return [4 /*yield*/, dbManager.validateRequest({ userId: userId, clientKey: clientKey })];
+                tourId = req.body.tourId;
+                companyId = req.body.companyId;
+                console.log("CompId", companyId);
+                return [4 /*yield*/, dbManager.checkUserPermission(userId, companyId)];
             case 1:
-                passValid = _a.sent();
-                if (!passValid) {
-                    res.code(403).send();
-                    return [2 /*return*/];
-                }
-                return [4 /*yield*/, dbManager.checkUserTour(userId, tourId)];
-            case 2:
-                userIsTourDriver = _a.sent();
-                if (!userIsTourDriver) {
+                calculationPermission = _a.sent();
+                if (!calculationPermission) {
                     res.code(403).send();
                     return [2 /*return*/];
                 }
                 return [4 /*yield*/, dbManager.loadTourById(tourId)];
-            case 3:
+            case 2:
                 currentTour = _a.sent();
                 if (!currentTour.tourValid) {
                     res.code(200).send({ calcResult: currentTour.calcState });
                     return [2 /*return*/];
                 }
                 return [4 /*yield*/, dbManager.calculateTour(currentTour.tourId)];
-            case 4:
+            case 3:
                 _a.sent();
                 res.code(200).send({ calcResult: currentTour.calcState });
+                return [2 /*return*/];
+        }
+    });
+}); });
+//Company Information
+fastify.post("/api/v1/getCompany", { preHandler: [middleWareWrapper] }, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var tempClientKey, companyObj;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                tempClientKey = req.body.clientKey;
+                return [4 /*yield*/, dbManager.getCompanyByClientKey(tempClientKey)];
+            case 1:
+                companyObj = _a.sent();
+                res.send(companyObj);
+                return [2 /*return*/];
+        }
+    });
+}); });
+fastify.post("/api/v1/getCompanyTours", { preHandler: [middleWareWrapper] }, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var companyId, companyTours;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                companyId = req.body.companyId;
+                return [4 /*yield*/, dbManager.loadCompanyTours(companyId)];
+            case 1:
+                companyTours = _a.sent();
+                res.send(companyTours);
                 return [2 /*return*/];
         }
     });

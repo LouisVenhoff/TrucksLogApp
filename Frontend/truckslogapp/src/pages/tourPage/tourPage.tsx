@@ -21,30 +21,32 @@ import { Interactions } from "../../enums/interactions";
 import useTour from "../../hooks/useTour";
 import usePage from "../../hooks/usePage";
 import { Pages } from "../../enums/pages";
-
-
+import TourData from "../../claases/tourData/tourData";
+import UserObj from "../../claases/user/userObj";
+import Company from "../../claases/company/company";
 
 type TourPageProps = {
   api:ApiController
+  pageContent:TourData,
 };
 
 const AVATAR_HIDE_POSITION:number = 0.945;
 const AVATAR_HIDE_BOTTOM:number = -300;
 const SCROLL_ELEMENTS_THRESHOLD = 3;
-const SYNC_TIME = 60000;
-
+//const SYNC_TIME = 60000;
+const SYNC_TIME = 3000;
 let syncInterval:any;
 
 //Loader
 const SHOW_LOADER_TIME = 750;
 let loadingTimeout:any;
 
-const TourPage: React.FC<TourPageProps> = ({api}) => {
+const TourPage: React.FC<TourPageProps> = ({api, pageContent}) => {
 
-    const currentUser = useSelector((state:any) => state.user.value);
+    const currentUserRedux = useSelector((state:any) => state.user.value);
 
-    const dispatch = useDispatch();
-
+    //const [contentObj, setContentObj] = useState<TourData>(pageContent);
+    const contentObj:any = useRef<TourData>(pageContent);
     const elementRef = useRef(null);
 
     const menu = useMenu();
@@ -68,6 +70,7 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const [avatarSize, setAvatarSize] = useState<number>(1);
     const [avatarPosition, setAvatarPosition] = useState<number>(0);
 
+    const [isCompanyPage, setIsCompanyPage] = useState<boolean>(pageContent instanceof Company);
 
     useEffect(() => {
 
@@ -75,8 +78,16 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
       // Parse Tours to Tour Obj
       // Load Tours in tours state
       loadTours();
-    
+      
     },[]);
+
+    useEffect(() => {
+      //setContentObj(pageContent);
+      contentObj.current = pageContent;
+      loadTours();
+      setIsCompanyPage(contentObj.current instanceof UserObj);
+      
+    },[pageContent]);
 
 
 
@@ -143,14 +154,10 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     const loadTours = async () =>
     {
         
-        let tourArr:Tour[] = await api.LoadTours(currentUser.id, currentUser.clientKey);
-
-        tourArr.reverse();
-
+        let tourArr:Tour[] = await contentObj.current.updateTours();
         setTours(tourArr);
         
     }
-
 
     const interactionsHandler = (id:number, type:Interactions) => 
     {
@@ -166,7 +173,6 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
 
     }
 
-
     const showTour = (tourId:number) => 
     {
         tourData.setTour(tourId);
@@ -177,8 +183,8 @@ const TourPage: React.FC<TourPageProps> = ({api}) => {
     {
          startLoading()
         
-          let result:CalcState = await api.calcTour(currentUser.id, tourId, currentUser.clientKey);
-
+          let result:CalcState = await api.calcTour(currentUserRedux.id, tourId, contentObj.current.companyObj.id, currentUserRedux.clientKey);
+  
           if(result !== CalcState.TOUR_OK)
           {
             Toaster.show("Fehler beim abrechenen", AlertType.ERROR,1000);
@@ -212,10 +218,10 @@ return (
           <HamburgerIcon  boxSize={10} onClick={() => {menu.showMenu(true)}}/>
       </div>
       <div className="TourPageAvatarDiv">
-            <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={currentUser.avatar} />
+            <motion.img  style={{scale: avatarSize, borderRadius:10}} animate={{y:avatarPosition}}  src={contentObj.current.avatar} />
       </div>
       <div className="TourPageWelcomeTextDiv">
-        <h1>Willkommen, {currentUser.name}</h1>
+        <h1>{isCompanyPage ? "Willkommen, " : ""}{contentObj.current.name}</h1>
       </div>
       <div className="TourPageDataTableSpace">
             <TourDisplay noDataText={infoText} tourData={tours} interactionCallback={(id:number, type:Interactions) => {interactionsHandler(id, type)}}  />
